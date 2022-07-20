@@ -1,10 +1,25 @@
+<style>
+  .Stack > div {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background-color: #cce7ff;
+    border: 1px solid #065091;
+  }
+  .test-area-wrapper {
+    border: 1px solid #065091;
+    padding: 16px;
+    border-radius: 6px;
+    margin-bottom: 12px
+  }
+</style>
+
 <h3>Using slot</h3>
 <% component_a = Primer::Alpha::Stack.new(props) %>
-<div style="background: #ebf9ff; padding: 16px; border-radius: 3px; margin-bottom: 12px">
+<div class="test-area-wrapper">
 <%= render component_a do |s| %>
   <% (1..3).each do |i| %>
     <% s.item do %>
-    <span> test <%= i %> </span>
+    <div> test <%= i %> </div>
     <% end %>
   <% end %>
 <% end %>
@@ -20,12 +35,14 @@
 
 <h3>Using content</h3>
 <% component_b = Primer::Alpha::Stack.new(props) %>
-<div style="background: #ebf9ff; padding: 16px; border-radius: 3px; margin-bottom: 12px">
+<div class="test-area-wrapper">
 <%= render component_b do %>
   <div> item A </div>
-  <span> item B </span>
-  <span> item C </span>
+  <div> item B </div>
+  <div> item C </div>
 <% end %>
 </div>
+<div style="max-width: 100%; overflow-x: auto">
 <pre>PROPERTIES:     <%= component_b.properties.inspect %></pre>
 <pre>APPLIED_STYLES: <%= component_b.applied_style_classes.inspect %></pre>
+</div>

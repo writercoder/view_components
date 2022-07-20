@@ -14,7 +14,7 @@ class Primer::PropertySpaceHelperTest < Minitest::Test
       },
       prop_b: {
         type: String,
-        responsive: :denied,
+        responsive: :no,
         default: "placeholder"
       },
       prop_c: {

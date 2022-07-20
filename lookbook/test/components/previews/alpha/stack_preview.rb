@@ -10,18 +10,19 @@ module Alpha
         locals: {
           props: {
             divider_aria_role: :presentation,
-            show_dividers: true,
             when_narrow: {
               direction: :inline,
               gap: :spacious,
               align: :stretch,
-              spread: :center
+              spread: :center,
+              show_dividers: false,
             },
             when_regular: {
               direction: :block,
               gap: :normal,
               align: :start,
-              spread: :start
+              spread: :start,
+              show_dividers: true
             }
           }
         },
