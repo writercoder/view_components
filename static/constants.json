@@ -122,6 +122,298 @@
       "section"
     ]
   },
+  "Primer::Alpha::Stack": {
+    "PROPERTY_SPACE": {
+      "direction": {
+        "values": [
+          "inline",
+          "block"
+        ],
+        "responsive": true,
+        "DEFAULT": "block"
+      },
+      "gap": {
+        "values": [
+          "none",
+          "condensed",
+          "normal",
+          "spacious"
+        ],
+        "responsive": true,
+        "DEFAULT": "normal"
+      },
+      "align": {
+        "values": [
+          "stretch",
+          "start",
+          "center",
+          "end",
+          "baseline"
+        ],
+        "responsive": true,
+        "DEFAULT": "stretch"
+      },
+      "alignWrap": {
+        "values": [
+          "start",
+          "center",
+          "end",
+          "distribute",
+          "distributeEvenly"
+        ],
+        "responsive": true,
+        "DEFAULT": "start"
+      },
+      "spread": {
+        "values": [
+          "start",
+          "center",
+          "end",
+          "distribute",
+          "distributeEvenly"
+        ],
+        "responsive": true,
+        "DEFAULT": "start"
+      },
+      "wrap": {
+        "values": [
+          "wrap",
+          "nowrap"
+        ],
+        "responsive": true,
+        "DEFAULT": "nowrap"
+      },
+      "showDivider": {
+        "values": [
+          true,
+          false
+        ],
+        "responsive": true,
+        "narrow": {
+          "values": [
+            "inherit"
+          ],
+          "DEFAULT": "inherit"
+        },
+        "DEFAULT": false
+      },
+      "dividerAriaRole": {
+        "values": [
+          "presentation",
+          "separator",
+          "none"
+        ],
+        "responsive": true,
+        "narrow": {
+          "DEFAULT": "none"
+        },
+        "DEFAULT": "presentation"
+      }
+    },
+    "STYLE_MAPPING": {
+      "direction": {
+        "inline": "Stack--dir-inline",
+        "block": "Stack--dir-block"
+      },
+      "gap": {
+        "none": "Stack--gap-none",
+        "condensed": "Stack--gap-condensed",
+        "normal": "Stack--gap-normal",
+        "spacious": "Stack--gap-spacious"
+      },
+      "align": {
+        "stretch": "Stack--align",
+        "start": "Stack--align-start",
+        "center": "Stack--align-center",
+        "end": "Stack--align-end",
+        "baseline": "Stack--align-baseline"
+      },
+      "spread": {
+        "start": "Stack--spread-start",
+        "center": "Stack--spread-center",
+        "end": "Stack--spread-end",
+        "distribute": "Stack--spread-baseline",
+        "distributeEvenly": "Stack--spread-baseline"
+      },
+      "wrap": {
+        "wrap": "Stack--wrap",
+        "nowrap": "Stack--nowrap"
+      },
+      "alignWrap": {
+        "start": "Stack--alignWrap-start",
+        "center": "Stack--alignWrap-center",
+        "end": "Stack--alignWrap-end",
+        "distribute": "Stack--alignWrap-distribute",
+        "distributeEvenly": "Stack--alignWrap-distributeEvenly"
+      },
+      "viewportNarrow": {
+        "direction": {
+          "inline": "Stack--dir-inline--whenNarrow",
+          "block": "Stack--dir-block--whenNarrow"
+        },
+        "gap": {
+          "none": "Stack--gap-none--whenNarrow",
+          "condensed": "Stack--gap-condensed--whenNarrow",
+          "normal": "Stack--gap-normal--whenNarrow",
+          "spacious": "Stack--gap-spacious--whenNarrow"
+        },
+        "align": {
+          "stretch": "Stack--align--whenNarrow",
+          "start": "Stack--align-start--whenNarrow",
+          "center": "Stack--align-center--whenNarrow",
+          "end": "Stack--align-end--whenNarrow",
+          "baseline": "Stack--align-baseline--whenNarrow"
+        },
+        "spread": {
+          "start": "Stack--spread-start--whenNarrow",
+          "center": "Stack--spread-center--whenNarrow",
+          "end": "Stack--spread-end--whenNarrow",
+          "distribute": "Stack--spread-baseline--whenNarrow",
+          "distributeEvenly": "Stack--spread-baseline--whenNarrow"
+        },
+        "wrap": {
+          "wrap": "Stack--wrap--whenNarrow",
+          "nowrap": "Stack--nowrap--whenNarrow"
+        },
+        "alignWrap": {
+          "start": "Stack--alignWrap-start--whenNarrow",
+          "center": "Stack--alignWrap-center--whenNarrow",
+          "end": "Stack--alignWrap-end--whenNarrow",
+          "distribute": "Stack--alignWrap-distribute--whenNarrow",
+          "distributeEvenly": "Stack--alignWrap-distributeEvenly--whenNarrow"
+        },
+        "viewportNarrow": {
+          "direction": "{:inline=>\"Stack--dir-inline--whenNarrow\", :block=>\"Stack--dir-block--whenNarrow\"}--whenNarrow",
+          "gap": "{:none=>\"Stack--gap-none--whenNarrow\", :condensed=>\"Stack--gap-condensed--whenNarrow\", :normal=>\"Stack--gap-normal--whenNarrow\", :spacious=>\"Stack--gap-spacious--whenNarrow\"}--whenNarrow",
+          "align": "{:stretch=>\"Stack--align--whenNarrow\", :start=>\"Stack--align-start--whenNarrow\", :center=>\"Stack--align-center--whenNarrow\", :end=>\"Stack--align-end--whenNarrow\", :baseline=>\"Stack--align-baseline--whenNarrow\"}--whenNarrow",
+          "spread": "{:start=>\"Stack--spread-start--whenNarrow\", :center=>\"Stack--spread-center--whenNarrow\", :end=>\"Stack--spread-end--whenNarrow\", :distribute=>\"Stack--spread-baseline--whenNarrow\", :distributeEvenly=>\"Stack--spread-baseline--whenNarrow\"}--whenNarrow",
+          "wrap": "{:wrap=>\"Stack--wrap--whenNarrow\", :nowrap=>\"Stack--nowrap--whenNarrow\"}--whenNarrow",
+          "alignWrap": "{:start=>\"Stack--alignWrap-start--whenNarrow\", :center=>\"Stack--alignWrap-center--whenNarrow\", :end=>\"Stack--alignWrap-end--whenNarrow\", :distribute=>\"Stack--alignWrap-distribute--whenNarrow\", :distributeEvenly=>\"Stack--alignWrap-distributeEvenly--whenNarrow\"}--whenNarrow"
+        }
+      },
+      "viewportRegular": {
+        "direction": {
+          "inline": "Stack--dir-inline--whenRegular",
+          "block": "Stack--dir-block--whenRegular"
+        },
+        "gap": {
+          "none": "Stack--gap-none--whenRegular",
+          "condensed": "Stack--gap-condensed--whenRegular",
+          "normal": "Stack--gap-normal--whenRegular",
+          "spacious": "Stack--gap-spacious--whenRegular"
+        },
+        "align": {
+          "stretch": "Stack--align--whenRegular",
+          "start": "Stack--align-start--whenRegular",
+          "center": "Stack--align-center--whenRegular",
+          "end": "Stack--align-end--whenRegular",
+          "baseline": "Stack--align-baseline--whenRegular"
+        },
+        "spread": {
+          "start": "Stack--spread-start--whenRegular",
+          "center": "Stack--spread-center--whenRegular",
+          "end": "Stack--spread-end--whenRegular",
+          "distribute": "Stack--spread-baseline--whenRegular",
+          "distributeEvenly": "Stack--spread-baseline--whenRegular"
+        },
+        "wrap": {
+          "wrap": "Stack--wrap--whenRegular",
+          "nowrap": "Stack--nowrap--whenRegular"
+        },
+        "alignWrap": {
+          "start": "Stack--alignWrap-start--whenRegular",
+          "center": "Stack--alignWrap-center--whenRegular",
+          "end": "Stack--alignWrap-end--whenRegular",
+          "distribute": "Stack--alignWrap-distribute--whenRegular",
+          "distributeEvenly": "Stack--alignWrap-distributeEvenly--whenRegular"
+        },
+        "viewportNarrow": {
+          "direction": "{:inline=>\"Stack--dir-inline--whenNarrow\", :block=>\"Stack--dir-block--whenNarrow\"}--whenRegular",
+          "gap": "{:none=>\"Stack--gap-none--whenNarrow\", :condensed=>\"Stack--gap-condensed--whenNarrow\", :normal=>\"Stack--gap-normal--whenNarrow\", :spacious=>\"Stack--gap-spacious--whenNarrow\"}--whenRegular",
+          "align": "{:stretch=>\"Stack--align--whenNarrow\", :start=>\"Stack--align-start--whenNarrow\", :center=>\"Stack--align-center--whenNarrow\", :end=>\"Stack--align-end--whenNarrow\", :baseline=>\"Stack--align-baseline--whenNarrow\"}--whenRegular",
+          "spread": "{:start=>\"Stack--spread-start--whenNarrow\", :center=>\"Stack--spread-center--whenNarrow\", :end=>\"Stack--spread-end--whenNarrow\", :distribute=>\"Stack--spread-baseline--whenNarrow\", :distributeEvenly=>\"Stack--spread-baseline--whenNarrow\"}--whenRegular",
+          "wrap": "{:wrap=>\"Stack--wrap--whenNarrow\", :nowrap=>\"Stack--nowrap--whenNarrow\"}--whenRegular",
+          "alignWrap": "{:start=>\"Stack--alignWrap-start--whenNarrow\", :center=>\"Stack--alignWrap-center--whenNarrow\", :end=>\"Stack--alignWrap-end--whenNarrow\", :distribute=>\"Stack--alignWrap-distribute--whenNarrow\", :distributeEvenly=>\"Stack--alignWrap-distributeEvenly--whenNarrow\"}--whenRegular",
+          "viewportNarrow": "{:direction=>\"{:inline=>\\\"Stack--dir-inline--whenNarrow\\\", :block=>\\\"Stack--dir-block--whenNarrow\\\"}--whenNarrow\", :gap=>\"{:none=>\\\"Stack--gap-none--whenNarrow\\\", :condensed=>\\\"Stack--gap-condensed--whenNarrow\\\", :normal=>\\\"Stack--gap-normal--whenNarrow\\\", :spacious=>\\\"Stack--gap-spacious--whenNarrow\\\"}--whenNarrow\", :align=>\"{:stretch=>\\\"Stack--align--whenNarrow\\\", :start=>\\\"Stack--align-start--whenNarrow\\\", :center=>\\\"Stack--align-center--whenNarrow\\\", :end=>\\\"Stack--align-end--whenNarrow\\\", :baseline=>\\\"Stack--align-baseline--whenNarrow\\\"}--whenNarrow\", :spread=>\"{:start=>\\\"Stack--spread-start--whenNarrow\\\", :center=>\\\"Stack--spread-center--whenNarrow\\\", :end=>\\\"Stack--spread-end--whenNarrow\\\", :distribute=>\\\"Stack--spread-baseline--whenNarrow\\\", :distributeEvenly=>\\\"Stack--spread-baseline--whenNarrow\\\"}--whenNarrow\", :wrap=>\"{:wrap=>\\\"Stack--wrap--whenNarrow\\\", :nowrap=>\\\"Stack--nowrap--whenNarrow\\\"}--whenNarrow\", :alignWrap=>\"{:start=>\\\"Stack--alignWrap-start--whenNarrow\\\", :center=>\\\"Stack--alignWrap-center--whenNarrow\\\", :end=>\\\"Stack--alignWrap-end--whenNarrow\\\", :distribute=>\\\"Stack--alignWrap-distribute--whenNarrow\\\", :distributeEvenly=>\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\"}--whenNarrow\"}--whenRegular"
+        },
+        "viewportRegular": {
+          "direction": "{:inline=>\"Stack--dir-inline--whenRegular\", :block=>\"Stack--dir-block--whenRegular\"}--whenRegular",
+          "gap": "{:none=>\"Stack--gap-none--whenRegular\", :condensed=>\"Stack--gap-condensed--whenRegular\", :normal=>\"Stack--gap-normal--whenRegular\", :spacious=>\"Stack--gap-spacious--whenRegular\"}--whenRegular",
+          "align": "{:stretch=>\"Stack--align--whenRegular\", :start=>\"Stack--align-start--whenRegular\", :center=>\"Stack--align-center--whenRegular\", :end=>\"Stack--align-end--whenRegular\", :baseline=>\"Stack--align-baseline--whenRegular\"}--whenRegular",
+          "spread": "{:start=>\"Stack--spread-start--whenRegular\", :center=>\"Stack--spread-center--whenRegular\", :end=>\"Stack--spread-end--whenRegular\", :distribute=>\"Stack--spread-baseline--whenRegular\", :distributeEvenly=>\"Stack--spread-baseline--whenRegular\"}--whenRegular",
+          "wrap": "{:wrap=>\"Stack--wrap--whenRegular\", :nowrap=>\"Stack--nowrap--whenRegular\"}--whenRegular",
+          "alignWrap": "{:start=>\"Stack--alignWrap-start--whenRegular\", :center=>\"Stack--alignWrap-center--whenRegular\", :end=>\"Stack--alignWrap-end--whenRegular\", :distribute=>\"Stack--alignWrap-distribute--whenRegular\", :distributeEvenly=>\"Stack--alignWrap-distributeEvenly--whenRegular\"}--whenRegular",
+          "viewportNarrow": "{:direction=>\"{:inline=>\\\"Stack--dir-inline--whenNarrow\\\", :block=>\\\"Stack--dir-block--whenNarrow\\\"}--whenRegular\", :gap=>\"{:none=>\\\"Stack--gap-none--whenNarrow\\\", :condensed=>\\\"Stack--gap-condensed--whenNarrow\\\", :normal=>\\\"Stack--gap-normal--whenNarrow\\\", :spacious=>\\\"Stack--gap-spacious--whenNarrow\\\"}--whenRegular\", :align=>\"{:stretch=>\\\"Stack--align--whenNarrow\\\", :start=>\\\"Stack--align-start--whenNarrow\\\", :center=>\\\"Stack--align-center--whenNarrow\\\", :end=>\\\"Stack--align-end--whenNarrow\\\", :baseline=>\\\"Stack--align-baseline--whenNarrow\\\"}--whenRegular\", :spread=>\"{:start=>\\\"Stack--spread-start--whenNarrow\\\", :center=>\\\"Stack--spread-center--whenNarrow\\\", :end=>\\\"Stack--spread-end--whenNarrow\\\", :distribute=>\\\"Stack--spread-baseline--whenNarrow\\\", :distributeEvenly=>\\\"Stack--spread-baseline--whenNarrow\\\"}--whenRegular\", :wrap=>\"{:wrap=>\\\"Stack--wrap--whenNarrow\\\", :nowrap=>\\\"Stack--nowrap--whenNarrow\\\"}--whenRegular\", :alignWrap=>\"{:start=>\\\"Stack--alignWrap-start--whenNarrow\\\", :center=>\\\"Stack--alignWrap-center--whenNarrow\\\", :end=>\\\"Stack--alignWrap-end--whenNarrow\\\", :distribute=>\\\"Stack--alignWrap-distribute--whenNarrow\\\", :distributeEvenly=>\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\"}--whenRegular\", :viewportNarrow=>\"{:direction=>\\\"{:inline=>\\\\\\\"Stack--dir-inline--whenNarrow\\\\\\\", :block=>\\\\\\\"Stack--dir-block--whenNarrow\\\\\\\"}--whenNarrow\\\", :gap=>\\\"{:none=>\\\\\\\"Stack--gap-none--whenNarrow\\\\\\\", :condensed=>\\\\\\\"Stack--gap-condensed--whenNarrow\\\\\\\", :normal=>\\\\\\\"Stack--gap-normal--whenNarrow\\\\\\\", :spacious=>\\\\\\\"Stack--gap-spacious--whenNarrow\\\\\\\"}--whenNarrow\\\", :align=>\\\"{:stretch=>\\\\\\\"Stack--align--whenNarrow\\\\\\\", :start=>\\\\\\\"Stack--align-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--align-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--align-end--whenNarrow\\\\\\\", :baseline=>\\\\\\\"Stack--align-baseline--whenNarrow\\\\\\\"}--whenNarrow\\\", :spread=>\\\"{:start=>\\\\\\\"Stack--spread-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--spread-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--spread-end--whenNarrow\\\\\\\", :distribute=>\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\"}--whenNarrow\\\", :wrap=>\\\"{:wrap=>\\\\\\\"Stack--wrap--whenNarrow\\\\\\\", :nowrap=>\\\\\\\"Stack--nowrap--whenNarrow\\\\\\\"}--whenNarrow\\\", :alignWrap=>\\\"{:start=>\\\\\\\"Stack--alignWrap-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--alignWrap-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--alignWrap-end--whenNarrow\\\\\\\", :distribute=>\\\\\\\"Stack--alignWrap-distribute--whenNarrow\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\\\\\"}--whenNarrow\\\"}--whenRegular\"}--whenRegular"
+        }
+      },
+      "viewportWide": {
+        "direction": {
+          "inline": "Stack--dir-inline--whenWide",
+          "block": "Stack--dir-block--whenWide"
+        },
+        "gap": {
+          "none": "Stack--gap-none--whenWide",
+          "condensed": "Stack--gap-condensed--whenWide",
+          "normal": "Stack--gap-normal--whenWide",
+          "spacious": "Stack--gap-spacious--whenWide"
+        },
+        "align": {
+          "stretch": "Stack--align--whenWide",
+          "start": "Stack--align-start--whenWide",
+          "center": "Stack--align-center--whenWide",
+          "end": "Stack--align-end--whenWide",
+          "baseline": "Stack--align-baseline--whenWide"
+        },
+        "spread": {
+          "start": "Stack--spread-start--whenWide",
+          "center": "Stack--spread-center--whenWide",
+          "end": "Stack--spread-end--whenWide",
+          "distribute": "Stack--spread-baseline--whenWide",
+          "distributeEvenly": "Stack--spread-baseline--whenWide"
+        },
+        "wrap": {
+          "wrap": "Stack--wrap--whenWide",
+          "nowrap": "Stack--nowrap--whenWide"
+        },
+        "alignWrap": {
+          "start": "Stack--alignWrap-start--whenWide",
+          "center": "Stack--alignWrap-center--whenWide",
+          "end": "Stack--alignWrap-end--whenWide",
+          "distribute": "Stack--alignWrap-distribute--whenWide",
+          "distributeEvenly": "Stack--alignWrap-distributeEvenly--whenWide"
+        },
+        "viewportNarrow": {
+          "direction": "{:inline=>\"Stack--dir-inline--whenNarrow\", :block=>\"Stack--dir-block--whenNarrow\"}--whenWide",
+          "gap": "{:none=>\"Stack--gap-none--whenNarrow\", :condensed=>\"Stack--gap-condensed--whenNarrow\", :normal=>\"Stack--gap-normal--whenNarrow\", :spacious=>\"Stack--gap-spacious--whenNarrow\"}--whenWide",
+          "align": "{:stretch=>\"Stack--align--whenNarrow\", :start=>\"Stack--align-start--whenNarrow\", :center=>\"Stack--align-center--whenNarrow\", :end=>\"Stack--align-end--whenNarrow\", :baseline=>\"Stack--align-baseline--whenNarrow\"}--whenWide",
+          "spread": "{:start=>\"Stack--spread-start--whenNarrow\", :center=>\"Stack--spread-center--whenNarrow\", :end=>\"Stack--spread-end--whenNarrow\", :distribute=>\"Stack--spread-baseline--whenNarrow\", :distributeEvenly=>\"Stack--spread-baseline--whenNarrow\"}--whenWide",
+          "wrap": "{:wrap=>\"Stack--wrap--whenNarrow\", :nowrap=>\"Stack--nowrap--whenNarrow\"}--whenWide",
+          "alignWrap": "{:start=>\"Stack--alignWrap-start--whenNarrow\", :center=>\"Stack--alignWrap-center--whenNarrow\", :end=>\"Stack--alignWrap-end--whenNarrow\", :distribute=>\"Stack--alignWrap-distribute--whenNarrow\", :distributeEvenly=>\"Stack--alignWrap-distributeEvenly--whenNarrow\"}--whenWide",
+          "viewportNarrow": "{:direction=>\"{:inline=>\\\"Stack--dir-inline--whenNarrow\\\", :block=>\\\"Stack--dir-block--whenNarrow\\\"}--whenNarrow\", :gap=>\"{:none=>\\\"Stack--gap-none--whenNarrow\\\", :condensed=>\\\"Stack--gap-condensed--whenNarrow\\\", :normal=>\\\"Stack--gap-normal--whenNarrow\\\", :spacious=>\\\"Stack--gap-spacious--whenNarrow\\\"}--whenNarrow\", :align=>\"{:stretch=>\\\"Stack--align--whenNarrow\\\", :start=>\\\"Stack--align-start--whenNarrow\\\", :center=>\\\"Stack--align-center--whenNarrow\\\", :end=>\\\"Stack--align-end--whenNarrow\\\", :baseline=>\\\"Stack--align-baseline--whenNarrow\\\"}--whenNarrow\", :spread=>\"{:start=>\\\"Stack--spread-start--whenNarrow\\\", :center=>\\\"Stack--spread-center--whenNarrow\\\", :end=>\\\"Stack--spread-end--whenNarrow\\\", :distribute=>\\\"Stack--spread-baseline--whenNarrow\\\", :distributeEvenly=>\\\"Stack--spread-baseline--whenNarrow\\\"}--whenNarrow\", :wrap=>\"{:wrap=>\\\"Stack--wrap--whenNarrow\\\", :nowrap=>\\\"Stack--nowrap--whenNarrow\\\"}--whenNarrow\", :alignWrap=>\"{:start=>\\\"Stack--alignWrap-start--whenNarrow\\\", :center=>\\\"Stack--alignWrap-center--whenNarrow\\\", :end=>\\\"Stack--alignWrap-end--whenNarrow\\\", :distribute=>\\\"Stack--alignWrap-distribute--whenNarrow\\\", :distributeEvenly=>\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\"}--whenNarrow\"}--whenWide"
+        },
+        "viewportRegular": {
+          "direction": "{:inline=>\"Stack--dir-inline--whenRegular\", :block=>\"Stack--dir-block--whenRegular\"}--whenWide",
+          "gap": "{:none=>\"Stack--gap-none--whenRegular\", :condensed=>\"Stack--gap-condensed--whenRegular\", :normal=>\"Stack--gap-normal--whenRegular\", :spacious=>\"Stack--gap-spacious--whenRegular\"}--whenWide",
+          "align": "{:stretch=>\"Stack--align--whenRegular\", :start=>\"Stack--align-start--whenRegular\", :center=>\"Stack--align-center--whenRegular\", :end=>\"Stack--align-end--whenRegular\", :baseline=>\"Stack--align-baseline--whenRegular\"}--whenWide",
+          "spread": "{:start=>\"Stack--spread-start--whenRegular\", :center=>\"Stack--spread-center--whenRegular\", :end=>\"Stack--spread-end--whenRegular\", :distribute=>\"Stack--spread-baseline--whenRegular\", :distributeEvenly=>\"Stack--spread-baseline--whenRegular\"}--whenWide",
+          "wrap": "{:wrap=>\"Stack--wrap--whenRegular\", :nowrap=>\"Stack--nowrap--whenRegular\"}--whenWide",
+          "alignWrap": "{:start=>\"Stack--alignWrap-start--whenRegular\", :center=>\"Stack--alignWrap-center--whenRegular\", :end=>\"Stack--alignWrap-end--whenRegular\", :distribute=>\"Stack--alignWrap-distribute--whenRegular\", :distributeEvenly=>\"Stack--alignWrap-distributeEvenly--whenRegular\"}--whenWide",
+          "viewportNarrow": "{:direction=>\"{:inline=>\\\"Stack--dir-inline--whenNarrow\\\", :block=>\\\"Stack--dir-block--whenNarrow\\\"}--whenRegular\", :gap=>\"{:none=>\\\"Stack--gap-none--whenNarrow\\\", :condensed=>\\\"Stack--gap-condensed--whenNarrow\\\", :normal=>\\\"Stack--gap-normal--whenNarrow\\\", :spacious=>\\\"Stack--gap-spacious--whenNarrow\\\"}--whenRegular\", :align=>\"{:stretch=>\\\"Stack--align--whenNarrow\\\", :start=>\\\"Stack--align-start--whenNarrow\\\", :center=>\\\"Stack--align-center--whenNarrow\\\", :end=>\\\"Stack--align-end--whenNarrow\\\", :baseline=>\\\"Stack--align-baseline--whenNarrow\\\"}--whenRegular\", :spread=>\"{:start=>\\\"Stack--spread-start--whenNarrow\\\", :center=>\\\"Stack--spread-center--whenNarrow\\\", :end=>\\\"Stack--spread-end--whenNarrow\\\", :distribute=>\\\"Stack--spread-baseline--whenNarrow\\\", :distributeEvenly=>\\\"Stack--spread-baseline--whenNarrow\\\"}--whenRegular\", :wrap=>\"{:wrap=>\\\"Stack--wrap--whenNarrow\\\", :nowrap=>\\\"Stack--nowrap--whenNarrow\\\"}--whenRegular\", :alignWrap=>\"{:start=>\\\"Stack--alignWrap-start--whenNarrow\\\", :center=>\\\"Stack--alignWrap-center--whenNarrow\\\", :end=>\\\"Stack--alignWrap-end--whenNarrow\\\", :distribute=>\\\"Stack--alignWrap-distribute--whenNarrow\\\", :distributeEvenly=>\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\"}--whenRegular\", :viewportNarrow=>\"{:direction=>\\\"{:inline=>\\\\\\\"Stack--dir-inline--whenNarrow\\\\\\\", :block=>\\\\\\\"Stack--dir-block--whenNarrow\\\\\\\"}--whenNarrow\\\", :gap=>\\\"{:none=>\\\\\\\"Stack--gap-none--whenNarrow\\\\\\\", :condensed=>\\\\\\\"Stack--gap-condensed--whenNarrow\\\\\\\", :normal=>\\\\\\\"Stack--gap-normal--whenNarrow\\\\\\\", :spacious=>\\\\\\\"Stack--gap-spacious--whenNarrow\\\\\\\"}--whenNarrow\\\", :align=>\\\"{:stretch=>\\\\\\\"Stack--align--whenNarrow\\\\\\\", :start=>\\\\\\\"Stack--align-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--align-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--align-end--whenNarrow\\\\\\\", :baseline=>\\\\\\\"Stack--align-baseline--whenNarrow\\\\\\\"}--whenNarrow\\\", :spread=>\\\"{:start=>\\\\\\\"Stack--spread-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--spread-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--spread-end--whenNarrow\\\\\\\", :distribute=>\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\"}--whenNarrow\\\", :wrap=>\\\"{:wrap=>\\\\\\\"Stack--wrap--whenNarrow\\\\\\\", :nowrap=>\\\\\\\"Stack--nowrap--whenNarrow\\\\\\\"}--whenNarrow\\\", :alignWrap=>\\\"{:start=>\\\\\\\"Stack--alignWrap-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--alignWrap-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--alignWrap-end--whenNarrow\\\\\\\", :distribute=>\\\\\\\"Stack--alignWrap-distribute--whenNarrow\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\\\\\"}--whenNarrow\\\"}--whenRegular\"}--whenWide",
+          "viewportRegular": "{:direction=>\"{:inline=>\\\"Stack--dir-inline--whenRegular\\\", :block=>\\\"Stack--dir-block--whenRegular\\\"}--whenRegular\", :gap=>\"{:none=>\\\"Stack--gap-none--whenRegular\\\", :condensed=>\\\"Stack--gap-condensed--whenRegular\\\", :normal=>\\\"Stack--gap-normal--whenRegular\\\", :spacious=>\\\"Stack--gap-spacious--whenRegular\\\"}--whenRegular\", :align=>\"{:stretch=>\\\"Stack--align--whenRegular\\\", :start=>\\\"Stack--align-start--whenRegular\\\", :center=>\\\"Stack--align-center--whenRegular\\\", :end=>\\\"Stack--align-end--whenRegular\\\", :baseline=>\\\"Stack--align-baseline--whenRegular\\\"}--whenRegular\", :spread=>\"{:start=>\\\"Stack--spread-start--whenRegular\\\", :center=>\\\"Stack--spread-center--whenRegular\\\", :end=>\\\"Stack--spread-end--whenRegular\\\", :distribute=>\\\"Stack--spread-baseline--whenRegular\\\", :distributeEvenly=>\\\"Stack--spread-baseline--whenRegular\\\"}--whenRegular\", :wrap=>\"{:wrap=>\\\"Stack--wrap--whenRegular\\\", :nowrap=>\\\"Stack--nowrap--whenRegular\\\"}--whenRegular\", :alignWrap=>\"{:start=>\\\"Stack--alignWrap-start--whenRegular\\\", :center=>\\\"Stack--alignWrap-center--whenRegular\\\", :end=>\\\"Stack--alignWrap-end--whenRegular\\\", :distribute=>\\\"Stack--alignWrap-distribute--whenRegular\\\", :distributeEvenly=>\\\"Stack--alignWrap-distributeEvenly--whenRegular\\\"}--whenRegular\", :viewportNarrow=>\"{:direction=>\\\"{:inline=>\\\\\\\"Stack--dir-inline--whenNarrow\\\\\\\", :block=>\\\\\\\"Stack--dir-block--whenNarrow\\\\\\\"}--whenRegular\\\", :gap=>\\\"{:none=>\\\\\\\"Stack--gap-none--whenNarrow\\\\\\\", :condensed=>\\\\\\\"Stack--gap-condensed--whenNarrow\\\\\\\", :normal=>\\\\\\\"Stack--gap-normal--whenNarrow\\\\\\\", :spacious=>\\\\\\\"Stack--gap-spacious--whenNarrow\\\\\\\"}--whenRegular\\\", :align=>\\\"{:stretch=>\\\\\\\"Stack--align--whenNarrow\\\\\\\", :start=>\\\\\\\"Stack--align-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--align-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--align-end--whenNarrow\\\\\\\", :baseline=>\\\\\\\"Stack--align-baseline--whenNarrow\\\\\\\"}--whenRegular\\\", :spread=>\\\"{:start=>\\\\\\\"Stack--spread-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--spread-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--spread-end--whenNarrow\\\\\\\", :distribute=>\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\"}--whenRegular\\\", :wrap=>\\\"{:wrap=>\\\\\\\"Stack--wrap--whenNarrow\\\\\\\", :nowrap=>\\\\\\\"Stack--nowrap--whenNarrow\\\\\\\"}--whenRegular\\\", :alignWrap=>\\\"{:start=>\\\\\\\"Stack--alignWrap-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--alignWrap-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--alignWrap-end--whenNarrow\\\\\\\", :distribute=>\\\\\\\"Stack--alignWrap-distribute--whenNarrow\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\\\\\"}--whenRegular\\\", :viewportNarrow=>\\\"{:direction=>\\\\\\\"{:inline=>\\\\\\\\\\\\\\\"Stack--dir-inline--whenNarrow\\\\\\\\\\\\\\\", :block=>\\\\\\\\\\\\\\\"Stack--dir-block--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\", :gap=>\\\\\\\"{:none=>\\\\\\\\\\\\\\\"Stack--gap-none--whenNarrow\\\\\\\\\\\\\\\", :condensed=>\\\\\\\\\\\\\\\"Stack--gap-condensed--whenNarrow\\\\\\\\\\\\\\\", :normal=>\\\\\\\\\\\\\\\"Stack--gap-normal--whenNarrow\\\\\\\\\\\\\\\", :spacious=>\\\\\\\\\\\\\\\"Stack--gap-spacious--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\", :align=>\\\\\\\"{:stretch=>\\\\\\\\\\\\\\\"Stack--align--whenNarrow\\\\\\\\\\\\\\\", :start=>\\\\\\\\\\\\\\\"Stack--align-start--whenNarrow\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\"Stack--align-center--whenNarrow\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\"Stack--align-end--whenNarrow\\\\\\\\\\\\\\\", :baseline=>\\\\\\\\\\\\\\\"Stack--align-baseline--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\", :spread=>\\\\\\\"{:start=>\\\\\\\\\\\\\\\"Stack--spread-start--whenNarrow\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\"Stack--spread-center--whenNarrow\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\"Stack--spread-end--whenNarrow\\\\\\\\\\\\\\\", :distribute=>\\\\\\\\\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\\\\\\\\\", :distributeEvenly=>\\\\\\\\\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\", :wrap=>\\\\\\\"{:wrap=>\\\\\\\\\\\\\\\"Stack--wrap--whenNarrow\\\\\\\\\\\\\\\", :nowrap=>\\\\\\\\\\\\\\\"Stack--nowrap--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\", :alignWrap=>\\\\\\\"{:start=>\\\\\\\\\\\\\\\"Stack--alignWrap-start--whenNarrow\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\"Stack--alignWrap-center--whenNarrow\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\"Stack--alignWrap-end--whenNarrow\\\\\\\\\\\\\\\", :distribute=>\\\\\\\\\\\\\\\"Stack--alignWrap-distribute--whenNarrow\\\\\\\\\\\\\\\", :distributeEvenly=>\\\\\\\\\\\\\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\"}--whenRegular\\\"}--whenRegular\"}--whenWide"
+        },
+        "viewportWide": {
+          "direction": "{:inline=>\"Stack--dir-inline--whenWide\", :block=>\"Stack--dir-block--whenWide\"}--whenWide",
+          "gap": "{:none=>\"Stack--gap-none--whenWide\", :condensed=>\"Stack--gap-condensed--whenWide\", :normal=>\"Stack--gap-normal--whenWide\", :spacious=>\"Stack--gap-spacious--whenWide\"}--whenWide",
+          "align": "{:stretch=>\"Stack--align--whenWide\", :start=>\"Stack--align-start--whenWide\", :center=>\"Stack--align-center--whenWide\", :end=>\"Stack--align-end--whenWide\", :baseline=>\"Stack--align-baseline--whenWide\"}--whenWide",
+          "spread": "{:start=>\"Stack--spread-start--whenWide\", :center=>\"Stack--spread-center--whenWide\", :end=>\"Stack--spread-end--whenWide\", :distribute=>\"Stack--spread-baseline--whenWide\", :distributeEvenly=>\"Stack--spread-baseline--whenWide\"}--whenWide",
+          "wrap": "{:wrap=>\"Stack--wrap--whenWide\", :nowrap=>\"Stack--nowrap--whenWide\"}--whenWide",
+          "alignWrap": "{:start=>\"Stack--alignWrap-start--whenWide\", :center=>\"Stack--alignWrap-center--whenWide\", :end=>\"Stack--alignWrap-end--whenWide\", :distribute=>\"Stack--alignWrap-distribute--whenWide\", :distributeEvenly=>\"Stack--alignWrap-distributeEvenly--whenWide\"}--whenWide",
+          "viewportNarrow": "{:direction=>\"{:inline=>\\\"Stack--dir-inline--whenNarrow\\\", :block=>\\\"Stack--dir-block--whenNarrow\\\"}--whenWide\", :gap=>\"{:none=>\\\"Stack--gap-none--whenNarrow\\\", :condensed=>\\\"Stack--gap-condensed--whenNarrow\\\", :normal=>\\\"Stack--gap-normal--whenNarrow\\\", :spacious=>\\\"Stack--gap-spacious--whenNarrow\\\"}--whenWide\", :align=>\"{:stretch=>\\\"Stack--align--whenNarrow\\\", :start=>\\\"Stack--align-start--whenNarrow\\\", :center=>\\\"Stack--align-center--whenNarrow\\\", :end=>\\\"Stack--align-end--whenNarrow\\\", :baseline=>\\\"Stack--align-baseline--whenNarrow\\\"}--whenWide\", :spread=>\"{:start=>\\\"Stack--spread-start--whenNarrow\\\", :center=>\\\"Stack--spread-center--whenNarrow\\\", :end=>\\\"Stack--spread-end--whenNarrow\\\", :distribute=>\\\"Stack--spread-baseline--whenNarrow\\\", :distributeEvenly=>\\\"Stack--spread-baseline--whenNarrow\\\"}--whenWide\", :wrap=>\"{:wrap=>\\\"Stack--wrap--whenNarrow\\\", :nowrap=>\\\"Stack--nowrap--whenNarrow\\\"}--whenWide\", :alignWrap=>\"{:start=>\\\"Stack--alignWrap-start--whenNarrow\\\", :center=>\\\"Stack--alignWrap-center--whenNarrow\\\", :end=>\\\"Stack--alignWrap-end--whenNarrow\\\", :distribute=>\\\"Stack--alignWrap-distribute--whenNarrow\\\", :distributeEvenly=>\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\"}--whenWide\", :viewportNarrow=>\"{:direction=>\\\"{:inline=>\\\\\\\"Stack--dir-inline--whenNarrow\\\\\\\", :block=>\\\\\\\"Stack--dir-block--whenNarrow\\\\\\\"}--whenNarrow\\\", :gap=>\\\"{:none=>\\\\\\\"Stack--gap-none--whenNarrow\\\\\\\", :condensed=>\\\\\\\"Stack--gap-condensed--whenNarrow\\\\\\\", :normal=>\\\\\\\"Stack--gap-normal--whenNarrow\\\\\\\", :spacious=>\\\\\\\"Stack--gap-spacious--whenNarrow\\\\\\\"}--whenNarrow\\\", :align=>\\\"{:stretch=>\\\\\\\"Stack--align--whenNarrow\\\\\\\", :start=>\\\\\\\"Stack--align-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--align-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--align-end--whenNarrow\\\\\\\", :baseline=>\\\\\\\"Stack--align-baseline--whenNarrow\\\\\\\"}--whenNarrow\\\", :spread=>\\\"{:start=>\\\\\\\"Stack--spread-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--spread-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--spread-end--whenNarrow\\\\\\\", :distribute=>\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\"}--whenNarrow\\\", :wrap=>\\\"{:wrap=>\\\\\\\"Stack--wrap--whenNarrow\\\\\\\", :nowrap=>\\\\\\\"Stack--nowrap--whenNarrow\\\\\\\"}--whenNarrow\\\", :alignWrap=>\\\"{:start=>\\\\\\\"Stack--alignWrap-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--alignWrap-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--alignWrap-end--whenNarrow\\\\\\\", :distribute=>\\\\\\\"Stack--alignWrap-distribute--whenNarrow\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\\\\\"}--whenNarrow\\\"}--whenWide\"}--whenWide",
+          "viewportRegular": "{:direction=>\"{:inline=>\\\"Stack--dir-inline--whenRegular\\\", :block=>\\\"Stack--dir-block--whenRegular\\\"}--whenWide\", :gap=>\"{:none=>\\\"Stack--gap-none--whenRegular\\\", :condensed=>\\\"Stack--gap-condensed--whenRegular\\\", :normal=>\\\"Stack--gap-normal--whenRegular\\\", :spacious=>\\\"Stack--gap-spacious--whenRegular\\\"}--whenWide\", :align=>\"{:stretch=>\\\"Stack--align--whenRegular\\\", :start=>\\\"Stack--align-start--whenRegular\\\", :center=>\\\"Stack--align-center--whenRegular\\\", :end=>\\\"Stack--align-end--whenRegular\\\", :baseline=>\\\"Stack--align-baseline--whenRegular\\\"}--whenWide\", :spread=>\"{:start=>\\\"Stack--spread-start--whenRegular\\\", :center=>\\\"Stack--spread-center--whenRegular\\\", :end=>\\\"Stack--spread-end--whenRegular\\\", :distribute=>\\\"Stack--spread-baseline--whenRegular\\\", :distributeEvenly=>\\\"Stack--spread-baseline--whenRegular\\\"}--whenWide\", :wrap=>\"{:wrap=>\\\"Stack--wrap--whenRegular\\\", :nowrap=>\\\"Stack--nowrap--whenRegular\\\"}--whenWide\", :alignWrap=>\"{:start=>\\\"Stack--alignWrap-start--whenRegular\\\", :center=>\\\"Stack--alignWrap-center--whenRegular\\\", :end=>\\\"Stack--alignWrap-end--whenRegular\\\", :distribute=>\\\"Stack--alignWrap-distribute--whenRegular\\\", :distributeEvenly=>\\\"Stack--alignWrap-distributeEvenly--whenRegular\\\"}--whenWide\", :viewportNarrow=>\"{:direction=>\\\"{:inline=>\\\\\\\"Stack--dir-inline--whenNarrow\\\\\\\", :block=>\\\\\\\"Stack--dir-block--whenNarrow\\\\\\\"}--whenRegular\\\", :gap=>\\\"{:none=>\\\\\\\"Stack--gap-none--whenNarrow\\\\\\\", :condensed=>\\\\\\\"Stack--gap-condensed--whenNarrow\\\\\\\", :normal=>\\\\\\\"Stack--gap-normal--whenNarrow\\\\\\\", :spacious=>\\\\\\\"Stack--gap-spacious--whenNarrow\\\\\\\"}--whenRegular\\\", :align=>\\\"{:stretch=>\\\\\\\"Stack--align--whenNarrow\\\\\\\", :start=>\\\\\\\"Stack--align-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--align-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--align-end--whenNarrow\\\\\\\", :baseline=>\\\\\\\"Stack--align-baseline--whenNarrow\\\\\\\"}--whenRegular\\\", :spread=>\\\"{:start=>\\\\\\\"Stack--spread-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--spread-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--spread-end--whenNarrow\\\\\\\", :distribute=>\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\"}--whenRegular\\\", :wrap=>\\\"{:wrap=>\\\\\\\"Stack--wrap--whenNarrow\\\\\\\", :nowrap=>\\\\\\\"Stack--nowrap--whenNarrow\\\\\\\"}--whenRegular\\\", :alignWrap=>\\\"{:start=>\\\\\\\"Stack--alignWrap-start--whenNarrow\\\\\\\", :center=>\\\\\\\"Stack--alignWrap-center--whenNarrow\\\\\\\", :end=>\\\\\\\"Stack--alignWrap-end--whenNarrow\\\\\\\", :distribute=>\\\\\\\"Stack--alignWrap-distribute--whenNarrow\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\\\\\"}--whenRegular\\\", :viewportNarrow=>\\\"{:direction=>\\\\\\\"{:inline=>\\\\\\\\\\\\\\\"Stack--dir-inline--whenNarrow\\\\\\\\\\\\\\\", :block=>\\\\\\\\\\\\\\\"Stack--dir-block--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\", :gap=>\\\\\\\"{:none=>\\\\\\\\\\\\\\\"Stack--gap-none--whenNarrow\\\\\\\\\\\\\\\", :condensed=>\\\\\\\\\\\\\\\"Stack--gap-condensed--whenNarrow\\\\\\\\\\\\\\\", :normal=>\\\\\\\\\\\\\\\"Stack--gap-normal--whenNarrow\\\\\\\\\\\\\\\", :spacious=>\\\\\\\\\\\\\\\"Stack--gap-spacious--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\", :align=>\\\\\\\"{:stretch=>\\\\\\\\\\\\\\\"Stack--align--whenNarrow\\\\\\\\\\\\\\\", :start=>\\\\\\\\\\\\\\\"Stack--align-start--whenNarrow\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\"Stack--align-center--whenNarrow\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\"Stack--align-end--whenNarrow\\\\\\\\\\\\\\\", :baseline=>\\\\\\\\\\\\\\\"Stack--align-baseline--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\", :spread=>\\\\\\\"{:start=>\\\\\\\\\\\\\\\"Stack--spread-start--whenNarrow\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\"Stack--spread-center--whenNarrow\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\"Stack--spread-end--whenNarrow\\\\\\\\\\\\\\\", :distribute=>\\\\\\\\\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\\\\\\\\\", :distributeEvenly=>\\\\\\\\\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\", :wrap=>\\\\\\\"{:wrap=>\\\\\\\\\\\\\\\"Stack--wrap--whenNarrow\\\\\\\\\\\\\\\", :nowrap=>\\\\\\\\\\\\\\\"Stack--nowrap--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\", :alignWrap=>\\\\\\\"{:start=>\\\\\\\\\\\\\\\"Stack--alignWrap-start--whenNarrow\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\"Stack--alignWrap-center--whenNarrow\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\"Stack--alignWrap-end--whenNarrow\\\\\\\\\\\\\\\", :distribute=>\\\\\\\\\\\\\\\"Stack--alignWrap-distribute--whenNarrow\\\\\\\\\\\\\\\", :distributeEvenly=>\\\\\\\\\\\\\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\"}--whenRegular\\\"}--whenWide\", :viewportRegular=>\"{:direction=>\\\"{:inline=>\\\\\\\"Stack--dir-inline--whenRegular\\\\\\\", :block=>\\\\\\\"Stack--dir-block--whenRegular\\\\\\\"}--whenRegular\\\", :gap=>\\\"{:none=>\\\\\\\"Stack--gap-none--whenRegular\\\\\\\", :condensed=>\\\\\\\"Stack--gap-condensed--whenRegular\\\\\\\", :normal=>\\\\\\\"Stack--gap-normal--whenRegular\\\\\\\", :spacious=>\\\\\\\"Stack--gap-spacious--whenRegular\\\\\\\"}--whenRegular\\\", :align=>\\\"{:stretch=>\\\\\\\"Stack--align--whenRegular\\\\\\\", :start=>\\\\\\\"Stack--align-start--whenRegular\\\\\\\", :center=>\\\\\\\"Stack--align-center--whenRegular\\\\\\\", :end=>\\\\\\\"Stack--align-end--whenRegular\\\\\\\", :baseline=>\\\\\\\"Stack--align-baseline--whenRegular\\\\\\\"}--whenRegular\\\", :spread=>\\\"{:start=>\\\\\\\"Stack--spread-start--whenRegular\\\\\\\", :center=>\\\\\\\"Stack--spread-center--whenRegular\\\\\\\", :end=>\\\\\\\"Stack--spread-end--whenRegular\\\\\\\", :distribute=>\\\\\\\"Stack--spread-baseline--whenRegular\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--spread-baseline--whenRegular\\\\\\\"}--whenRegular\\\", :wrap=>\\\"{:wrap=>\\\\\\\"Stack--wrap--whenRegular\\\\\\\", :nowrap=>\\\\\\\"Stack--nowrap--whenRegular\\\\\\\"}--whenRegular\\\", :alignWrap=>\\\"{:start=>\\\\\\\"Stack--alignWrap-start--whenRegular\\\\\\\", :center=>\\\\\\\"Stack--alignWrap-center--whenRegular\\\\\\\", :end=>\\\\\\\"Stack--alignWrap-end--whenRegular\\\\\\\", :distribute=>\\\\\\\"Stack--alignWrap-distribute--whenRegular\\\\\\\", :distributeEvenly=>\\\\\\\"Stack--alignWrap-distributeEvenly--whenRegular\\\\\\\"}--whenRegular\\\", :viewportNarrow=>\\\"{:direction=>\\\\\\\"{:inline=>\\\\\\\\\\\\\\\"Stack--dir-inline--whenNarrow\\\\\\\\\\\\\\\", :block=>\\\\\\\\\\\\\\\"Stack--dir-block--whenNarrow\\\\\\\\\\\\\\\"}--whenRegular\\\\\\\", :gap=>\\\\\\\"{:none=>\\\\\\\\\\\\\\\"Stack--gap-none--whenNarrow\\\\\\\\\\\\\\\", :condensed=>\\\\\\\\\\\\\\\"Stack--gap-condensed--whenNarrow\\\\\\\\\\\\\\\", :normal=>\\\\\\\\\\\\\\\"Stack--gap-normal--whenNarrow\\\\\\\\\\\\\\\", :spacious=>\\\\\\\\\\\\\\\"Stack--gap-spacious--whenNarrow\\\\\\\\\\\\\\\"}--whenRegular\\\\\\\", :align=>\\\\\\\"{:stretch=>\\\\\\\\\\\\\\\"Stack--align--whenNarrow\\\\\\\\\\\\\\\", :start=>\\\\\\\\\\\\\\\"Stack--align-start--whenNarrow\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\"Stack--align-center--whenNarrow\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\"Stack--align-end--whenNarrow\\\\\\\\\\\\\\\", :baseline=>\\\\\\\\\\\\\\\"Stack--align-baseline--whenNarrow\\\\\\\\\\\\\\\"}--whenRegular\\\\\\\", :spread=>\\\\\\\"{:start=>\\\\\\\\\\\\\\\"Stack--spread-start--whenNarrow\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\"Stack--spread-center--whenNarrow\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\"Stack--spread-end--whenNarrow\\\\\\\\\\\\\\\", :distribute=>\\\\\\\\\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\\\\\\\\\", :distributeEvenly=>\\\\\\\\\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\\\\\\\\\"}--whenRegular\\\\\\\", :wrap=>\\\\\\\"{:wrap=>\\\\\\\\\\\\\\\"Stack--wrap--whenNarrow\\\\\\\\\\\\\\\", :nowrap=>\\\\\\\\\\\\\\\"Stack--nowrap--whenNarrow\\\\\\\\\\\\\\\"}--whenRegular\\\\\\\", :alignWrap=>\\\\\\\"{:start=>\\\\\\\\\\\\\\\"Stack--alignWrap-start--whenNarrow\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\"Stack--alignWrap-center--whenNarrow\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\"Stack--alignWrap-end--whenNarrow\\\\\\\\\\\\\\\", :distribute=>\\\\\\\\\\\\\\\"Stack--alignWrap-distribute--whenNarrow\\\\\\\\\\\\\\\", :distributeEvenly=>\\\\\\\\\\\\\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\\\\\\\\\\\\\"}--whenRegular\\\\\\\", :viewportNarrow=>\\\\\\\"{:direction=>\\\\\\\\\\\\\\\"{:inline=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--dir-inline--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :block=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--dir-block--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\\\\\\\\\", :gap=>\\\\\\\\\\\\\\\"{:none=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--gap-none--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :condensed=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--gap-condensed--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :normal=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--gap-normal--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :spacious=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--gap-spacious--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\\\\\\\\\", :align=>\\\\\\\\\\\\\\\"{:stretch=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--align--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :start=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--align-start--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--align-center--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--align-end--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :baseline=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--align-baseline--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\\\\\\\\\", :spread=>\\\\\\\\\\\\\\\"{:start=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--spread-start--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--spread-center--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--spread-end--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :distribute=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :distributeEvenly=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--spread-baseline--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\\\\\\\\\", :wrap=>\\\\\\\\\\\\\\\"{:wrap=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--wrap--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :nowrap=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--nowrap--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\\\\\\\\\", :alignWrap=>\\\\\\\\\\\\\\\"{:start=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--alignWrap-start--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :center=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--alignWrap-center--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :end=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--alignWrap-end--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :distribute=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--alignWrap-distribute--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", :distributeEvenly=>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"Stack--alignWrap-distributeEvenly--whenNarrow\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"}--whenNarrow\\\\\\\\\\\\\\\"}--whenRegular\\\\\\\"}--whenRegular\\\"}--whenWide\"}--whenWide"
+        }
+      }
+    }
+  },
   "Primer::Alpha::TabNav": {
     "BODY_TAG_DEFAULT": "ul",
     "TAG_DEFAULT": "nav",
