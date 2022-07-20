@@ -1,3 +1,13 @@
-<pre>
-<%= styles_map.inspect %>
-</pre>
+<div class="<%= stack_classes %>">
+<% if items? %>
+  <% items.each_with_index do |item, index| %>
+      <%= item %>
+
+      <% if show_divider? && (index != items.length - 1) %>
+      <hr class="Stack-divider" role="<%= divider_aria_role %>">
+      <% end %>
+  <% end %>
+<% else %>
+  <%= content %>
+<% end %>
+</div>

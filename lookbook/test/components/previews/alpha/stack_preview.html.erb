@@ -1,1 +1,31 @@
-<%= render Primer::Alpha::Stack.new %>
+<h3>Using slot</h3>
+<% component_a = Primer::Alpha::Stack.new(props) %>
+<div style="background: #ebf9ff; padding: 16px; border-radius: 3px; margin-bottom: 12px">
+<%= render component_a do |s| %>
+  <% (1..3).each do |i| %>
+    <% s.item do %>
+    <span> test <%= i %> </span>
+    <% end %>
+  <% end %>
+<% end %>
+</div>
+<div style="max-width: 100%; overflow-x: auto">
+<pre>DEFAULT_PROPS:  <%= props.inspect %></pre>
+<pre>PROPERTIES:     <%= component_a.properties.inspect %></pre>
+<pre>BASE_STYLE_MAP: <%= component_a.default_style_class_map.inspect %></pre>
+<pre>APPLIED_STYLES: <%= component_a.applied_style_classes.inspect %></pre>
+</div>
+
+<hr>
+
+<h3>Using content</h3>
+<% component_b = Primer::Alpha::Stack.new(props) %>
+<div style="background: #ebf9ff; padding: 16px; border-radius: 3px; margin-bottom: 12px">
+<%= render component_b do %>
+  <div> item A </div>
+  <span> item B </span>
+  <span> item C </span>
+<% end %>
+</div>
+<pre>PROPERTIES:     <%= component_b.properties.inspect %></pre>
+<pre>APPLIED_STYLES: <%= component_b.applied_style_classes.inspect %></pre>
