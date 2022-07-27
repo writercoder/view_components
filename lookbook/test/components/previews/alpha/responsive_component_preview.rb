@@ -16,7 +16,7 @@ module Alpha
     # @param placement_viewport_when_regular select [~, center, top, bottom, full]
     # @param placement_viewport_when_wide select [~, center, top, bottom, full]
     # @param placement_container select [~, top, right, bottom, left]
-    def definition_validation_playground(
+    def property_values_defaults(
       uuid: "",
       id: 0,
       spacing: nil,
@@ -42,8 +42,8 @@ module Alpha
       values[:placement_viewport_when_wide] = placement_viewport_when_wide.to_sym unless placement_viewport_when_wide.nil?
       values[:placement_container] = placement_container.to_sym unless placement_container.nil?
 
-      cloned_values = values.clone
-      component = Alpha::DummyResponsiveComponent.new(cloned_values)
+      cloned_values = values.deep_dup
+      component = Alpha::DummyResponsiveComponent.new(property_values: cloned_values)
       cloned_values = component.fill_default_values(cloned_values)
 
       panels = [
@@ -56,6 +56,87 @@ module Alpha
         template: "responsive/responsive_preview_output"
       )
     end
+
+    # @label Fill with default values
+    def definition_validation_fill_defaults
+      values = {
+        uuid: "unique-hash",
+        id: "test",
+        spacing: :not_defined,
+        placement: {
+          container: :middle
+        }
+      }
+
+      cloned_values = values.deep_dup
+      component = Alpha::DummyResponsiveComponent.new(property_values: cloned_values)
+      with_default_values = component.fill_default_values(cloned_values, fallback_to_default: false)
+
+      panels = [
+        { title: "Values", output: values.pretty_inspect },
+        { title: "Values with default", output: with_default_values.pretty_inspect },
+        { title: "Component", output: component.pretty_inspect }
+      ]
+
+      render_with_template(
+        locals: { panels: panels },
+        template: "responsive/responsive_preview_output"
+      )
+    end
+
+    # @!group Html Attributes
+    # @label html attributes validation
+    def invalid_html_attributes
+      html_attributes = {
+        class: ["class-a", "class-b", "class-c"],
+        autofocus: true,
+        type: "datetime"
+      }
+
+      begin
+        component = Alpha::ChildDummyResponsiveComponent.new(
+          property_values: {},
+          html_attributes: html_attributes
+        )
+      rescue => e
+        error_message = "#{e.message}*In production, html attributes are going to be sanitized, but no exception is thrown."
+      end
+
+      panels = [
+        { title: "Attributes", output: html_attributes.pretty_inspect },
+        { title: "Error", output: error_message }
+      ]
+
+      render_with_template(
+        locals: { panels: panels },
+        template: "responsive/responsive_preview_output"
+      )
+    end
+
+    
+    # @label Rendering html attributes
+    def html_attributes_render
+      component = Alpha::ChildDummyResponsiveComponent.new(
+        property_values: {},
+        html_attributes: {
+          class: ["class-a", "class-b", "class-c"],
+          data: {
+            "entity-id": 1234,
+            readonly: :readonly,
+            disabled: true,
+            "entity-title": "Clean-up taks list"
+          },
+          autofocus: true
+        }
+      )
+
+      render_with_template(
+        locals: { component: component, ViewComponent: ViewComponent },
+        template: "alpha/responsive_component_attribute_render"
+      )
+    end
+
+    # @!endgroup
 
     # @label property definitions
     def property_definitions
@@ -146,7 +227,7 @@ module Alpha
           test_prop: prop(
             allowed_values: [:test_a, :test_b, :test_c],
             default: :test_a,
-            responsive: :optional,
+            responsive: :required,
             when_wide: {
               default: :test_c
             }
@@ -167,7 +248,7 @@ module Alpha
   class ChildDummyResponsiveComponent < DummyResponsiveComponent
     add_allowed_html_attributes :for, :autocomplete
 
-    properties_definition(
+    add_properties_definition(
       id: prop(
         type: String,
         default: "10"
@@ -177,6 +258,34 @@ module Alpha
         responsive: :optional,
         default: "no name"
       )
+    )
+
+    style_class_map(
+      general: {
+        id: {
+          "0": "ChildComponent-not-persisted"
+        }
+      },
+      responsive: {
+        name: {
+          "no mame": "ChildComponent-nameless"
+        },
+        spacing: {
+          s: "ChildComponent-spacing-Small",
+          m: "ChildComponent-spacing-Medium",
+          l: "ChildComponent-spacing-Large",
+        }
+      },
+      with_responsive: {
+        placement: {
+          viewport: {
+            center: "ChildComponent-Viewport-Center",
+            top: "ChildComponent-Viewport-Top",
+            bottom: "ChildComponent-Viewport-Bottom",
+            full: "ChildComponent-Viewport-Full",
+          }
+        }
+      }
     )
 
     def initialize(property_values: {}, html_attributes: {})

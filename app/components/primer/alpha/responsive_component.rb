@@ -4,6 +4,7 @@ module Primer
   module Alpha
     # Base class for Responsive Components
     class ResponsiveComponent < Primer::Component
+      extend ActionView::Helpers::TagHelper
       extend Primer::Responsive::HtmlAttributesHelper
       extend Primer::Responsive::PropertiesDefinitionHelper
       extend Primer::Responsive::StyleClassMapHelper
@@ -37,11 +38,29 @@ module Primer
       end
 
       # Declares the class map of a component
+      #
+      # @param general [Hash] map without responsive support
+      # @param responsive [Hash] replaces the map with its responsive variants
+      # @param with_responsive [Hash] adds responsive variants to the hash map while keeping it's original structure
+      def self.style_class_map(general: {}, responsive: {}, with_responsive: {})
+        @style_map = {
+          **general,
+          **add_responsive_variants(responsive, remove_initial: true),
+          **add_responsive_variants(with_responsive)
+        }.freeze
+      end
+
+      # Adds style map to the parent style map if it exists
+      # To be used in child components that want to reuse its parent's style map
+      #
       # @param general [Hash] map without responsive support
       # @param responsive [Hash] replaces the map with its responsive variants
       # @param with_responsive [Hash] adds responsive variants to the map while keeping it's original structure
-      def self.style_class_map(general: {}, responsive: {}, with_responsive: {})
+      def self.add_style_class_map(general: {}, responsive: {}, with_responsive: {})
+        existing_style_map = superclass.respond_to?(:style_map) && !superclass.style_map.nil? ? superclass.style_map : {}
+
         @style_map = {
+          **existing_style_map,
           **general,
           **add_responsive_variants(responsive, remove_initial: true),
           **add_responsive_variants(with_responsive)
@@ -52,8 +71,8 @@ module Primer
         @property_values = property_values
         @html_attributes = html_attributes
 
-        # validate_html_attributes unless Primer::Responsive::PropertiesDefinitionHelper.production_env?
-        # sanitize_html_attributes!
+        validate_html_attributes unless Primer::Responsive::PropertiesDefinitionHelper.production_env?
+        sanitize_html_attributes!
       end
 
       def validate_html_attributes(html_attributes = nil)
@@ -75,10 +94,15 @@ module Primer
         )
       end
 
-      def fill_default_values(property_values = {})
+      def render_html_attributes
+        self.class.tag.attributes(@html_attributes)
+      end
+
+      def fill_default_values(property_values = {}, fallback_to_default: false)
         self.class.fill_missing_values_with_default(
           properties_definition: self.class.properties,
-          property_values: property_values
+          property_values: property_values,
+          fallback_to_default: fallback_to_default || Primer::Responsive::PropertiesDefinitionHelper.production_env?
         )
       end
 
@@ -95,8 +119,8 @@ module Primer
         self.class.style_map
       end
 
-      def filtered_style_class_map
-        @filtered_map unless @filtered_map.nil?
+      def filtered_style_class_map!(force_recalculation: false)
+        @filtered_map unless @filtered_map.nil? || force_recalculation
 
         @filtered_map = filter_style_class_map(@property_values)
       end

@@ -19,6 +19,7 @@ module Primer
       # https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
       ALLOWED_GLOBAL_ATTRIBUTES = [
         # aria
+        :aria,
         :"aria-*",
         :role,
 
@@ -26,6 +27,7 @@ module Primer
         :autocapitalize,
         :autofocus,
         :class,
+        :data,
         :"data-*",
         :enterkeyhint,
         :hidden,
@@ -71,7 +73,7 @@ module Primer
 
           raise InvalidHtmlAttributeError, <<~MSG
             HTML Attribute: "#{name}" is not allowed.
-            To support element specific attributes, add them to the `additional_allowed_attributes:` param
+            To support element specific attributes, add them using the `additional_allowed_attributes` class method
           MSG
         end
       end

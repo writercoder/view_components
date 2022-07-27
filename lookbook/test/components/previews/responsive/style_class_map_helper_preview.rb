@@ -39,7 +39,7 @@ module Responsive
     # @label add responsive
     def add_responsive
       map = CLASS_MAP
-      map_copy = map.clone
+      map_copy = map.deep_dup
       self.class.add_responsive_variants(map_copy)
 
       panels = [
@@ -61,7 +61,7 @@ module Responsive
     # @label to responsive
     def to_responsive
       map = CLASS_MAP
-      map_copy = map.clone
+      map_copy = map.deep_dup
       self.class.add_responsive_variants(map_copy, remove_initial: true)
 
       panels = [
@@ -134,7 +134,7 @@ module Responsive
         }
       }
 
-      responsive_map = map.clone
+      responsive_map = map.deep_dup
       self.class.add_responsive_variants(responsive_map, remove_initial: true)
       filtered_map = self.class.apply_values_to_style_map(responsive_map, values)
 

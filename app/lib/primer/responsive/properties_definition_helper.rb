@@ -100,31 +100,45 @@ module Primer
       #
       # @param properties_definition [Hash] a map with the properties part of the component API
       # @param property_values [Hash] a map with the same structure of the definition holding component's current values
-      def fill_missing_values_with_default(properties_definition:, property_values: {})
+      # @param fallback_to_default [Boolean] if a value is not valid, it'll fallback to default if a default exists
+      def fill_missing_values_with_default(properties_definition:, property_values: {}, fallback_to_default: false)
         properties_definition.each do |prop, possible_definition|
           unless possible_definition.is_a? PropertyDefinition
             property_values[prop] = fill_missing_values_with_default(
               properties_definition: possible_definition,
-              property_values: property_values[prop] || {}
+              property_values: property_values[prop] || {},
+              fallback_to_default: fallback_to_default
             )
-            next unless property_values[prop].is_a?(Hash)
+            next unless property_values[prop].is_a? Hash
 
-            # moving responsive variants to the base variants
-            property_values[prop].each do |key, value|
-              next unless RESPONSIVE_VARIANTS.include? key
+            # moving responsive props to the base variants hash.
+            # since this method is recursive, it'll create responsive variants
+            # into every recursive hash and it needs to be bubbled up til
+            # the "root" level hash
+            RESPONSIVE_VARIANTS.each do |variant|
+              next unless property_values[prop].key? variant
 
-              property_values[key] = { prop => {} } unless property_values.key? key
-              property_values[key][prop] = value
+              property_values[variant] = {} unless property_values.key? variant
+              property_values[variant][prop] = property_values[prop][variant]
             end
-            # NOTE: can't use excep! here because PVC is ruby 2.7
-            # property_values[prop].delete_if { |key| RESPONSIVE_VARIANTS.include? key }
-            property_values[prop].except!(RESPONSIVE_VARIANTS)
-            next
+            # property_values[prop].each do |key, value|
+            #   next unless RESPONSIVE_VARIANTS.include? key
+
+            #   property_values[key] = {} unless property_values.key? key
+            #   property_values[key][prop] = value
+            # end
+
+            Rails.logger.info("\n################################")
+            Rails.logger.info([property_values, property_values[prop]].pretty_inspect)
+            property_values[prop].except!(*RESPONSIVE_VARIANTS)
+            Rails.logger.info([prop, property_values[prop]].pretty_inspect)
+            #property_values.delete(prop) if property_values[prop].empty?
           end
 
-          next if property_values.key?(prop) && !property_values[prop].nil?
-
           definition = possible_definition
+          has_to_fallback = fallback_to_default && !definition.valid_value?(property_values[prop])
+          next unless !property_values.key?(prop) || property_values[prop].nil? || has_to_fallback
+
           if definition.responsive == :no
             property_values[prop] = definition.default_value if definition.defined_default?
           else
@@ -132,10 +146,16 @@ module Primer
 
             RESPONSIVE_VARIANTS_MAP.each do |responsive_variant, responsive_variant_config|
               property_values[responsive_variant] = {} unless property_values.key? responsive_variant
-              next if property_values[responsive_variant].key? prop
+
+              has_defined_variant = property_values[responsive_variant].key?(prop)
+              responsive_value = has_defined_variant ? property_values[responsive_variant][prop] : base_value
+
+              has_to_fallback ||= (fallback_to_default && !definition.valid_value?(responsive_value, responsive_variant))
+
+              next if has_defined_variant && !has_to_fallback
               next if responsive_variant_config[:optional] && !definition.defined_default?(responsive_variant)
 
-              property_values[responsive_variant][prop] = base_value.nil? ? definition.default_value(responsive_variant) : base_value
+              property_values[responsive_variant][prop] = responsive_value.nil? || has_to_fallback ? definition.default_value(responsive_variant) : responsive_value
             end
           end
         end
