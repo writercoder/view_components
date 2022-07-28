@@ -27,6 +27,7 @@ module Primer
         :autocapitalize,
         :autofocus,
         :class,
+        :classes, #support for Primer::BaseComponent abstraction
         :data,
         :"data-*",
         :enterkeyhint,

@@ -3,7 +3,7 @@
 module Primer
   module Alpha
     # Base class for Responsive Components
-    class ResponsiveComponent < Primer::Component
+    class ResponsiveComponent < Primer::BaseComponent
       extend ActionView::Helpers::TagHelper
       extend Primer::Responsive::HtmlAttributesHelper
       extend Primer::Responsive::PropertiesDefinitionHelper
@@ -67,14 +67,28 @@ module Primer
         }.freeze
       end
 
-      def initialize(property_values: {}, html_attributes: {})
+      # @param property_values: [Hash] component property values
+      # @param html_attributes: [Hash] html_attributes to be added to the component root element
+      # @param tag [Symbol] html tag to render as the component root element
+      def initialize(property_values: {}, html_attributes: {}, tag: nil)
         @property_values = property_values
         @html_attributes = html_attributes
 
-        validate_html_attributes unless Primer::Responsive::PropertiesDefinitionHelper.production_env?
+        validate_html_attributes if should_raise_error?
         sanitize_html_attributes!
+
+        super(tag: tag)
+
+        @html_attributes[:"data-view-component"] = true
+        @html_attributes = add_test_selector(@html_attributes)
+
+        return unless @html_attributes.key? :classes
+
+        @html_attributes[:class] = @html_attributes[:classes]
+        @html_attributes.delete(:classes)
       end
 
+      # Validate html attributes
       def validate_html_attributes(html_attributes = nil)
         html_attributes = @html_attributes if html_attributes.nil?
         self.class.validate_html_attributes(html_attributes, self.class.additional_allowed_html_attributes)
