@@ -30,6 +30,7 @@
   "Primer::ButtonGroup": "",
   "Primer::ClipboardCopy": "",
   "Primer::CloseButton": "",
+  "Primer::ConditionalWrapper": "",
   "Primer::Content": "",
   "Primer::CounterComponent": "",
   "Primer::DetailsComponent": "",
