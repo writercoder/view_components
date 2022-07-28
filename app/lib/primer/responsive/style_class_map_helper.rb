@@ -2,37 +2,68 @@
 
 module Primer
   module Responsive
-    # style map helper
+    # style map helper to generate responsive variants of class map and to handle creation of classes based on responsive values
     module StyleClassMapHelper
-      RESPONSIVE_VARIANTS_MAP = Primer::Responsive::PropertiesDefinitionHelper::RESPONSIVE_VARIANTS_MAP
-      RESPONSIVE_VARIANTS = Primer::Responsive::PropertiesDefinitionHelper::RESPONSIVE_VARIANTS
+      RESPONSIVE_VARIANTS_MAP = Primer::Responsive::ResponsiveConfig::RESPONSIVE_VARIANTS_MAP
+      RESPONSIVE_VARIANTS = Primer::Responsive::ResponsiveConfig::RESPONSIVE_VARIANTS
 
-      def add_responsive_variants(map, remove_initial: false)
+      private_constant :RESPONSIVE_VARIANTS_MAP, :RESPONSIVE_VARIANTS
+
+      # Adds responsive variants to the base map modifying the base classes to the respective variant name
+      #
+      # @param map [Hash] a hash composed of argument names mapping each possible value to a css class (string)
+      # @param remove_inicial [boolean] flag to remove the initial class map structure once the variants are added  
+      def add_responsive_variants!(map, remove_initial: false)
         RESPONSIVE_VARIANTS_MAP.each do |responsive_variant, config|
-          add_response_variant(map, responsive_variant, config[:style_class_suffix])
+          add_responsive_variant!(map, responsive_variant, config[:style_class_modifier], RESPONSIVE_VARIANTS)
         end
 
         if remove_initial
           keys_to_be_removed = []
-          map.each_key do |property_name|
-            next if RESPONSIVE_VARIANTS_MAP.key? property_name
+          map.each_key do |argument_name|
+            next if RESPONSIVE_VARIANTS_MAP.key? argument_name
 
-            keys_to_be_removed.push(property_name)
+            keys_to_be_removed.push(argument_name)
           end
           map.except!(*keys_to_be_removed)
         end
         map
       end
 
-      def add_response_variant(map, responsive_variant, modifier)
+      # Derive an applied map from the current arguments values.
+      # NOTE: This method doesn't take into consideration any argument definition, so to get the default classes,
+      #       make sure to fill the values with defaults before calling this method.
+      #
+      # @param map [Hash] a style class map with classes value-dependent
+      # @param argument_values [Hash] a hash with the current argument values of the component
+      def apply_values_to_style_map(map, argument_values)
+        applied_map = {}
+        argument_values.each do |argument_name, value|
+          next if RESPONSIVE_VARIANTS_MAP.key? argument_name
+          next unless map.key? argument_name
+
+          applied_map[argument_name] = get_style_from_value(map[argument_name], value)
+        end
+
+        if responsive_variants?(map)
+          applied_responsive_map = apply_responsive_map(map, argument_values)
+          applied_map.merge! applied_responsive_map
+        end
+
+        applied_map
+      end
+
+      # ==== [ the following functions should be treated as private to this module ] ====
+      def add_responsive_variant!(map, responsive_variant, modifier, arguments_to_ignore = [])
         map[responsive_variant] = {} unless map.key?(responsive_variant)
 
         map_variant = map[responsive_variant]
-        map.each do |property_name, value|
-          next if RESPONSIVE_VARIANTS_MAP.key?(property_name)
+        map.each do |argument_name, value|
+          next if arguments_to_ignore.include?(argument_name)
+          next if argument_name == responsive_variant
 
-          responsive_property_map = value.is_a?(Hash) ? build_responsive_variant(value, modifier) : derive_class_variant(value, modifier)
-          map_variant[property_name] = responsive_property_map
+          responsive_argument_map = value.is_a?(Hash) ? build_responsive_variant(value, modifier) : derive_class_variant(value, modifier)
+          map_variant[argument_name] = responsive_argument_map
         end
       end
 
@@ -48,53 +79,30 @@ module Primer
         "#{class_name}-#{modifier}"
       end
 
-      # Derive an applied map from the current properties values.
-      # NOTE: This method doesn't take in consideration any property definition, so to get the default classes, 
-      #       make sure to fill the values with defaults before calling this method.
-      #
-      # @param map [Hash] a style class map with classes value-dependent
-      # @param property_values [Hash] a hash with the current property values of the component
-      def apply_values_to_style_map(map, property_values)
-        applied_map = {}
-        property_values.each do |property_name, value|
-          next if RESPONSIVE_VARIANTS_MAP.key? property_name
-          next unless map.key? property_name
-
-          applied_map[property_name] = get_style_from_value(map[property_name], value)
-        end
-
-        if responsive_variants?(map)
-          applied_responsive_map = apply_responsive_map(map, property_values)
-          applied_map.merge! applied_responsive_map
-        end
-
-        applied_map
-      end
-
-      def apply_responsive_map(map, property_values)
+      def apply_responsive_map(map, argument_values)
         applied_map = {}
 
         RESPONSIVE_VARIANTS_MAP.each do |responsive_variant, variant_config|
           next unless map.key? responsive_variant
 
           responsive_map = map[responsive_variant]
-          responsive_map.each do |property_name, property_map|
-            if property_values.key?(responsive_variant) && property_values[responsive_variant].key?(property_name)
-              value = property_values[responsive_variant][property_name]
-            elsif property_values.key? property_name
+          responsive_map.each do |argument_name, argument_map|
+            if argument_values.key?(responsive_variant) && argument_values[responsive_variant].key?(argument_name)
+              value = argument_values[responsive_variant][argument_name]
+            elsif argument_values.key? argument_name
               next if variant_config[:optional]
 
-              value = property_values[property_name]
+              value = argument_values[argument_name]
             else
               next
             end
 
-            applied_style = get_style_from_value(property_map, value)
+            applied_style = get_style_from_value(argument_map, value)
 
-            applied_map[property_name] = if applied_map.key? property_name
-                                           merge_class_styles(applied_map[property_name], applied_style)
+            applied_map[argument_name] = if applied_map.key? argument_name
+                                           merge_class_styles(applied_map[argument_name], applied_style)
                                          else
-                                           applied_map[property_name] = applied_style
+                                           applied_map[argument_name] = applied_style
                                          end
           end
         end
@@ -114,8 +122,8 @@ module Primer
 
       # Matches the style map with the given value and returns the mapped class
       #
-      # @param map [Hash] a map of the possible values of a property and its respective css class
-      # @param value [Object] the value of the property. If it's a hash, the style is going to try to create a recursive applied map 
+      # @param map [Hash] a map of the possible values of a argument and its respective css class
+      # @param value [Object] the value of the argument. If it's a hash, the style is going to try to create a recursive applied map 
       def get_style_from_value(map, value)
         style_class = nil
 
@@ -126,10 +134,10 @@ module Primer
           style_class = map if map.is_a? String
         when Hash
           style_class = {}
-          value.each do |property_name, inner_value|
-            next unless map.key?(property_name)
+          value.each do |argument_name, inner_value|
+            next unless map.key?(argument_name)
 
-            style_class[property_name] = get_style_from_value(map[property_name], inner_value)
+            style_class[argument_name] = get_style_from_value(map[argument_name], inner_value)
           end
         end
 
