@@ -65,7 +65,10 @@ module Primer
 
         properties_definition.each do |prop, possible_definition|
           unless possible_definition.is_a? PropertyDefinition
-            validate_property_values(possible_definition, property_values.fetch(prop, {}))
+            validate_property_values(
+              properties_definition: possible_definition,
+              property_values: property_values.fetch(prop, {})
+            )
             next
           end
 
@@ -93,7 +96,7 @@ module Primer
           RESPONSIVE_VARIANTS.each do |variant|
             next unless property_values.key?(variant)
 
-            definition.validate_values(property_values[variant][prop], variant)
+            definition.validate_value(property_values[variant][prop], variant)
           end
         end
       end

@@ -43,11 +43,10 @@ module Primer
       # @param responsive [Hash] replaces the map with its responsive variants
       # @param with_responsive [Hash] adds responsive variants to the hash map while keeping it's original structure
       def self.style_class_map(general: {}, responsive: {}, with_responsive: {})
-        @style_map = {
-          **general,
-          **add_responsive_variants(responsive, remove_initial: true),
-          **add_responsive_variants(with_responsive)
-        }.freeze
+        @style_map = { **general }
+        @style_map = @style_map.deep_merge(add_responsive_variants(responsive, remove_initial: true))
+        @style_map = @style_map.deep_merge(add_responsive_variants(with_responsive))
+        @style_map.freeze
       end
 
       # Adds style map to the parent style map if it exists
@@ -114,7 +113,7 @@ module Primer
         self.class.tag.attributes(@html_attributes)
       end
 
-      def fill_default_values(property_values = {}, fallback_to_default: false)
+      def fill_default_values(property_values: {}, fallback_to_default: false)
         self.class.fill_missing_values_with_default(
           properties_definition: self.class.properties,
           property_values: property_values,
@@ -123,12 +122,15 @@ module Primer
       end
 
       def fill_default_values!
-        @property_values = fill_default_values(@property_values)
+        @property_values = fill_default_values(property_values: @property_values)
       end
 
       def validate_values(property_values = nil)
         property_values = @property_values if property_values.nil?
-        self.class.validate_property_values(self.class.properties, property_values)
+        self.class.validate_property_values(
+          properties_definition: self.class.properties,
+          property_values: property_values
+        )
       end
 
       def style_class_map

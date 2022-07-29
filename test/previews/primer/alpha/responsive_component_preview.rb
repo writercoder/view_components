@@ -45,7 +45,7 @@ module Primer
 
         cloned_values = values.deep_dup
         component = Alpha::DummyResponsiveComponent.new(property_values: cloned_values)
-        cloned_values = component.fill_default_values(cloned_values)
+        #cloned_values = component.fill_default_values(cloned_values)
 
         panels = [
           { title: "Values", output: cloned_values.pretty_inspect },
@@ -59,7 +59,7 @@ module Primer
       end
 
       # @label Fill with default values
-      def definition_validation_fill_defaults
+      def fill_defaults_with_fallback
         values = {
           uuid: "unique-hash",
           id: "test",
@@ -83,6 +83,11 @@ module Primer
           locals: { panels: panels },
           template: "primer/responsive/responsive_preview_output"
         )
+      end
+
+      # @label Fill tests with different responsive property types
+      def responsive_property_values
+        #todo
       end
 
       # @label List defaults from definitions
@@ -307,7 +312,7 @@ module Primer
     end
 
     # class for responsive default tests
-    class DefaultValuesResponsiveComponent < Primer::Alpha::ResponsiveComponentPreview
+    class DefaultValuesResponsiveComponent < Primer::Alpha::ResponsiveComponent
       properties_definition(
         responsive_a: prop(
           allowed_values: [:a, :b, :c],

@@ -71,7 +71,7 @@ module Primer
 
       def valid_value?(value, variant = nil)
         # deprecated values are considered valid, even though they're discouraged
-        return true if value_deprecated?(value)
+        return true if deprecated_value?(value)
 
         # type can't be changed based on responsive variants
         return false if !@type.nil? && !value.is_a?(@type)
@@ -100,7 +100,7 @@ module Primer
         end
 
         allowed_values = @allowed_values || []
-        responsive_variant = @responsive_variants[variant]
+        responsive_variant = @responsive_variants[variant] unless @responsive_variants.nil?
 
         if responsive_variant
           variant_allowed_values = responsive_variant&.allowed_values || []
@@ -122,10 +122,10 @@ module Primer
         !@deprecation.nil? && @deprecation.property_deprecated?
       end
 
-      def value_deprecated?(value)
+      def deprecated_value?(value)
         return false if @deprecation.nil?
 
-        @deprecation.value_deprecated?(value)
+        @deprecation.deprecated_value?(value)
       end
 
       def deprecation_warn_message(value)
@@ -322,7 +322,7 @@ module Primer
       end
 
       def deprecation_warn_message(value_given = nil)
-        return "" unless value_deprecated? value_given
+        return "" unless deprecated_value? value_given
 
         property_name = @property_definition.name.inspect
         msg = if @property
@@ -342,7 +342,7 @@ module Primer
         @property
       end
 
-      def value_deprecated?(value)
+      def deprecated_value?(value)
         # property deprecation means that all values are deprecated
         return true if @property
 
