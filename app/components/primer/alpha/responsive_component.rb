@@ -69,14 +69,16 @@ module Primer
 
       # @param property_values: [Hash] component property values
       # @param html_attributes: [Hash] html_attributes to be added to the component root element
-      # @param tag [Symbol] html tag to render as the component root element
-      def initialize(property_values: {}, html_attributes: {}, tag: nil)
+      #
+      # NOTE: use a property named :tag to support custom tags, since the definition can also be used to valid what tags are allowed
+      def initialize(property_values: {}, html_attributes: {})
         @property_values = property_values
         @html_attributes = html_attributes
 
         validate_html_attributes if should_raise_error?
         sanitize_html_attributes!
 
+        tag = property_values.fetch(:tag, nil)
         super(tag: tag)
 
         @html_attributes[:"data-view-component"] = true
@@ -126,7 +128,7 @@ module Primer
 
       def validate_values(property_values = nil)
         property_values = @property_values if property_values.nil?
-        self.class.validate_property_values(property_values)
+        self.class.validate_property_values(self.class.properties, property_values)
       end
 
       def style_class_map

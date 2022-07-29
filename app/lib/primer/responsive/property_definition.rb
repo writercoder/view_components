@@ -49,6 +49,12 @@ module Primer
         @is_required
       end
 
+      def responsive?(responsive_type = nil)
+        return @responsive == responsive_type unless responsive_type.nil?
+
+        @responsive != :no
+      end
+
       def defined_default?(variant = nil)
         return !@is_required if variant.nil?
         return @responsive_variants[variant].defined_default? if @responsive_variants.key?(variant)
@@ -57,10 +63,10 @@ module Primer
       end
 
       def default_value(variant = nil)
-        return @default if @responsive == :no || defined_default?
-        return @default unless defined_default?(variant)
+        return @default unless responsive?
+        return @default if variant.nil? || !defined_default?(variant)
 
-        @responsive_variants[variant].default
+        defined_default?(variant) ? @responsive_variants[variant].default : @default
       end
 
       def valid_value?(value, variant = nil)
@@ -128,14 +134,14 @@ module Primer
         @deprecation.deprecation_warn_message(value)
       end
 
+      def invalid_value_base_message(value)
+        "Invalid value for \"#{@name.inspect}\": provided \"#{value.inspect}\"(#{value.class.inspect})."
+      end
+
       private
 
       def error_base_message
         "Invalid property definition for \"#{@name.inspect}\"."
-      end
-
-      def invalid_value_base_message(value)
-        "Invalid value for \"#{@name.inspect}\": provided \"#{value.inspect}\"(#{value.class.inspect})."
       end
 
       # Validates the property definition when developing a responsive component.

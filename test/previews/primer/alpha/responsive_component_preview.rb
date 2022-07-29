@@ -71,12 +71,26 @@ module Primer
 
         cloned_values = values.deep_dup
         component = Alpha::DummyResponsiveComponent.new(property_values: cloned_values)
-        with_default_values = component.fill_default_values(cloned_values, fallback_to_default: false)
+        with_default_values = component.fill_default_values(cloned_values, fallback_to_default: true)
 
         panels = [
           { title: "Values", output: values.pretty_inspect },
           { title: "Values with default", output: with_default_values.pretty_inspect },
           { title: "Component", output: component.pretty_inspect }
+        ]
+
+        render_with_template(
+          locals: { panels: panels },
+          template: "primer/responsive/responsive_preview_output"
+        )
+      end
+
+      # @label List defaults from definitions
+      def property_definition
+        instance = ChildDummyResponsiveComponent.new
+
+        panels = [
+          { title: "Properties", output: instance.props.pretty_inspect }
         ]
 
         render_with_template(
@@ -135,7 +149,6 @@ module Primer
           template: "primer/alpha/responsive_component_attribute_render"
         )
       end
-
       # @!endgroup
 
       # @label property definitions
@@ -179,6 +192,8 @@ module Primer
     # === COMPONENT CLASS TESTS ===
     # class for testing responsive component class methods
     class DummyResponsiveComponent < Primer::Alpha::ResponsiveComponent
+      attr_reader :props
+
       properties_definition(
         uuid: prop(
           type: String
@@ -241,6 +256,8 @@ module Primer
 
     # dummy class to test inherited properties
     class ChildDummyResponsiveComponent < DummyResponsiveComponent
+      attr_reader :props
+
       add_allowed_html_attributes :for, :autocomplete
 
       add_properties_definition(
