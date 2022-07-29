@@ -4,7 +4,7 @@ module Primer
   module Responsive
     # Property definition helps defining, validating, and deprecating the property of responsive View Components
     class PropertyDefinition
-      RESPONSIVE_OPTIONS = [:optional, :required, :no].freeze
+      RESPONSIVE_OPTIONS = [:optional, :exclusive, :no].freeze
       DENY_RESPONSIVE_VARIANT_ATTRIBUTES = [:type, :responsive, :deprecation].freeze
 
       attr_accessor :name
@@ -64,16 +64,52 @@ module Primer
       end
 
       def valid_value?(value, variant = nil)
+        # deprecated values are considered valid, even though they're discouraged
         return true if value_deprecated?(value)
 
+        # type can't be changed based on responsive variants
         return false if !@type.nil? && !value.is_a?(@type)
         return !@allowed_values.nil? && @allowed_values.include?(value) if @responsive == :no
 
-        return false if @responsive == :required && variant.nil?
         return true if @allowed_values.include?(value)
 
         responsive_variant = @responsive_variants[variant]
+
+        # definition with no type and no allowed_values allows anything
+        return true if @allowed_values.nil? && (responsive_variant.nil? || responsive_variant.allowed_values.nil?)
+
         !!responsive_variant&.allowed_values&.include?(value)
+      end
+
+      def validate_value(value, variant = nil)
+        return if valid_value?(value, variant)
+
+        base_message = invalid_value_base_message(value)
+
+        unless @type.nil?
+          raise PropertiesDefinitionHelper::InvalidPropertyValueError, <<~MSG
+            #{base_message}
+            Value has to be of type #{@type.inspect}. #{value_provided_message}
+          MSG
+        end
+
+        allowed_values = @allowed_values || []
+        responsive_variant = @responsive_variants[variant]
+
+        if responsive_variant
+          variant_allowed_values = responsive_variant&.allowed_values || []
+          all_allowed_values = allowed_values.concat(variant_allowed_values)
+
+          raise PropertiesDefinitionHelper::InvalidPropertyValueError, <<~MSG
+            #{base_message}
+            Value for responsive variant "#{variant.inspect}" has to be one of #{all_allowed_values.inspect}.
+          MSG
+        end
+
+        raise PropertiesDefinitionHelper::InvalidPropertyValueError, <<~MSG
+          #{base_message}
+          Value has to be one of #{allowed_values.inspect}.
+        MSG
       end
 
       def deprecated?
@@ -92,14 +128,14 @@ module Primer
         @deprecation.deprecation_warn_message(value)
       end
 
-      def invalid_value_base_message(value)
-        "Invalid value for #{definition.name.inspect}: #{value.inspect}(#{value.class.inspect})."
-      end
-
       private
 
       def error_base_message
         "Invalid property definition for \"#{@name.inspect}\"."
+      end
+
+      def invalid_value_base_message(value)
+        "Invalid value for \"#{@name.inspect}\": provided \"#{value.inspect}\"(#{value.class.inspect})."
       end
 
       # Validates the property definition when developing a responsive component.
@@ -127,7 +163,7 @@ module Primer
             raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
               #{error_base_message}
               Properties not responsive can't have responsive variants definition, but #{variant.inspect} found.
-              To fix this, change :responsive to :optional or :required
+              To fix this, change :responsive to :optional or :exclusive
             MSG
           end
         else

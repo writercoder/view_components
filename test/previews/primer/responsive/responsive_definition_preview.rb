@@ -4,13 +4,13 @@ module Primer
   module Responsive
     # @label PropertyDefinition
     class ResponsiveDefinitionPreview < ViewComponent::Preview
-      MAIN_TEMPLATE = "responsive/responsive_preview_output"
+      MAIN_TEMPLATE = "primer/responsive/responsive_preview_output"
       ERROR_STYLE = "color: darkred"
 
       # @label Property validation playground
       #
       # @param show_object toggle
-      # @param responsive select [~, [_no, no], optional, required]
+      # @param responsive select [~, [_no, no], optional, exclusive]
       # @param allowed_values text
       # @param allowed_values_type select [~, String, Integer]
       # @param type select [~, String, Integer]
@@ -57,11 +57,11 @@ module Primer
 
         unless type.empty?
           props[:type] = case type
-                        when "String"
-                          String
-                        when "Integer"
-                          Integer
-                        end
+                         when "String"
+                           String
+                         when "Integer"
+                           Integer
+                         end
         end
 
         unless when_narrow_allowed_values.empty? && when_narrow_default.empty?
@@ -107,12 +107,12 @@ module Primer
         )
       end
 
-      # @label validate value
+      # @label Validate value
       #
       # @param value text
       # @param value_type select [String, Symbol]
       # @param responsive_variant select [~, when_narrow, when_regular, when_wide]
-      def valide_value(value: "", value_type: "String", responsive_variant: "")
+      def validate_value(value: "", value_type: "String", responsive_variant: "")
         props = {
           name: :test,
           allowed_values: [:a, :b, :c],
@@ -146,10 +146,18 @@ module Primer
         log_message = "valid?: #{property_definition.valid_value?(value, responsive_variant).inspect}, "
         log_message += "deprecated? #{property_definition.value_deprecated?(value)}"
 
+        begin
+          property_definition.validate_value(value, responsive_variant)
+        rescue Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyValueError => e
+          error_message = e.message
+        end
+
         panels = []
         panels << { title: "props", output: props.pretty_inspect }
         panels << { title: "value", output: value.pretty_inspect }
         panels << { title: "log", output: log_message }
+
+        panels << { title: "error", style: ERROR_STYLE, output: error_message } if error_message.present?
 
         render_with_template(
           locals: { panels: panels },
@@ -157,7 +165,7 @@ module Primer
         )
       end
 
-      # @label valid definition
+      # @label Valid definition
       #
       # @param show_object toggle
       def stress_test(show_object: false)
@@ -233,7 +241,7 @@ module Primer
         props = {
           name: :test,
           allowed_values: [1, 2, 3],
-          responsive: :optional,
+          responsive: :exclusive,
           when_narrow: {
             allowed_values: [4, 5],
             default: 6
@@ -296,7 +304,7 @@ module Primer
         props = {
           name: :test,
           allowed_values: [1, 2, 3, 4],
-          responsive: :optional,
+          responsive: :exclusive,
           deprecation: {
             deprecated_values: [5, 6],
             warn_message: "Support for these values is going to be dropped in the next release"

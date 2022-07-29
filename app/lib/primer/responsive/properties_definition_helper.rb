@@ -128,11 +128,7 @@ module Primer
             #   property_values[key][prop] = value
             # end
 
-            Rails.logger.info("\n################################")
-            Rails.logger.info([property_values, property_values[prop]].pretty_inspect)
             property_values[prop].except!(*RESPONSIVE_VARIANTS)
-            Rails.logger.info([prop, property_values[prop]].pretty_inspect)
-            #property_values.delete(prop) if property_values[prop].empty?
           end
 
           definition = possible_definition

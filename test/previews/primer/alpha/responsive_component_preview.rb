@@ -54,7 +54,7 @@ module Primer
 
         render_with_template(
           locals: { panels: panels },
-          template: "responsive/responsive_preview_output"
+          template: "primer/responsive/responsive_preview_output"
         )
       end
 
@@ -81,7 +81,7 @@ module Primer
 
         render_with_template(
           locals: { panels: panels },
-          template: "responsive/responsive_preview_output"
+          template: "primer/responsive/responsive_preview_output"
         )
       end
 
@@ -95,11 +95,11 @@ module Primer
         }
 
         begin
-          Alpha::ChildDummyResponsiveComponent.new(
+          ChildDummyResponsiveComponent.new(
             property_values: {},
             html_attributes: html_attributes
           )
-        rescue => e
+        rescue Primer::Responsive::HtmlAttributesHelper::InvalidHtmlAttributeError => e
           error_message = "#{e.message}*In production, html attributes are going to be sanitized, but no exception is thrown."
         end
 
@@ -110,13 +110,13 @@ module Primer
 
         render_with_template(
           locals: { panels: panels },
-          template: "responsive/responsive_preview_output"
+          template: "primer/responsive/responsive_preview_output"
         )
       end
 
       # @label Rendering html attributes
       def html_attributes_render
-        component = Alpha::ChildDummyResponsiveComponent.new(
+        component = ChildDummyResponsiveComponent.new(
           property_values: {},
           html_attributes: {
             class: %w[class-a class-b class-c],
@@ -132,7 +132,7 @@ module Primer
 
         render_with_template(
           locals: { component: component, ViewComponent: ViewComponent },
-          template: "alpha/responsive_component_attribute_render"
+          template: "primer/alpha/responsive_component_attribute_render"
         )
       end
 
@@ -141,7 +141,7 @@ module Primer
       # @label property definitions
       def property_definitions
         begin
-          component = Alpha::DummyResponsiveComponent.new
+          component = DummyResponsiveComponent.new
         rescue => e
           error_message = e.message
         end
@@ -151,34 +151,27 @@ module Primer
             component: component.pretty_inspect,
             error_message: error_message
           },
-          template: "alpha/responsive_component_preview"
+          template: "primer/alpha/responsive_component_preview"
         )
       end
 
       # @label property definitions inheritance
       def inherited_property_definitions
-        begin
-          component = Alpha::ChildDummyResponsiveComponent.new(
-            property_values: {},
-            html_attributes: {
-              id: "unique-id",
-              for: "some-id",
-              autocomplete: "autocomplete",
-              onclick: "javascript: callback()"
-            }
+        component = ChildDummyResponsiveComponent.new(
+          html_attributes: {
+            id: "unique-id",
+            for: "some-id",
+            autocomplete: "autocomplete"
+          }
         )
-        rescue => e
-          error_message = e.message
-        end
 
-        component.sanitize_html_attributes!
         render_with_template(
           locals: {
             props: nil,
             component: component.pretty_inspect,
-            error_message: error_message
+            error_message: nil
           },
-          template: "alpha/responsive_component_preview"
+          template: "primer/alpha/responsive_component_preview"
         )
       end
     end
@@ -186,7 +179,7 @@ module Primer
     # === COMPONENT CLASS TESTS ===
     # class for testing responsive component class methods
     class DummyResponsiveComponent < Primer::Alpha::ResponsiveComponent
-      PROPS_DEFINITION_FOR_TESTS = {
+      properties_definition(
         uuid: prop(
           type: String
         ),
@@ -197,7 +190,7 @@ module Primer
         spacing: prop(
           allowed_values: [:s, :m, :l],
           default: :m,
-          responsive: :optional,
+          responsive: :exclusive,
           when_narrow: {
             default: :s
           },
@@ -227,20 +220,22 @@ module Primer
             test_prop: prop(
               allowed_values: [:test_a, :test_b, :test_c],
               default: :test_a,
-              responsive: :required,
+              responsive: :exclusive,
               when_wide: {
                 default: :test_c
               }
             )
           }
         }
-      }.freeze
-
-      properties_definition(PROPS_DEFINITION_FOR_TESTS)
+      )
 
       def initialize(property_values: {}, html_attributes: {})
         super
         @props = DummyResponsiveComponent.properties
+      end
+
+      def should_raise_error?
+        true
       end
     end
 
@@ -255,7 +250,7 @@ module Primer
         ),
         name: prop(
           type: String,
-          responsive: :optional,
+          responsive: :exclusive,
           default: "no name"
         )
       )
@@ -292,6 +287,47 @@ module Primer
         super
         @props = ChildDummyResponsiveComponent.properties
       end
+    end
+
+    # class for responsive default tests
+    class DefaultValuesResponsiveComponent < Primer::Alpha::ResponsiveComponentPreview
+      properties_definition(
+        responsive_a: prop(
+          allowed_values: [:a, :b, :c],
+          default: :b,
+          responsive: :exclusive
+        ),
+        responsive_opt_a: prop(
+          allowed_values: [:a, :b, :c],
+          default: :b,
+          responsive: :optional
+        ),
+        responsive_b: prop(
+          allowed_values: [:a, :b, :c],
+          default: :b,
+          responsive: :exclusive,
+          when_narrow: { default: :a },
+          when_wide: { default: :c }
+        ),
+        nested: {
+          responsive_c: prop(
+            allowed_values: [:a, :b],
+            responsive: :exclusive,
+            when_narrow: {
+              allowed_values: [:na, :nb],
+              default: :na
+            },
+            when_regular: {
+              allowed_values: [:rd, :re],
+              default: :a
+            },
+            when_wide: {
+              allowed_values: [:wc, :wd],
+              default: :wd
+            }
+          )
+        }
+      )
     end
   end
 end

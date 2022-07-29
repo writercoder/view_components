@@ -6,7 +6,7 @@ module Primer
     class StyleClassMapHelperPreview < ViewComponent::Preview
       extend Primer::Responsive::StyleClassMapHelper
 
-      MAIN_TEMPLATE = "responsive/responsive_preview_output"
+      MAIN_TEMPLATE = "primer/responsive/responsive_preview_output"
 
       CLASS_MAP = {
         prop_a: {
