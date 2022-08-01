@@ -85,9 +85,19 @@ module Primer
         )
       end
 
-      # @label Fill tests with different responsive property types
-      def responsive_property_values
-        #todo
+      # @label Normalize values
+      def responsive_values_normalization
+        component = DefaultValuesResponsiveComponent.new()
+        normalized_values = component.normalize_values
+
+        panels = [
+          { title: "Values", output: normalized_values.props.pretty_inspect }
+        ]
+
+        render_with_template(
+          locals: { panels: panels },
+          template: "primer/responsive/responsive_preview_output"
+        )
       end
 
       # @label List defaults from definitions
@@ -210,7 +220,7 @@ module Primer
         spacing: prop(
           allowed_values: [:s, :m, :l],
           default: :m,
-          responsive: :exclusive,
+          responsive: :yes,
           when_narrow: {
             default: :s
           },
@@ -227,7 +237,7 @@ module Primer
           viewport: prop(
             allowed_values: [:center, :top, :bottom, :full],
             default: :center,
-            responsive: :optional,
+            responsive: :transitional,
             when_narrow: { default: :full }
           ),
           container: prop(
@@ -240,7 +250,7 @@ module Primer
             test_prop: prop(
               allowed_values: [:test_a, :test_b, :test_c],
               default: :test_a,
-              responsive: :exclusive,
+              responsive: :yes,
               when_wide: {
                 default: :test_c
               }
@@ -272,7 +282,7 @@ module Primer
         ),
         name: prop(
           type: String,
-          responsive: :exclusive,
+          responsive: :yes,
           default: "no name"
         )
       )
@@ -317,24 +327,24 @@ module Primer
         responsive_a: prop(
           allowed_values: [:a, :b, :c],
           default: :b,
-          responsive: :exclusive
+          responsive: :yes
         ),
         responsive_opt_a: prop(
           allowed_values: [:a, :b, :c],
           default: :b,
-          responsive: :optional
+          responsive: :transitional
         ),
         responsive_b: prop(
           allowed_values: [:a, :b, :c],
           default: :b,
-          responsive: :exclusive,
+          responsive: :yes,
           when_narrow: { default: :a },
           when_wide: { default: :c }
         ),
         nested: {
           responsive_c: prop(
             allowed_values: [:a, :b],
-            responsive: :exclusive,
+            responsive: :yes,
             when_narrow: {
               allowed_values: [:na, :nb],
               default: :na

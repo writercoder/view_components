@@ -37,15 +37,17 @@ module Primer
         @properties = !superclass.respond_to?(:properties) || superclass.properties.nil? ? new_properties : { **superclass.properties, **new_properties }
       end
 
-      # Declares the class map of a component
+      # Declares the class map of a component.
+      # NOTE: It'll overwrite the current class map if it already exists
       #
       # @param general [Hash] map without responsive support
       # @param responsive [Hash] replaces the map with its responsive variants
-      # @param with_responsive [Hash] adds responsive variants to the hash map while keeping it's original structure
+      # @param with_responsive [Hash] adds responsive variants to the hash map while keeping its original structure
       def self.style_class_map(general: {}, responsive: {}, with_responsive: {})
-        @style_map = { **general }
-        @style_map = @style_map.deep_merge(add_responsive_variants(responsive, remove_initial: true))
-        @style_map = @style_map.deep_merge(add_responsive_variants(with_responsive))
+        @style_map = general.present? ? { **general } : {}
+        @style_map.deep_merge!(add_responsive_variants(responsive, remove_initial: true)) if responsive.present?
+        @style_map.deep_merge!(add_responsive_variants(with_responsive)) if with_responsive.present?
+
         @style_map.freeze
       end
 
@@ -54,16 +56,21 @@ module Primer
       #
       # @param general [Hash] map without responsive support
       # @param responsive [Hash] replaces the map with its responsive variants
-      # @param with_responsive [Hash] adds responsive variants to the map while keeping it's original structure
+      # @param with_responsive [Hash] adds responsive variants to the map while keeping its original structure
       def self.add_style_class_map(general: {}, responsive: {}, with_responsive: {})
         existing_style_map = superclass.respond_to?(:style_map) && !superclass.style_map.nil? ? superclass.style_map : {}
+        existing_style_map = existing_style_map.deep_merge(@style_map) if @style_map.present?
 
-        @style_map = {
-          **existing_style_map,
-          **general,
-          **add_responsive_variants(responsive, remove_initial: true),
-          **add_responsive_variants(with_responsive)
-        }.freeze
+        @style_map = { **existing_style_map }
+        @style_map.deep_merge!(general) if general.present?
+        @style_map.deep_merge!(add_responsive_variants(responsive, remove_initial: true)) if responsive.present?
+        @style_map.deep_merge!(add_responsive_variants(with_responsive)) if with_responsive.present?
+
+        @style_map.freeze
+      end
+
+      class << self
+        attr_accessor :properties, :style_map, :additional_allowed_html_attributes
       end
 
       # @param property_values: [Hash] component property values
@@ -97,20 +104,33 @@ module Primer
 
       # Sanitizes @html_attributes or a custom html_attributes, if provided
       def sanitize_html_attributes(html_attributes = nil)
-        html_attributes = @html_attributes if use_instance_variable
-        self.class.sanitize_html_attributes(html_attributes, self.class.additional_allowed_attributes)
+        html_attributes = @html_attributes if html_attributes.nil?
+        self.class.sanitize_html_attributes(
+          html_attributes,
+          additional_allowed_attributes: self.class.additional_allowed_attributes
+        )
       end
 
       # Sanitizes and updates @html_attributes
       def sanitize_html_attributes!
         @html_attributes = self.class.sanitize_html_attributes(
-          @html_attributes,
+          @html_attributes || {},
           additional_allowed_attributes: self.class.additional_allowed_html_attributes
         )
       end
 
-      def render_html_attributes
-        self.class.tag.attributes(@html_attributes)
+      # @param html_attibutes [Hash] defaults to instance @html_attributes
+      def render_html_attributes(html_attributes = nil)
+        html_attributes = @html_attributes if html_attributes.nil?
+        self.class.tag.attributes(html_attributes)
+      end
+
+      def normalize_values(property_values: {}, fallback_to_default: true)
+        self.class.normalize_property_values(
+          properties_definition: self.class.properties,
+          property_values: property_values,
+          fallback_to_default: fallback_to_default || Primer::Responsive::PropertiesDefinitionHelper.production_env? 
+        )
       end
 
       def fill_default_values(property_values: {}, fallback_to_default: false)
@@ -121,8 +141,12 @@ module Primer
         )
       end
 
-      def fill_default_values!
-        @property_values = fill_default_values(property_values: @property_values)
+      #normalize_values!
+      def fill_default_values!(fallback_to_default: false)
+        @property_values = fill_default_values(
+          property_values: @property_values,
+          fallback_to_default: fallback_to_default
+        )
       end
 
       def validate_values(property_values = nil)
@@ -150,9 +174,13 @@ module Primer
         self.class.apply_values_to_style_map(self.class.style_map, property_values)
       end
 
-      class << self
-        attr_accessor :properties, :style_map, :additional_allowed_html_attributes
-      end
+      # def call
+      #   if SELF_CLOSING_TAGS.include?(@tag)
+      #     tag(@tag, @content_tag_args.merge(@result))
+      #   else
+      #     content_tag(@tag, content, @content_tag_args.merge(@result))
+      #   end
+      # end
     end
   end
 end

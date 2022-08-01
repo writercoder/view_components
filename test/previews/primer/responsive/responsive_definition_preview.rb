@@ -10,7 +10,7 @@ module Primer
       # @label Property validation playground
       #
       # @param show_object toggle
-      # @param responsive select [~, [_no, no], optional, exclusive]
+      # @param responsive select [~, [_no, no], transitional, yes]
       # @param allowed_values text
       # @param allowed_values_type select [~, String, Integer]
       # @param type select [~, String, Integer]
@@ -116,7 +116,7 @@ module Primer
         props = {
           name: :test,
           allowed_values: [:a, :b, :c],
-          responsive: :optional,
+          responsive: :transitional,
           default: :a,
           when_narrow: {
             allowed_values: [:d, :e],
@@ -172,7 +172,7 @@ module Primer
         props = {
           name: :test,
           allowed_values: [:a, :b, :c],
-          responsive: :optional,
+          responsive: :transitional,
           default: :a,
           when_narrow: {
             allowed_values: [:d, :e],
@@ -241,7 +241,7 @@ module Primer
         props = {
           name: :test,
           allowed_values: [1, 2, 3],
-          responsive: :exclusive,
+          responsive: :yes,
           when_narrow: {
             allowed_values: [4, 5],
             default: 6
@@ -273,7 +273,7 @@ module Primer
         props = {
           name: :test,
           type: String,
-          responsive: :optional,
+          responsive: :transitional,
           when_narrow: {
             allowed_values: [1, 2],
             default: 1
@@ -304,7 +304,7 @@ module Primer
         props = {
           name: :test,
           allowed_values: [1, 2, 3, 4],
-          responsive: :exclusive,
+          responsive: :yes,
           deprecation: {
             deprecated_values: [5, 6],
             warn_message: "Support for these values is going to be dropped in the next release"

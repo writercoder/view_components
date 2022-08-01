@@ -2,10 +2,18 @@
 
 module Primer
   module Responsive
-    # Property definition helps defining, validating, and deprecating the property of responsive View Components
+    # Property definition helps defining, validating, and deprecating the property of responsive components
     class PropertyDefinition
-      RESPONSIVE_OPTIONS = [:optional, :exclusive, :no].freeze
-      DENY_RESPONSIVE_VARIANT_ATTRIBUTES = [:type, :responsive, :deprecation].freeze
+      ALLOWED_PARAMS = [
+        :name,
+        :variant_name,
+        :allowed_values,
+        :type,
+        :default,
+        :deprecation,
+        :responsive
+      ].concat(PropertiesDefinitionHelper::RESPONSIVE_VARIANTS).freeze
+      RESPONSIVE_OPTIONS = [:no, :transitional, :yes].freeze
 
       attr_accessor :name
       attr_reader(
@@ -19,6 +27,7 @@ module Primer
 
       def initialize(params = {})
         @params = params
+        validate_params_structure unless PropertiesDefinitionHelper.production_env?
 
         @name = params[:name]
         @allowed_values = params[:allowed_values]
@@ -27,6 +36,7 @@ module Primer
         @deprecation = create_deprecation(params)
         @responsive = params.fetch(:responsive, :no)
 
+        @are_variants_required = false
         unless @responsive == :no
           @responsive_variants = {}
           PropertiesDefinitionHelper::RESPONSIVE_VARIANTS.each do |variant|
@@ -37,18 +47,21 @@ module Primer
               variant_name: variant,
               **params[variant]
             )
+            @are_variants_required ||= @responsive_variants[variant].required?
           end
         end
 
-        @is_required = !params.key?(:default)
+        @has_defined_default = params.key?(:default)
 
         validate_definition unless PropertiesDefinitionHelper.production_env?
       end
 
+      # tells if the property is required by checking if it or its reponsive variants have defaults
       def required?
-        @is_required
+        !@has_defined_default || @are_variants_required
       end
 
+      # checks responsive type of responsiveness in general
       def responsive?(responsive_type = nil)
         return @responsive == responsive_type unless responsive_type.nil?
 
@@ -56,7 +69,7 @@ module Primer
       end
 
       def defined_default?(variant = nil)
-        return !@is_required if variant.nil?
+        return @has_defined_default if variant.nil?
         return @responsive_variants[variant].defined_default? if @responsive_variants.key?(variant)
 
         false
@@ -78,6 +91,7 @@ module Primer
         return !@allowed_values.nil? && @allowed_values.include?(value) if @responsive == :no
 
         return true if @allowed_values.include?(value)
+        return false if variant.nil?
 
         responsive_variant = @responsive_variants[variant]
 
@@ -144,32 +158,45 @@ module Primer
         "Invalid property definition for \"#{@name.inspect}\"."
       end
 
+      def validate_params_structure(params = nil)
+        params = @params if params.nil?
+
+        params.each_key do |key|
+          next if ALLOWED_PARAMS.include? key
+
+          raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+            Invalid property definition param:
+            Param `#{key.inspect}` is not a valid definition parameters.
+            Allowed parameters: `#{ALLOWED_PARAMS.inspect}`
+          MSG
+        end
+      end
+
       # Validates the property definition when developing a responsive component.
       # Triggers automatically on instantiation when not in production
       def validate_definition
         if !@allowed_values.nil? && !@type.nil?
           raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
             #{error_base_message}
-            Definition cannot contain both :type and :allowed_values. To validate a type, consider using :validate.
+            Definition cannot contain both :type and :allowed_values.
           MSG
         end
 
-        unless valid_responsive_value?
+        unless valid_responsive_option?
           raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
             #{error_base_message}
             Invalid :responsive value: #{responsive.inspect}. Allowed values for :responsive are: #{RESPONSIVE_OPTIONS.inspect}.
           MSG
         end
 
-        # responsive definition validations
-        if @responsive == :no
+        if responsive? :no
           PropertiesDefinitionHelper::RESPONSIVE_VARIANTS.each do |variant|
             next unless @params.key? variant
 
             raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
               #{error_base_message}
               Properties not responsive can't have responsive variants definition, but #{variant.inspect} found.
-              To fix this, change :responsive to :optional or :exclusive
+              To fix this, change :responsive to :transitional or :yes
             MSG
           end
         else
@@ -195,9 +222,19 @@ module Primer
             MSG
           end
 
+          responsive_variants_with_default = []
           @responsive_variants.each_value do |responsive_variant|
             responsive_variant.validate_definition
             next unless responsive_variant.defined_default?
+
+            responsive_variants_with_default << responsive_variant.variant_name
+            if responsive?(:yes) && defined_default?
+              raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+                #{error_base_message}
+                A responsive-only type (responsive: :yes) cannot contain a variant :default at the same
+                time it defines an overall :default. Remove the base :default, or remove all variants :default
+              MSG
+            end
 
             if @type.nil?
               validate_default_value_by_allowed_values(
@@ -206,6 +243,21 @@ module Primer
               )
             else
               validate_default_value_by_type(responsive_variant.default)
+            end
+          end
+
+          unless responsive_variants_with_default.empty?
+            PropertiesDefinitionHelper::RESPONSIVE_VARIANTS_MAP.each do |key, config|
+              next if config[:optional]
+              next if responsive_variants_with_default.include? key
+
+              raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+                #{error_base_message}
+                If a responsive property defines a default in at least one responsive variant,
+                all required responsive variants have to also define a default value.
+                Variant with default: #{responsive_variants_with_default.inspect}
+                Variant missing default: #{PropertiesDefinitionHelper::REQUIRED_RESPONSIVE_VARIANTS - responsive_variants_with_default}
+              MSG
             end
           end
         end
@@ -257,7 +309,7 @@ module Primer
         MSG
       end
 
-      def valid_responsive_value?
+      def valid_responsive_option?
         RESPONSIVE_OPTIONS.include? @responsive
       end
 
@@ -295,8 +347,7 @@ module Primer
       end
     end
 
-    # Handles deprecation of properties or values as part of the
-    # responsive property definition
+    # Handles deprecation of properties or values as part of the responsive property definition
     class PropertyDeprecation
       # @property: deprecates the whole property. Defaults to true if @deprecated_values and @type are not set
       # @deprecated_values: array of deprecated values that cannot be used moving forward

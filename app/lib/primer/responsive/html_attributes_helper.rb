@@ -74,7 +74,26 @@ module Primer
 
           raise InvalidHtmlAttributeError, <<~MSG
             HTML Attribute: "#{name}" is not allowed.
-            To support element specific attributes, add them using the `additional_allowed_attributes` class method
+            To support element specific attributes, add them using one of the following methods: ``
+          MSG
+        end
+      end
+
+      # Validates the hash of HTML Attributes for a component
+      #
+      # @param given_html_attributes [Hash] keys are symbols with the html attribute name.
+      # @param additional_allowed_attributes [Array] optional array to allow components to accept element specific attributes.
+      #                                              However, wildcard is not allowed for them.
+      def strict_validate_html_attributes(given_html_attributes, allowed_attributes = [], allowed_attribute_prefixes = [])
+        return if given_html_attributes.blank?
+
+        given_html_attributes.each_key do |name|
+          next if allowed_attributes.include? name
+          next if allowed_attribute_prefixes.any? { |prefix| name.to_s.starts_with? prefix }
+
+          raise InvalidHtmlAttributeError, <<~MSG
+            HTML Attribute: "#{name}" is not allowed.
+            To support element specific attributes, add them using one of the following methods: ``
           MSG
         end
       end
