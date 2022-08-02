@@ -88,7 +88,12 @@ module Primer
 
         # type can't be changed based on responsive variants
         return false if !@type.nil? && !value.is_a?(@type)
-        return !@allowed_values.nil? && @allowed_values.include?(value) if @responsive == :no
+
+        if @responsive == :no
+          return @allowed_values.include?(value) unless @allowed_values.nil?
+          # if no allowed_values and no type is specified, the value is always valid
+          return true if @type.nil?
+        end
 
         return true if @allowed_values.include?(value)
         return false if variant.nil?
@@ -109,7 +114,7 @@ module Primer
         unless @type.nil?
           raise PropertiesDefinitionHelper::InvalidPropertyValueError, <<~MSG
             #{base_message}
-            Value has to be of type #{@type.inspect}. #{value_provided_message}
+            Value has to be of type #{@type.inspect}.
           MSG
         end
 
