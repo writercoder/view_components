@@ -9,7 +9,7 @@ module Primer
 
       def add_responsive_variants(map, remove_initial: false)
         RESPONSIVE_VARIANTS_MAP.each do |responsive_variant, config|
-          add_response_variant(map, responsive_variant, config[:style_class_suffix])
+          add_response_variant(map, responsive_variant, config[:style_class_modifier])
         end
 
         if remove_initial

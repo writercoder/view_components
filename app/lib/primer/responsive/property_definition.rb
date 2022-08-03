@@ -58,7 +58,7 @@ module Primer
 
       # tells if the property is required by checking if it or its reponsive variants have defaults
       def required?
-        !@has_defined_default || @are_variants_required
+        !@has_defined_default && (responsive?(:no) || @are_variants_required)
       end
 
       # checks responsive type of responsiveness in general
@@ -87,12 +87,13 @@ module Primer
         return true if deprecated_value?(value)
 
         # type can't be changed based on responsive variants
-        return false if !@type.nil? && !value.is_a?(@type)
+        return value.is_a?(@type) unless @type.nil?
 
         if @responsive == :no
           return @allowed_values.include?(value) unless @allowed_values.nil?
+
           # if no allowed_values and no type is specified, the value is always valid
-          return true if @type.nil?
+          return true
         end
 
         return true if @allowed_values.include?(value)

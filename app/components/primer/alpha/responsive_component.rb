@@ -173,14 +173,6 @@ module Primer
         property_values = @property_values if property_values.nil?
         self.class.apply_values_to_style_map(self.class.style_map, property_values)
       end
-
-      # def call
-      #   if SELF_CLOSING_TAGS.include?(@tag)
-      #     tag(@tag, @content_tag_args.merge(@result))
-      #   else
-      #     content_tag(@tag, content, @content_tag_args.merge(@result))
-      #   end
-      # end
     end
   end
 end

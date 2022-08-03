@@ -19,7 +19,7 @@ class PropertyDefinitionTest < Minitest::Test
     assert(error&.message&.include?(not_allowed_param.to_s))
   end
 
-  def test_valid_definition_cannot_containt_type_and_allowed_values_simultaneously
+  def test_valid_definition_cannot_contain_type_and_allowed_values_simultaneously
     # arrange
     params = {
       type: String,
