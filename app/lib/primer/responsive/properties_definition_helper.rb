@@ -7,13 +7,13 @@ module Primer
       # NOTE: optional responsive variants are skipped
       # when calculating style classes and when validating missgin values
       RESPONSIVE_VARIANTS_MAP = {
-        when_narrow: {
+        v_narrow: {
           style_class_modifier: "whenNarrow"
         },
-        when_regular: {
+        v_regular: {
           style_class_modifier: "whenRegular"
         },
-        when_wide: {
+        v_wide: {
           optional: true,
           style_class_modifier: "whenWide"
         }

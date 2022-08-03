@@ -16,14 +16,14 @@ module Primer
       # @param type select [~, String, Integer]
       # @param default text
       # @param default_type select [~, String, Integer]
-      # @param when_narrow_allowed_values text
-      # @param when_narrow_allowed_values_type select [~, String, Integer]
-      # @param when_narrow_default text
-      # @param when_narrow_default_type select [~, String, Integer]
-      # @param when_regular_allowed_values text
-      # @param when_regular_allowed_values_type select [~, String, Integer]
-      # @param when_regular_default text
-      # @param when_regular_default_type select [~, String, Integer]
+      # @param v_narrow_allowed_values text
+      # @param v_narrow_allowed_values_type select [~, String, Integer]
+      # @param v_narrow_default text
+      # @param v_narrow_default_type select [~, String, Integer]
+      # @param v_regular_allowed_values text
+      # @param v_regular_allowed_values_type select [~, String, Integer]
+      # @param v_regular_default text
+      # @param v_regular_default_type select [~, String, Integer]
       def definition_validation_playground(
         show_object: false,
         responsive: "",
@@ -32,14 +32,14 @@ module Primer
         default: "",
         default_type: "",
         type: "",
-        when_narrow_allowed_values: "",
-        when_narrow_allowed_values_type: "",
-        when_narrow_default: "",
-        when_narrow_default_type: "",
-        when_regular_allowed_values: "",
-        when_regular_allowed_values_type: "",
-        when_regular_default: "",
-        when_regular_default_type: ""
+        v_narrow_allowed_values: "",
+        v_narrow_allowed_values_type: "",
+        v_narrow_default: "",
+        v_narrow_default_type: "",
+        v_regular_allowed_values: "",
+        v_regular_allowed_values_type: "",
+        v_regular_default: "",
+        v_regular_default_type: ""
       )
         props = { name: :component_property }
         responsive = :no if responsive == "false"
@@ -64,29 +64,29 @@ module Primer
                          end
         end
 
-        unless when_narrow_allowed_values.empty? && when_narrow_default.empty?
-          props[:when_narrow] = {}
-          when_narrow = props[:when_narrow]
-          unless when_narrow_allowed_values.empty?
-            when_narrow[:allowed_values] = when_narrow_allowed_values.split(",").map(&:strip)
-            when_narrow[:allowed_values] = when_narrow[:allowed_values].map(&:to_i) if when_narrow_allowed_values_type == "Integer"
+        unless v_narrow_allowed_values.empty? && v_narrow_default.empty?
+          props[:v_narrow] = {}
+          v_narrow = props[:v_narrow]
+          unless v_narrow_allowed_values.empty?
+            v_narrow[:allowed_values] = v_narrow_allowed_values.split(",").map(&:strip)
+            v_narrow[:allowed_values] = v_narrow[:allowed_values].map(&:to_i) if v_narrow_allowed_values_type == "Integer"
           end
-          unless when_narrow_default.empty?
-            when_narrow_default = when_narrow_default.to_i if when_narrow_default_type == "Integer"
-            when_narrow[:default] = when_narrow_default
+          unless v_narrow_default.empty?
+            v_narrow_default = v_narrow_default.to_i if v_narrow_default_type == "Integer"
+            v_narrow[:default] = v_narrow_default
           end
         end
 
-        unless when_regular_allowed_values.empty? && when_regular_default.empty?
-          props[:when_regular] = {}
-          when_regular = props[:when_regular]
-          unless when_regular_allowed_values.empty?
-            when_regular[:allowed_values] = when_regular_allowed_values.split(",").map(&:strip)
-            when_regular[:allowed_values] = when_regular[:allowed_values].map(&:to_i) if when_regular_allowed_values_type == "Integer"
+        unless v_regular_allowed_values.empty? && v_regular_default.empty?
+          props[:v_regular] = {}
+          v_regular = props[:v_regular]
+          unless v_regular_allowed_values.empty?
+            v_regular[:allowed_values] = v_regular_allowed_values.split(",").map(&:strip)
+            v_regular[:allowed_values] = v_regular[:allowed_values].map(&:to_i) if v_regular_allowed_values_type == "Integer"
           end
-          unless when_regular_default.empty?
-            when_regular_default = when_regular_default.to_i if when_regular_default_type == "Integer"
-            when_regular[:default] = when_regular_default
+          unless v_regular_default.empty?
+            v_regular_default = v_regular_default.to_i if v_regular_default_type == "Integer"
+            v_regular[:default] = v_regular_default
           end
         end
 
@@ -111,21 +111,21 @@ module Primer
       #
       # @param value text
       # @param value_type select [String, Symbol]
-      # @param responsive_variant select [~, when_narrow, when_regular, when_wide]
+      # @param responsive_variant select [~, v_narrow, v_regular, v_wide]
       def validate_value(value: "", value_type: "String", responsive_variant: "")
         props = {
           name: :test,
           allowed_values: [:a, :b, :c],
           responsive: :transitional,
           default: :a,
-          when_narrow: {
+          v_narrow: {
             allowed_values: [:d, :e],
             default: :d
           },
-          when_regular: {
+          v_regular: {
             default: :b
           },
-          when_wide: {
+          v_wide: {
             allowed_values: [:xl]
           },
           deprecation: {
@@ -144,7 +144,7 @@ module Primer
         end
 
         log_message = "valid?: #{property_definition.valid_value?(value, responsive_variant).inspect}, "
-        log_message += "deprecated? #{property_definition.value_deprecated?(value)}"
+        log_message += "deprecated? #{property_definition.deprecated_value?(value)}"
 
         begin
           property_definition.validate_value(value, responsive_variant)
@@ -174,14 +174,14 @@ module Primer
           allowed_values: [:a, :b, :c],
           responsive: :transitional,
           default: :a,
-          when_narrow: {
+          v_narrow: {
             allowed_values: [:d, :e],
             default: :d
           },
-          when_regular: {
+          v_regular: {
             default: :b
           },
-          when_wide: {
+          v_wide: {
             allowed_values: [:xl]
           },
           deprecation: {
@@ -242,7 +242,7 @@ module Primer
           name: :test,
           allowed_values: [1, 2, 3],
           responsive: :yes,
-          when_narrow: {
+          v_narrow: {
             allowed_values: [4, 5],
             default: 6
           }
@@ -274,7 +274,7 @@ module Primer
           name: :test,
           type: String,
           responsive: :transitional,
-          when_narrow: {
+          v_narrow: {
             allowed_values: [1, 2],
             default: 1
           }

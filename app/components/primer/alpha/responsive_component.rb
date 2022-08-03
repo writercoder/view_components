@@ -90,6 +90,7 @@ module Primer
         @html_attributes[:"data-view-component"] = true
         @html_attributes = add_test_selector(@html_attributes)
 
+        # support for the old Primer behavior
         return unless @html_attributes.key? :classes
 
         @html_attributes[:class] = @html_attributes[:classes]
@@ -125,25 +126,18 @@ module Primer
         self.class.tag.attributes(html_attributes)
       end
 
+      # Normalizes the property_values by component properties_definition
       def normalize_values(property_values: {}, fallback_to_default: true)
-        self.class.normalize_property_values(
-          properties_definition: self.class.properties,
-          property_values: property_values,
-          fallback_to_default: fallback_to_default || Primer::Responsive::PropertiesDefinitionHelper.production_env? 
-        )
-      end
-
-      def fill_default_values(property_values: {}, fallback_to_default: false)
-        self.class.fill_missing_values_with_default(
+        self.class.normalize_property_values!(
           properties_definition: self.class.properties,
           property_values: property_values,
           fallback_to_default: fallback_to_default || Primer::Responsive::PropertiesDefinitionHelper.production_env?
         )
       end
 
-      #normalize_values!
-      def fill_default_values!(fallback_to_default: false)
-        @property_values = fill_default_values(
+      # Normalizes and updates the property_values by component properties_definition
+      def normalize_values!(fallback_to_default: true)
+        @property_values = normalize_values(
           property_values: @property_values,
           fallback_to_default: fallback_to_default
         )

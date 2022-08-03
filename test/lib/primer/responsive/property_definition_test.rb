@@ -50,8 +50,8 @@ class PropertyDefinitionTest < Minitest::Test
     params = {
       type: String,
       responsive: :yes,
-      when_narrow: { default: 1 },
-      when_regular: { default: 2 }
+      v_narrow: { default: 1 },
+      v_regular: { default: 2 }
     }
 
     # act / assert
@@ -78,7 +78,7 @@ class PropertyDefinitionTest < Minitest::Test
     params = {
       allowed_values: [:a, :b],
       responsive: :no,
-      when_narrow: { default: :a }
+      v_narrow: { default: :a }
     }
 
     # act / assert
@@ -93,7 +93,7 @@ class PropertyDefinitionTest < Minitest::Test
     params = {
       allowed_values: [:duplicate_value, :value_a, :value_b],
       responsive: :yes,
-      when_narrow: {
+      v_narrow: {
         allowed_values: [:duplicate_value, :narrow_a]
       }
     }
@@ -108,7 +108,7 @@ class PropertyDefinitionTest < Minitest::Test
     params = {
       type: String,
       responsive: :yes,
-      when_narrow: { type: String }
+      v_narrow: { type: String }
     }
 
     error = assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
@@ -123,7 +123,7 @@ class PropertyDefinitionTest < Minitest::Test
       type: String,
       default: "overall_default",
       responsive: :yes,
-      when_narrow: { default: "narrow_default" }
+      v_narrow: { default: "narrow_default" }
     }
 
     error = assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
@@ -137,7 +137,7 @@ class PropertyDefinitionTest < Minitest::Test
     params = {
       type: String,
       responsive: :yes,
-      when_narrow: { default: "narrow" }
+      v_narrow: { default: "narrow" }
     }
 
     error = assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
@@ -198,10 +198,10 @@ class PropertyDefinitionTest < Minitest::Test
     property_definition = Primer::Responsive::PropertyDefinition.new(
       responsive: :yes,
       allowed_values: [:a, :b, :c],
-      when_narrow: {
+      v_narrow: {
         allowed_values: [:na, :nb]
       },
-      when_regular: {
+      v_regular: {
         allowed_values: [:ra]
       }
     )
@@ -217,37 +217,37 @@ class PropertyDefinitionTest < Minitest::Test
         expected: false
       },
       {
-        variant: :when_narrow,
+        variant: :v_narrow,
         value: :nb,
         expected: true
       },
       {
-        variant: :when_narrow,
+        variant: :v_narrow,
         value: :b,
         expected: true
       },
       {
-        variant: :when_narrow,
+        variant: :v_narrow,
         value: :ra,
         expected: false
       },
       {
-        variant: :when_regular,
+        variant: :v_regular,
         value: :ra,
         expected: true
       },
       {
-        variant: :when_regular,
+        variant: :v_regular,
         value: :invalid_value,
         expected: false
       },
       {
-        variant: :when_wide,
+        variant: :v_wide,
         value: :a,
         expected: true
       },
       {
-        variant: :when_wide,
+        variant: :v_wide,
         value: :ra,
         expected: false
       }
@@ -296,7 +296,7 @@ class PropertyDefinitionTest < Minitest::Test
     property_definition = Primer::Responsive::PropertyDefinition.new(
       allowed_values: [:a, :b, :c],
       responsive: :yes,
-      when_narrow: {
+      v_narrow: {
         allowed_values: [:d, :e]
       }
     )
@@ -304,7 +304,7 @@ class PropertyDefinitionTest < Minitest::Test
 
     # act / assert
     assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyValueError) do
-      property_definition.validate_value(value, :when_narrow)
+      property_definition.validate_value(value, :v_narrow)
     end
   end
 

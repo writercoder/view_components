@@ -4,51 +4,59 @@ module Primer
   module Alpha
     # @label ResponsiveComponent
     class ResponsiveComponentPreview < ViewComponent::Preview
+      # @hidden
+      def hash_recursive
+        Hash.new do |hash, key|
+          hash[key] = hash_recursive
+        end
+      end
+
       # @label Values validation playground
       #
       # @param uuid text
       # @param id number
       # @param spacing select [~, xs, s, m, l, xl, xxl]
-      # @param spacing_when_narrow select [~, xs, s, m, l, xl, xxl]
-      # @param spacing_when_regular select [~, xs, s, m, l, xl, xxl]
-      # @param spacing_when_wide select [~, xs, s, m, l, xl, xxl]
+      # @param spacing_v_narrow select [~, xs, s, m, l, xl, xxl]
+      # @param spacing_v_regular select [~, xs, s, m, l, xl, xxl]
+      # @param spacing_v_wide select [~, xs, s, m, l, xl, xxl]
       # @param placement_viewport select [~, center, top, bottom, full]
-      # @param placement_viewport_when_narrow select [~, center, top, bottom, full]
-      # @param placement_viewport_when_regular select [~, center, top, bottom, full]
-      # @param placement_viewport_when_wide select [~, center, top, bottom, full]
+      # @param placement_viewport_v_narrow select [~, center, top, bottom, full]
+      # @param placement_viewport_v_regular select [~, center, top, bottom, full]
+      # @param placement_viewport_v_wide select [~, center, top, bottom, full]
       # @param placement_container select [~, top, right, bottom, left]
       def property_values_defaults(
         uuid: "",
         id: 0,
         spacing: nil,
-        spacing_when_narrow: nil,
-        spacing_when_regular: nil,
-        spacing_when_wide: nil,
+        spacing_v_narrow: nil,
+        spacing_v_regular: nil,
+        spacing_v_wide: nil,
         placement_viewport: nil,
-        placement_viewport_when_narrow: nil,
-        placement_viewport_when_regular: nil,
-        placement_viewport_when_wide: nil,
+        placement_viewport_v_narrow: nil,
+        placement_viewport_v_regular: nil,
+        placement_viewport_v_wide: nil,
         placement_container: nil
       )
-        values = {}
+        values = hash_recursive
         values[:uuid] = uuid unless uuid.empty?
-        values[:id] = id unless id.zero?
+        values[:id] = id
         values[:spacing] = spacing.to_sym unless spacing.nil?
-        values[:spacing_when_narrow] = spacing_when_narrow.to_sym unless spacing_when_narrow.nil?
-        values[:spacing_when_regular] = spacing_when_regular.to_sym unless spacing_when_regular.nil?
-        values[:spacing_when_wide] = spacing_when_wide.to_sym unless spacing_when_wide.nil?
-        values[:placement_viewport] = placement_viewport.to_sym unless placement_viewport.nil?
-        values[:placement_viewport_when_narrow] = placement_viewport_when_narrow.to_sym unless placement_viewport_when_narrow.nil?
-        values[:placement_viewport_when_regular] = placement_viewport_when_regular.to_sym unless placement_viewport_when_regular.nil?
-        values[:placement_viewport_when_wide] = placement_viewport_when_wide.to_sym unless placement_viewport_when_wide.nil?
-        values[:placement_container] = placement_container.to_sym unless placement_container.nil?
+        values[:v_narrow][:spacing] = spacing_v_narrow.to_sym unless spacing_v_narrow.nil?
+        values[:v_regular][:spacing] = spacing_v_regular.to_sym unless spacing_v_regular.nil?
+        values[:v_wide][:spacing] = spacing_v_wide.to_sym unless spacing_v_wide.nil?
+        values[:placement][:viewport] = placement_viewport.to_sym unless placement_viewport.nil?
+        values[:v_narrow][:placement][:viewport] = placement_viewport_v_narrow.to_sym unless placement_viewport_v_narrow.nil?
+        values[:v_regular][:placement][:viewport] = placement_viewport_v_regular.to_sym unless placement_viewport_v_regular.nil?
+        values[:v_wide][:placement][:viewport] = placement_viewport_v_wide.to_sym unless placement_viewport_v_wide.nil?
+        values[:placement][:container] = placement_container.to_sym unless placement_container.nil?
 
         cloned_values = values.deep_dup
         component = Alpha::DummyResponsiveComponent.new(property_values: cloned_values)
-        #cloned_values = component.fill_default_values(cloned_values)
+        component.normalize_values!
 
         panels = [
-          { title: "Values", output: cloned_values.pretty_inspect },
+          { title: "Values", output: values.pretty_inspect },
+          { title: "Normalized", output: component.property_values.pretty_inspect },
           { title: "Component", output: component.pretty_inspect }
         ]
 
@@ -58,8 +66,8 @@ module Primer
         )
       end
 
-      # @label Fill with default values
-      def fill_defaults_with_fallback
+      # @label Normalize values
+      def normalize_property_values
         values = {
           uuid: "unique-hash",
           id: "test",
@@ -71,7 +79,7 @@ module Primer
 
         cloned_values = values.deep_dup
         component = Alpha::DummyResponsiveComponent.new(property_values: cloned_values)
-        with_default_values = component.fill_default_values(cloned_values, fallback_to_default: true)
+        with_default_values = component.normalize_values(property_values: cloned_values, fallback_to_default: true)
 
         panels = [
           { title: "Values", output: values.pretty_inspect },
@@ -85,24 +93,9 @@ module Primer
         )
       end
 
-      # @label Normalize values
-      def responsive_values_normalization
-        component = DefaultValuesResponsiveComponent.new()
-        normalized_values = component.normalize_values
-
-        panels = [
-          { title: "Values", output: normalized_values.props.pretty_inspect }
-        ]
-
-        render_with_template(
-          locals: { panels: panels },
-          template: "primer/responsive/responsive_preview_output"
-        )
-      end
-
       # @label List defaults from definitions
       def property_definition
-        instance = ChildDummyResponsiveComponent.new
+        instance = Alpha::ChildDummyResponsiveComponent.new
 
         panels = [
           { title: "Properties", output: instance.props.pretty_inspect }
@@ -124,7 +117,7 @@ module Primer
         }
 
         begin
-          ChildDummyResponsiveComponent.new(
+          Alpha::ChildDummyResponsiveComponent.new(
             property_values: {},
             html_attributes: html_attributes
           )
@@ -145,7 +138,7 @@ module Primer
 
       # @label Rendering html attributes
       def html_attributes_render
-        component = ChildDummyResponsiveComponent.new(
+        component = Alpha::ChildDummyResponsiveComponent.new(
           property_values: {},
           html_attributes: {
             class: %w[class-a class-b class-c],
@@ -169,7 +162,7 @@ module Primer
       # @label property definitions
       def property_definitions
         begin
-          component = DummyResponsiveComponent.new
+          component = Alpha::DummyResponsiveComponent.new
         rescue => e
           error_message = e.message
         end
@@ -185,7 +178,7 @@ module Primer
 
       # @label property definitions inheritance
       def inherited_property_definitions
-        component = ChildDummyResponsiveComponent.new(
+        component = Alpha::ChildDummyResponsiveComponent.new(
           html_attributes: {
             id: "unique-id",
             for: "some-id",
@@ -218,27 +211,25 @@ module Primer
           default: 0
         ),
         spacing: prop(
-          allowed_values: [:s, :m, :l],
-          default: :m,
           responsive: :yes,
-          when_narrow: {
-            default: :s
-          },
-          when_regular: {
+          allowed_values: [:s, :m, :l],
+          v_narrow: { default: :s },
+          v_regular: {
             allowed_values: [:xs, :xl],
             default: :l
           },
-          when_wide: {
+          v_wide: {
             allowed_values: [:xl, :xxl],
             default: :xl
           }
         ),
         placement: {
           viewport: prop(
-            allowed_values: [:center, :top, :bottom, :full],
-            default: :center,
             responsive: :transitional,
-            when_narrow: { default: :full }
+            allowed_values: [:center, :top, :bottom, :full],
+            default: :top,
+            v_narrow: { default: :full },
+            v_regular: { default: :top },
           ),
           container: prop(
             allowed_values: [:top, :right, :bottom, :left],
@@ -248,12 +239,11 @@ module Primer
         double: {
           namespace: {
             test_prop: prop(
-              allowed_values: [:test_a, :test_b, :test_c],
-              default: :test_a,
               responsive: :yes,
-              when_wide: {
-                default: :test_c
-              }
+              allowed_values: [:test_a, :test_b, :test_c],
+              v_narrow: { default: :test_a },
+              v_regular: { default: :test_a },
+              v_wide: { default: :test_c }
             )
           }
         }
@@ -278,7 +268,7 @@ module Primer
       add_properties_definition(
         id: prop(
           type: String,
-          default: "10"
+          default: "empty id"
         ),
         name: prop(
           type: String,
@@ -325,35 +315,35 @@ module Primer
     class DefaultValuesResponsiveComponent < Primer::Alpha::ResponsiveComponent
       properties_definition(
         responsive_a: prop(
+          responsive: :yes,
           allowed_values: [:a, :b, :c],
-          default: :b,
-          responsive: :yes
+          default: :b
         ),
         responsive_opt_a: prop(
+          responsive: :transitional,
           allowed_values: [:a, :b, :c],
-          default: :b,
-          responsive: :transitional
+          default: :b
         ),
         responsive_b: prop(
-          allowed_values: [:a, :b, :c],
-          default: :b,
           responsive: :yes,
-          when_narrow: { default: :a },
-          when_wide: { default: :c }
+          allowed_values: [:a, :b, :c],
+          v_narrow: { default: :a },
+          v_regular: { default: :b },
+          v_wide: { default: :c }
         ),
         nested: {
           responsive_c: prop(
-            allowed_values: [:a, :b],
             responsive: :yes,
-            when_narrow: {
+            allowed_values: [:a, :b],
+            v_narrow: {
               allowed_values: [:na, :nb],
               default: :na
             },
-            when_regular: {
+            v_regular: {
               allowed_values: [:rd, :re],
               default: :a
             },
-            when_wide: {
+            v_wide: {
               allowed_values: [:wc, :wd],
               default: :wd
             }

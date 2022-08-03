@@ -126,10 +126,10 @@ module Primer
             dp_a: :s,
             dp_b: { deeper_a: { position: :center } }
           },
-          when_narrow: {
+          v_narrow: {
             prop_a: :value_a
           },
-          when_wide: {
+          v_wide: {
             deep_prop: { dp_a: :l },
             prop_c: "2"
           }

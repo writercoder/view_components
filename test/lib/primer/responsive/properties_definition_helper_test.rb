@@ -19,12 +19,12 @@ class PropertiesDefinitionHelperTest < Minitest::Test
       responsive_prop_c: prop(
         allowed_values: [:a, :b],
         responsive: :yes,
-        when_narrow: {
+        v_narrow: {
           allowed_values: [:n_a, :n_b],
           default: :n_a
         },
-        when_regular: { default: :b },
-        when_wide: { default: :a }
+        v_regular: { default: :b },
+        v_wide: { default: :a }
       ),
 
       prop_d: prop(
@@ -47,8 +47,8 @@ class PropertiesDefinitionHelperTest < Minitest::Test
           responsive: :transitional,
           allowed_values: [:a, :b, :c],
           default: :a,
-          when_narrow: { default: :b },
-          when_regular: { default: :b }
+          v_narrow: { default: :b },
+          v_regular: { default: :b }
         )
       }
     }
@@ -85,22 +85,22 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     assert_equal(false, responsive_prop_c.required?)
     assert_instance_of(
       Primer::Responsive::ResponsiveVariantPropertyDefinition,
-      responsive_prop_c.responsive_variants[:when_narrow]
+      responsive_prop_c.responsive_variants[:v_narrow]
     )
-    assert_equal(true, responsive_prop_c.defined_default?(:when_narrow))
-    assert_equal(:n_a, responsive_prop_c.default_value(:when_narrow))
+    assert_equal(true, responsive_prop_c.defined_default?(:v_narrow))
+    assert_equal(:n_a, responsive_prop_c.default_value(:v_narrow))
     assert_instance_of(
       Primer::Responsive::ResponsiveVariantPropertyDefinition,
-      responsive_prop_c.responsive_variants[:when_regular]
+      responsive_prop_c.responsive_variants[:v_regular]
     )
-    assert_equal(true, responsive_prop_c.defined_default?(:when_regular))
-    assert_equal(:b, responsive_prop_c.default_value(:when_regular))
+    assert_equal(true, responsive_prop_c.defined_default?(:v_regular))
+    assert_equal(:b, responsive_prop_c.default_value(:v_regular))
     assert_instance_of(
       Primer::Responsive::ResponsiveVariantPropertyDefinition,
-      responsive_prop_c.responsive_variants[:when_wide]
+      responsive_prop_c.responsive_variants[:v_wide]
     )
-    assert_equal(true, responsive_prop_c.defined_default?(:when_wide))
-    assert_equal(:a, responsive_prop_c.default_value(:when_wide))
+    assert_equal(true, responsive_prop_c.defined_default?(:v_wide))
+    assert_equal(:a, responsive_prop_c.default_value(:v_wide))
 
     transitional_prop_d = props_definition[:prop_d]
     assert_instance_of(Primer::Responsive::PropertyDefinition, transitional_prop_d)
@@ -181,9 +181,9 @@ class PropertiesDefinitionHelperTest < Minitest::Test
 
     # assert
     assert_equal(false, normalized_values.key?(:prop_a), "Fully responsive props base values have to be moved into responsive variants")
-    assert_equal(values[:prop_a], normalized_values[:when_narrow][:prop_a], "Fully responsive props base values have to be moved into responsive variants")
-    assert_equal(values[:prop_a], normalized_values[:when_regular][:prop_a], "Fully responsive props base values have to be moved into responsive variants")
-    assert_equal(false, normalized_values.fetch(:when_wide, {}).key?(:prop_a), "Optional responsive variants shouldn't be added implicitly")
+    assert_equal(values[:prop_a], normalized_values[:v_narrow][:prop_a], "Fully responsive props base values have to be moved into responsive variants")
+    assert_equal(values[:prop_a], normalized_values[:v_regular][:prop_a], "Fully responsive props base values have to be moved into responsive variants")
+    assert_equal(false, normalized_values.fetch(:v_wide, {}).key?(:prop_a), "Optional responsive variants shouldn't be added implicitly")
   end
 
   def test_normalize_property_values_only_spreads_transitional_responsive_value_if_explicitly_set_into_variants
@@ -198,8 +198,8 @@ class PropertiesDefinitionHelperTest < Minitest::Test
         responsive: :transitional,
         allowed_values: [:ta, :tb, :tc],
         default: :tc,
-        when_narrow: { default: :ta },
-        when_regular: { default: :tb }
+        v_narrow: { default: :ta },
+        v_regular: { default: :tb }
       )
     )
     values = {
@@ -207,7 +207,7 @@ class PropertiesDefinitionHelperTest < Minitest::Test
       prop_a: :b,
 
       # setting as responsive value
-      when_narrow: {
+      v_narrow: {
         prop_b: :tc
       }
     }
@@ -222,10 +222,10 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     # assert
     assert(normalized_values.key?(:prop_a), "Transitional responsive don't remove base values")
     assert_equal(values[:prop_a], normalized_values[:prop_a])
-    assert_equal(false, normalized_values.fetch(:when_narrow, {}).key?(:prop_a), "Transitional responsive variants shouldn't be added implicitly")
+    assert_equal(false, normalized_values.fetch(:v_narrow, {}).key?(:prop_a), "Transitional responsive variants shouldn't be added implicitly")
 
-    assert_equal(values[:when_narrow][:prop_b], normalized_values[:when_narrow][:prop_b])
-    assert_equal(props_definition[:prop_b].default_value(:when_regular), normalized_values[:when_regular][:prop_b])
+    assert_equal(values[:v_narrow][:prop_b], normalized_values[:v_narrow][:prop_b])
+    assert_equal(props_definition[:prop_b].default_value(:v_regular), normalized_values[:v_regular][:prop_b])
   end
 
   def test_normalize_property_values_uses_base_default_value_for_responsive_value_unless_responsive_variants_are_present_in_the_values
@@ -235,19 +235,19 @@ class PropertiesDefinitionHelperTest < Minitest::Test
         responsive: :transitional,
         allowed_values: [:t_default, :t_narrow, :t_regular, :t_wide, :t_extra, :t_extra2],
         default: :t_default,
-        when_narrow: { default: :t_narrow },
-        when_regular: { default: :t_regular }
+        v_narrow: { default: :t_narrow },
+        v_regular: { default: :t_regular }
       )
     )
     # arrange: test cases
     values_empty = {}
     values_base_value = { prop_a: :t_extra }
     values_incomplete_variants = {
-      when_narrow: { prop_a: :t_extra }
+      v_narrow: { prop_a: :t_extra }
     }
     values_all_variants = {
-      when_narrow: { prop_a: :t_extra },
-      when_regular: { prop_a: :t_extra2 }
+      v_narrow: { prop_a: :t_extra },
+      v_regular: { prop_a: :t_extra2 }
     }
 
     # act
@@ -261,24 +261,24 @@ class PropertiesDefinitionHelperTest < Minitest::Test
 
     # assert
     assert_equal(:t_default, normalized_empty[:prop_a])
-    assert_equal(false, normalized_empty.key?(:when_narrow))
-    assert_equal(false, normalized_empty.key?(:when_regular))
+    assert_equal(false, normalized_empty.key?(:v_narrow))
+    assert_equal(false, normalized_empty.key?(:v_regular))
 
     assert_equal(:t_extra, normalized_base_value[:prop_a])
-    assert_equal(false, normalized_base_value.key?(:when_narrow))
-    assert_equal(false, normalized_base_value.key?(:when_regular))
+    assert_equal(false, normalized_base_value.key?(:v_narrow))
+    assert_equal(false, normalized_base_value.key?(:v_regular))
 
     assert_equal(false, normalized_incomplete_variants.key?(:prop_a))
-    assert_equal(true, normalized_incomplete_variants.key?(:when_narrow))
-    assert_equal(:t_extra, normalized_incomplete_variants[:when_narrow][:prop_a])
-    assert_equal(true, normalized_incomplete_variants.key?(:when_regular))
-    assert_equal(:t_regular, normalized_incomplete_variants[:when_regular][:prop_a])
+    assert_equal(true, normalized_incomplete_variants.key?(:v_narrow))
+    assert_equal(:t_extra, normalized_incomplete_variants[:v_narrow][:prop_a])
+    assert_equal(true, normalized_incomplete_variants.key?(:v_regular))
+    assert_equal(:t_regular, normalized_incomplete_variants[:v_regular][:prop_a])
 
     assert_equal(false, normalized_all_variants.key?(:prop_a))
-    assert_equal(true, normalized_all_variants.key?(:when_narrow))
-    assert_equal(:t_extra, normalized_all_variants[:when_narrow][:prop_a])
-    assert_equal(true, normalized_all_variants.key?(:when_regular))
-    assert_equal(:t_extra2, normalized_all_variants[:when_regular][:prop_a])
+    assert_equal(true, normalized_all_variants.key?(:v_narrow))
+    assert_equal(:t_extra, normalized_all_variants[:v_narrow][:prop_a])
+    assert_equal(true, normalized_all_variants.key?(:v_regular))
+    assert_equal(:t_extra2, normalized_all_variants[:v_regular][:prop_a])
   end
 
   def test_normalize_property_values_fallback_to_default_when_invalid_value_present
@@ -292,33 +292,33 @@ class PropertiesDefinitionHelperTest < Minitest::Test
       prop_r: prop(
         responsive: :yes,
         allowed_values: [:ra, :rb],
-        when_narrow: {
+        v_narrow: {
           allowed_values: [:rna, :rnb],
           default: :rnb
         },
-        when_regular: {
+        v_regular: {
           allowed_values: [:rra, :rrb],
           default: :rra
         },
-        when_wide: { default: :rb }
+        v_wide: { default: :rb }
       ),
       prop_t: prop(
         responsive: :transitional,
         allowed_values: [:ta, :tb, :tc],
         default: :tc,
-        when_narrow: { default: :ta },
-        when_regular: { default: :tb }
+        v_narrow: { default: :ta },
+        v_regular: { default: :tb }
       )
     )
     values = {
       prop_a: :invalid_value,
-      when_narrow: {
+      v_narrow: {
         prop_r: :rra # this value is not available for narrow, only for regular
       },
-      when_regular: {
+      v_regular: {
         prop_r: :rc # invalid value
       },
-      when_wide: {
+      v_wide: {
         prop_r: :rna, # this value is not available for wide, only for narrow
         prop_t: :td # invalid value for undefined variant in transitional
       }
@@ -334,13 +334,13 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     # assert
     assert_equal(:a, normalized_values[:prop_a], "Invalid value should fallback to default")
 
-    assert_equal(props_definition[:prop_r].default_value(:when_narrow), normalized_values[:when_narrow][:prop_r])
-    assert_equal(props_definition[:prop_r].default_value(:when_regular), normalized_values[:when_regular][:prop_r])
-    assert_equal(props_definition[:prop_r].default_value(:when_wide), normalized_values[:when_wide][:prop_r])
+    assert_equal(props_definition[:prop_r].default_value(:v_narrow), normalized_values[:v_narrow][:prop_r])
+    assert_equal(props_definition[:prop_r].default_value(:v_regular), normalized_values[:v_regular][:prop_r])
+    assert_equal(props_definition[:prop_r].default_value(:v_wide), normalized_values[:v_wide][:prop_r])
 
-    assert_equal(props_definition[:prop_t].default_value(:when_narrow), normalized_values[:when_narrow][:prop_t])
-    assert_equal(props_definition[:prop_t].default_value(:when_regular), normalized_values[:when_regular][:prop_t])
-    assert_equal(props_definition[:prop_t].default_value, normalized_values[:when_wide][:prop_t])
+    assert_equal(props_definition[:prop_t].default_value(:v_narrow), normalized_values[:v_narrow][:prop_t])
+    assert_equal(props_definition[:prop_t].default_value(:v_regular), normalized_values[:v_regular][:prop_t])
+    assert_equal(props_definition[:prop_t].default_value, normalized_values[:v_wide][:prop_t])
   end
 
   def test_normalize_property_values_with_deep_properties_definitions
@@ -351,8 +351,8 @@ class PropertiesDefinitionHelperTest < Minitest::Test
         prop_responsive: prop(
           responsive: :yes,
           allowed_values: [:a, :b, :c],
-          when_narrow: { default: :a },
-          when_regular: { default: :b }
+          v_narrow: { default: :a },
+          v_regular: { default: :b }
         ),
         prop_transitional: prop(
           responsive: :transitional,
@@ -367,8 +367,8 @@ class PropertiesDefinitionHelperTest < Minitest::Test
             prop_responsive: prop(
               responsive: :yes,
               allowed_values: [:a, :b, :c],
-              when_narrow: { default: :a },
-              when_regular: { default: :b }
+              v_narrow: { default: :a },
+              v_regular: { default: :b }
             ),
             prop_transitional: prop(
               responsive: :transitional,
@@ -386,8 +386,8 @@ class PropertiesDefinitionHelperTest < Minitest::Test
           prop_responsive: prop(
             responsive: :yes,
             allowed_values: [:a, :b, :c],
-            when_narrow: { default: :a },
-            when_regular: { default: :b }
+            v_narrow: { default: :a },
+            v_regular: { default: :b }
           ),
           prop_transitional: prop(
             responsive: :transitional,
@@ -407,7 +407,7 @@ class PropertiesDefinitionHelperTest < Minitest::Test
           prop_no: "valid value"
         }
       },
-      when_narrow: {
+      v_narrow: {
         one_lvl_deep: { prop_responsive: :c },
         multiple_lvls_deep: {
           level_a: {
@@ -415,7 +415,7 @@ class PropertiesDefinitionHelperTest < Minitest::Test
           }
         }
       },
-      when_regular: {
+      v_regular: {
         one_lvl_deep: { prop_responsive: :invalid_value }
       }
     }
@@ -461,35 +461,35 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     )
 
     assert_equal(
-      values[:when_narrow][:one_lvl_deep][:prop_responsive],
-      normalized_values[:when_narrow][:one_lvl_deep][:prop_responsive],
+      values[:v_narrow][:one_lvl_deep][:prop_responsive],
+      normalized_values[:v_narrow][:one_lvl_deep][:prop_responsive],
       "Valid responsive values don't fallback to default"
     )
     assert_equal(
-      props_definition[:one_lvl_deep][:prop_responsive].default_value(:when_regular),
-      normalized_values[:when_regular][:one_lvl_deep][:prop_responsive],
+      props_definition[:one_lvl_deep][:prop_responsive].default_value(:v_regular),
+      normalized_values[:v_regular][:one_lvl_deep][:prop_responsive],
       "Invalid responsive value for nested property is normalized and set to default"
     )
 
     assert_equal(
-      props_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive].default_value(:when_narrow),
-      normalized_values[:when_narrow][:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive],
+      props_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive].default_value(:v_narrow),
+      normalized_values[:v_narrow][:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive],
       "Invalid responsive value for nested property is normalized and set to default"
     )
     assert_equal(
-      props_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive].default_value(:when_regular),
-      normalized_values[:when_regular][:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive],
+      props_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive].default_value(:v_regular),
+      normalized_values[:v_regular][:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive],
       "Missing responsive value for nested property is normalized and set to default"
     )
 
     assert_equal(
-      props_definition[:multiple_lvls_deep][:level_b][:prop_responsive].default_value(:when_narrow),
-      normalized_values[:when_narrow][:multiple_lvls_deep][:level_b][:prop_responsive],
+      props_definition[:multiple_lvls_deep][:level_b][:prop_responsive].default_value(:v_narrow),
+      normalized_values[:v_narrow][:multiple_lvls_deep][:level_b][:prop_responsive],
       "Missing responsive value for nested property is normalized and set to default"
     )
     assert_equal(
-      props_definition[:multiple_lvls_deep][:level_b][:prop_responsive].default_value(:when_regular),
-      normalized_values[:when_regular][:multiple_lvls_deep][:level_b][:prop_responsive],
+      props_definition[:multiple_lvls_deep][:level_b][:prop_responsive].default_value(:v_regular),
+      normalized_values[:v_regular][:multiple_lvls_deep][:level_b][:prop_responsive],
       "Missing responsive value for nested property is normalized and set to default"
     )
   end

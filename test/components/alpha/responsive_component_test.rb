@@ -15,8 +15,8 @@ class ResponsiveComponentTest < Minitest::Test
         responsive_prop: prop(
           responsive: :yes,
           type: Numeric,
-          when_narrow: { default: 1 },
-          when_regular: { default: 2 }
+          v_narrow: { default: 1 },
+          v_regular: { default: 2 }
         )
       )
     end
@@ -29,10 +29,10 @@ class ResponsiveComponentTest < Minitest::Test
 
     responsive_prop_definition = ChildResponsiveComponent.properties[:responsive_prop]
     assert_instance_of(Primer::Responsive::PropertyDefinition, responsive_prop_definition)
-    assert_instance_of(Primer::Responsive::ResponsiveVariantPropertyDefinition, responsive_prop_definition.responsive_variants[:when_narrow])
-    assert_instance_of(Primer::Responsive::ResponsiveVariantPropertyDefinition, responsive_prop_definition.responsive_variants[:when_regular])
-    assert_equal(1, responsive_prop_definition.default_value(:when_narrow))
-    assert_equal(2, responsive_prop_definition.default_value(:when_regular))
+    assert_instance_of(Primer::Responsive::ResponsiveVariantPropertyDefinition, responsive_prop_definition.responsive_variants[:v_narrow])
+    assert_instance_of(Primer::Responsive::ResponsiveVariantPropertyDefinition, responsive_prop_definition.responsive_variants[:v_regular])
+    assert_equal(1, responsive_prop_definition.default_value(:v_narrow))
+    assert_equal(2, responsive_prop_definition.default_value(:v_regular))
 
     # teardown
     Object.send(:remove_const, :ChildResponsiveComponent)
