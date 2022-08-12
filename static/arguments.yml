@@ -22,6 +22,21 @@
     type: Hash
     default: N/A
     description: "[System arguments](/system-arguments)"
+- component: HiddenTextExpander
+  source: https://github.com/primer/view_components/tree/main/app/components/primer/alpha/hidden_text_expander.rb
+  parameters:
+  - name: inline
+    type: Boolean
+    default: "`false`"
+    description: Whether or not the expander is inline.
+  - name: button_arguments
+    type: Hash
+    default: "`{}`"
+    description: "[System arguments](/system-arguments) for the button element."
+  - name: system_arguments
+    type: Hash
+    default: N/A
+    description: "[System arguments](/system-arguments)"
 - component: Layout
   source: https://github.com/primer/view_components/tree/main/app/components/primer/alpha/layout.rb
   parameters:
@@ -521,6 +536,23 @@
     type: Hash
     default: N/A
     description: "[System arguments](/system-arguments)"
+- component: Details
+  source: https://github.com/primer/view_components/tree/main/app/components/primer/beta/details.rb
+  parameters:
+  - name: overlay
+    type: Symbol
+    default: "`:none`"
+    description: Dictates the type of overlay to render with. One of `:dark`, `:default`,
+      or `:none`.
+  - name: reset
+    type: Boolean
+    default: "`false`"
+    description: Defaults to false. If set to true, it will remove the default caret
+      and remove style from the summary element
+  - name: system_arguments
+    type: Hash
+    default: N/A
+    description: "[System arguments](/system-arguments)"
 - component: Flash
   source: https://github.com/primer/view_components/tree/main/app/components/primer/beta/flash.rb
   parameters:
@@ -544,6 +576,17 @@
     type: Symbol
     default: "`:default`"
     description: One of `:danger`, `:default`, `:success`, or `:warning`.
+  - name: system_arguments
+    type: Hash
+    default: N/A
+    description: "[System arguments](/system-arguments)"
+- component: Heading
+  source: https://github.com/primer/view_components/tree/main/app/components/primer/beta/heading.rb
+  parameters:
+  - name: tag
+    type: String
+    default: N/A
+    description: One of `:h1`, `:h2`, `:h3`, `:h4`, `:h5`, or `:h6`.
   - name: system_arguments
     type: Hash
     default: N/A
@@ -632,23 +675,6 @@
     type: Hash
     default: N/A
     description: "[System arguments](/system-arguments)"
-- component: Details
-  source: https://github.com/primer/view_components/tree/main/app/components/primer/details_component.rb
-  parameters:
-  - name: overlay
-    type: Symbol
-    default: "`:none`"
-    description: Dictates the type of overlay to render with. One of `:dark`, `:default`,
-      or `:none`.
-  - name: reset
-    type: Boolean
-    default: "`false`"
-    description: Defaults to false. If set to true, it will remove the default caret
-      and remove style from the summary element
-  - name: system_arguments
-    type: Hash
-    default: N/A
-    description: "[System arguments](/system-arguments)"
 - component: Dropdown
   source: https://github.com/primer/view_components/tree/main/app/components/primer/dropdown.rb
   parameters:
@@ -727,17 +753,6 @@
     type: Hash
     default: N/A
     description: "[System arguments](/system-arguments)"
-- component: Heading
-  source: https://github.com/primer/view_components/tree/main/app/components/primer/heading_component.rb
-  parameters:
-  - name: tag
-    type: String
-    default: N/A
-    description: One of `:h1`, `:h2`, `:h3`, `:h4`, `:h5`, or `:h6`.
-  - name: system_arguments
-    type: Hash
-    default: N/A
-    description: "[System arguments](/system-arguments)"
 - component: HellipButton
   source: https://github.com/primer/view_components/tree/main/app/components/primer/hellip_button.rb
   parameters:
@@ -745,21 +760,6 @@
     type: Boolean
     default: "`false`"
     description: Whether or not the button is inline.
-  - name: system_arguments
-    type: Hash
-    default: N/A
-    description: "[System arguments](/system-arguments)"
-- component: HiddenTextExpander
-  source: https://github.com/primer/view_components/tree/main/app/components/primer/hidden_text_expander.rb
-  parameters:
-  - name: inline
-    type: Boolean
-    default: "`false`"
-    description: Whether or not the expander is inline.
-  - name: button_arguments
-    type: Hash
-    default: "`{}`"
-    description: "[System arguments](/system-arguments) for the button element."
   - name: system_arguments
     type: Hash
     default: N/A
