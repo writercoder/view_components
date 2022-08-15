@@ -1,0 +1,9 @@
+<div class="width-full color-bg-closed" style="position:relative; height: 50px">
+  Some content
+</div>
+<%= render Primer::BaseComponent.new(tag: :div, float: :right) do %>
+  <%= render(Primer::ButtonComponent.new(id: "button-at-most-right-1")) do |c| %>
+    <% c.tooltip(text: tooltip_text, type: type, direction: direction) %>
+    Button with tooltip
+  <% end %>
+<% end %>
