@@ -2,12 +2,12 @@
 
 module Primer
   module Responsive
-    # @label PropertyDefinition
+    # @label ArgumentDefinition
     class ResponsiveDefinitionPreview < ViewComponent::Preview
       MAIN_TEMPLATE = "primer/responsive/responsive_preview_output"
       ERROR_STYLE = "color: darkred"
 
-      # @label Property validation playground
+      # @label Argument validation playground
       #
       # @param show_object toggle
       # @param responsive select [~, [_no, no], transitional, yes]
@@ -41,7 +41,7 @@ module Primer
         v_regular_default: "",
         v_regular_default_type: ""
       )
-        props = { name: :component_property }
+        props = { name: :component_argument }
         responsive = :no if responsive == "false"
         props[:responsive] = responsive.to_sym unless responsive.empty?
 
@@ -91,14 +91,14 @@ module Primer
         end
 
         begin
-          property_definition = Primer::Responsive::PropertyDefinition.new(props)
-        rescue Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError => e
+          argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+        rescue Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError => e
           error_message = e.message
         end
 
         panels = []
         panels << { title: "props", output: props.pretty_inspect }
-        panels << { title: "object", output: property_definition.pretty_inspect } if show_object
+        panels << { title: "object", output: argument_definition.pretty_inspect } if show_object
         panels << { title: "ERROR", style: ERROR_STYLE, output: error_message } if error_message.present?
 
         render_with_template(
@@ -133,7 +133,7 @@ module Primer
           }
         }
 
-        property_definition = Primer::Responsive::PropertyDefinition.new(props)
+        argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
 
         responsive_variant = responsive_variant.empty? ? nil : responsive_variant.to_sym
         case value_type
@@ -143,12 +143,12 @@ module Primer
           value = value.empty? ? nil : value.to_sym
         end
 
-        log_message = "valid?: #{property_definition.valid_value?(value, responsive_variant).inspect}, "
-        log_message += "deprecated? #{property_definition.deprecated_value?(value)}"
+        log_message = "valid?: #{argument_definition.valid_value?(value, responsive_variant).inspect}, "
+        log_message += "deprecated? #{argument_definition.deprecated_value?(value)}"
 
         begin
-          property_definition.validate_value(value, responsive_variant)
-        rescue Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyValueError => e
+          argument_definition.validate_value(value, responsive_variant)
+        rescue Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentValueError => e
           error_message = e.message
         end
 
@@ -190,14 +190,14 @@ module Primer
         }
 
         begin
-          property_definition = Primer::Responsive::PropertyDefinition.new(props)
-        rescue Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError => e
+          argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+        rescue Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError => e
           error_message = e.message
         end
 
         panels = []
         panels << { title: "props", output: props.pretty_inspect }
-        panels << { title: "object", output: property_definition.pretty_inspect } if show_object
+        panels << { title: "object", output: argument_definition.pretty_inspect } if show_object
         panels << { title: "ERROR", style: ERROR_STYLE, output: error_message } if error_message.present?
 
         render_with_template(
@@ -217,15 +217,15 @@ module Primer
         }
 
         begin
-          property_definition = Primer::Responsive::PropertyDefinition.new(props)
-        rescue Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError => e
+          argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+        rescue Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError => e
           error_message = e.message
         end
 
         # output
         panels = []
         panels << { title: "props", output: props.pretty_inspect }
-        panels << { title: "object", output: property_definition.pretty_inspect } if show_object
+        panels << { title: "object", output: argument_definition.pretty_inspect } if show_object
         panels << { title: "ERROR", style: ERROR_STYLE, output: error_message }
 
         render_with_template(
@@ -249,15 +249,15 @@ module Primer
         }
 
         begin
-          property_definition = Primer::Responsive::PropertyDefinition.new(props)
-        rescue Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError => e
+          argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+        rescue Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError => e
           error_message = e.message
         end
 
         # output
         panels = []
         panels << { title: "props", output: props.pretty_inspect }
-        panels << { title: "object", output: property_definition.pretty_inspect } if show_object
+        panels << { title: "object", output: argument_definition.pretty_inspect } if show_object
         panels << { title: "ERROR", style: ERROR_STYLE, output: error_message }
 
         render_with_template(
@@ -281,15 +281,15 @@ module Primer
         }
 
         begin
-          property_definition = Primer::Responsive::PropertyDefinition.new(props)
-        rescue Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError => e
+          argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+        rescue Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError => e
           error_message = e.message
         end
 
         # output
         panels = []
         panels << { title: "props", output: props.pretty_inspect }
-        panels << { title: "object", output: property_definition.pretty_inspect } if show_object
+        panels << { title: "object", output: argument_definition.pretty_inspect } if show_object
         panels << { title: "ERROR", style: ERROR_STYLE, output: error_message }
 
         render_with_template(
@@ -310,8 +310,8 @@ module Primer
             warn_message: "Support for these values is going to be dropped in the next release"
           }
         }
-        property_definition = Primer::Responsive::PropertyDefinition.new(props)
-        error_message = property_definition.deprecation_warn_message(5)
+        argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+        error_message = argument_definition.deprecation_warn_message(5)
 
         # output
         panels = []
@@ -333,8 +333,8 @@ module Primer
             type: Integer
           }
         }
-        property_definition = Primer::Responsive::PropertyDefinition.new(props)
-        error_message = property_definition.deprecation_warn_message(5)
+        argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+        error_message = argument_definition.deprecation_warn_message(5)
 
         # output
         panels = []
@@ -347,18 +347,18 @@ module Primer
         )
       end
 
-      # @label Deprecation: property
-      def deprecate_property
+      # @label Deprecation: argument
+      def deprecate_argument
         props = {
           name: :test,
           allowed_values: [1, 2, 3],
           deprecation: {
-            warn_message: "This property is unsafe and will be sunset in version 1.8"
+            warn_message: "This argument is unsafe and will be sunset in version 1.8"
           }
         }
-        property_definition = Primer::Responsive::PropertyDefinition.new(props)
+        argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
 
-        error_message = property_definition.deprecation_warn_message(5)
+        error_message = argument_definition.deprecation_warn_message(5)
 
         # output
         panels = []

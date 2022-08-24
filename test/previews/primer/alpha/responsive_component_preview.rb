@@ -24,7 +24,7 @@ module Primer
       # @param placement_viewport_v_regular select [~, center, top, bottom, full]
       # @param placement_viewport_v_wide select [~, center, top, bottom, full]
       # @param placement_container select [~, top, right, bottom, left]
-      def property_values_defaults(
+      def argument_values_defaults(
         uuid: "",
         id: 0,
         spacing: nil,
@@ -51,12 +51,12 @@ module Primer
         values[:placement][:container] = placement_container.to_sym unless placement_container.nil?
 
         cloned_values = values.deep_dup
-        component = Alpha::DummyResponsiveComponent.new(property_values: cloned_values)
+        component = Alpha::DummyResponsiveComponent.new(argument_values: cloned_values)
         component.normalize_values!
 
         panels = [
           { title: "Values", output: values.pretty_inspect },
-          { title: "Normalized", output: component.property_values.pretty_inspect },
+          { title: "Normalized", output: component.argument_values.pretty_inspect },
           { title: "Component", output: component.pretty_inspect }
         ]
 
@@ -67,7 +67,7 @@ module Primer
       end
 
       # @label Normalize values
-      def normalize_property_values
+      def normalize_argument_values
         values = {
           uuid: "unique-hash",
           id: "test",
@@ -78,8 +78,8 @@ module Primer
         }
 
         cloned_values = values.deep_dup
-        component = Alpha::DummyResponsiveComponent.new(property_values: cloned_values)
-        with_default_values = component.normalize_values(property_values: cloned_values, fallback_to_default: true)
+        component = Alpha::DummyResponsiveComponent.new(argument_values: cloned_values)
+        with_default_values = component.normalize_values(argument_values: cloned_values, fallback_to_default: true)
 
         panels = [
           { title: "Values", output: values.pretty_inspect },
@@ -94,11 +94,11 @@ module Primer
       end
 
       # @label List defaults from definitions
-      def property_definition
+      def argument_definition
         instance = Alpha::ChildDummyResponsiveComponent.new
 
         panels = [
-          { title: "Properties", output: instance.props.pretty_inspect }
+          { title: "Arguments", output: instance.props.pretty_inspect }
         ]
 
         render_with_template(
@@ -118,7 +118,7 @@ module Primer
 
         begin
           Alpha::ChildDummyResponsiveComponent.new(
-            property_values: {},
+            argument_values: {},
             html_attributes: html_attributes
           )
         rescue Primer::Responsive::HtmlAttributesHelper::InvalidHtmlAttributeError => e
@@ -139,7 +139,7 @@ module Primer
       # @label Rendering html attributes
       def html_attributes_render
         component = Alpha::ChildDummyResponsiveComponent.new(
-          property_values: {},
+          argument_values: {},
           html_attributes: {
             class: %w[class-a class-b class-c],
             data: {
@@ -159,8 +159,8 @@ module Primer
       end
       # @!endgroup
 
-      # @label property definitions
-      def property_definitions
+      # @label argument definitions
+      def argument_definitions
         begin
           component = Alpha::DummyResponsiveComponent.new
         rescue => e
@@ -176,8 +176,8 @@ module Primer
         )
       end
 
-      # @label property definitions inheritance
-      def inherited_property_definitions
+      # @label argument definitions inheritance
+      def inherited_argument_definitions
         component = Alpha::ChildDummyResponsiveComponent.new(
           html_attributes: {
             id: "unique-id",
@@ -202,7 +202,7 @@ module Primer
     class DummyResponsiveComponent < Primer::Alpha::ResponsiveComponent
       attr_reader :props
 
-      properties_definition(
+      arguments_definition(
         uuid: prop(
           type: String
         ),
@@ -249,9 +249,9 @@ module Primer
         }
       )
 
-      def initialize(property_values: {}, html_attributes: {})
+      def initialize(argument_values: {}, html_attributes: {})
         super
-        @props = DummyResponsiveComponent.properties
+        @props = DummyResponsiveComponent.arguments
       end
 
       def should_raise_error?
@@ -259,13 +259,13 @@ module Primer
       end
     end
 
-    # dummy class to test inherited properties
+    # dummy class to test inherited arguments
     class ChildDummyResponsiveComponent < DummyResponsiveComponent
       attr_reader :props
 
       add_allowed_html_attributes :for, :autocomplete
 
-      add_properties_definition(
+      add_arguments_definition(
         id: prop(
           type: String,
           default: "empty id"
@@ -305,15 +305,15 @@ module Primer
         }
       )
 
-      def initialize(property_values: {}, html_attributes: {})
+      def initialize(argument_values: {}, html_attributes: {})
         super
-        @props = ChildDummyResponsiveComponent.properties
+        @props = ChildDummyResponsiveComponent.arguments
       end
     end
 
     # class for responsive default tests
     class DefaultValuesResponsiveComponent < Primer::Alpha::ResponsiveComponent
-      properties_definition(
+      arguments_definition(
         responsive_a: prop(
           responsive: :yes,
           allowed_values: [:a, :b, :c],

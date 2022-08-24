@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class PropertiesDefinitionHelperTest < Minitest::Test
+class ArgumentsDefinitionHelperTest < Minitest::Test
   include Primer::Responsive::HtmlAttributesHelper
 
   def test_validate_html_attributes_raises_error_if_not_allowed_attribute_is_present

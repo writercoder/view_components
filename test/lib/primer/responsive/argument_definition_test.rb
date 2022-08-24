@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class PropertyDefinitionTest < Minitest::Test
+class ArgumentDefinitionTest < Minitest::Test
   def test_params_validation_raises_if_not_allowed_params_found
     # arrange
     not_allowed_param = :inexistent_param
@@ -13,8 +13,8 @@ class PropertyDefinitionTest < Minitest::Test
     params[not_allowed_param] = "irrelevant value"
 
     # act / assert
-    error = assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
-      Primer::Responsive::PropertyDefinition.new(params)
+    error = assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError) do
+      Primer::Responsive::ArgumentDefinition.new(params)
     end
     assert(error&.message&.include?(not_allowed_param.to_s))
   end
@@ -27,8 +27,8 @@ class PropertyDefinitionTest < Minitest::Test
     }
 
     # act / assert
-    assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
-      Primer::Responsive::PropertyDefinition.new(params)
+    assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError) do
+      Primer::Responsive::ArgumentDefinition.new(params)
     end
   end
 
@@ -40,8 +40,8 @@ class PropertyDefinitionTest < Minitest::Test
     }
 
     # act / assert
-    assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
-      Primer::Responsive::PropertyDefinition.new(params)
+    assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError) do
+      Primer::Responsive::ArgumentDefinition.new(params)
     end
   end
 
@@ -55,8 +55,8 @@ class PropertyDefinitionTest < Minitest::Test
     }
 
     # act / assert
-    assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
-      Primer::Responsive::PropertyDefinition.new(params)
+    assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError) do
+      Primer::Responsive::ArgumentDefinition.new(params)
     end
   end
 
@@ -67,8 +67,8 @@ class PropertyDefinitionTest < Minitest::Test
     }
 
     # act / assert
-    error = assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
-      Primer::Responsive::PropertyDefinition.new(params)
+    error = assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError) do
+      Primer::Responsive::ArgumentDefinition.new(params)
     end
     assert(error&.message&.include?("responsive"))
   end
@@ -82,8 +82,8 @@ class PropertyDefinitionTest < Minitest::Test
     }
 
     # act / assert
-    error = assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
-      Primer::Responsive::PropertyDefinition.new(params)
+    error = assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError) do
+      Primer::Responsive::ArgumentDefinition.new(params)
     end
     assert(error&.message&.include?("responsive"))
   end
@@ -99,8 +99,8 @@ class PropertyDefinitionTest < Minitest::Test
     }
 
     # act / assert
-    assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
-      Primer::Responsive::PropertyDefinition.new(params)
+    assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError) do
+      Primer::Responsive::ArgumentDefinition.new(params)
     end
   end
 
@@ -111,14 +111,14 @@ class PropertyDefinitionTest < Minitest::Test
       v_narrow: { type: String }
     }
 
-    error = assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
-      Primer::Responsive::PropertyDefinition.new(params)
+    error = assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError) do
+      Primer::Responsive::ArgumentDefinition.new(params)
     end
 
     assert(error&.message&.include?("type"))
   end
 
-  def test_valid_definition_fully_responsive_property_cant_have_variant_default_and_overall_default_simultaneously
+  def test_valid_definition_fully_responsive_argument_cant_have_variant_default_and_overall_default_simultaneously
     params = {
       type: String,
       default: "overall_default",
@@ -126,8 +126,8 @@ class PropertyDefinitionTest < Minitest::Test
       v_narrow: { default: "narrow_default" }
     }
 
-    error = assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
-      Primer::Responsive::PropertyDefinition.new(params)
+    error = assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError) do
+      Primer::Responsive::ArgumentDefinition.new(params)
     end
 
     assert(error&.message&.include?("default"))
@@ -140,8 +140,8 @@ class PropertyDefinitionTest < Minitest::Test
       v_narrow: { default: "narrow" }
     }
 
-    error = assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyDefinitionError) do
-      Primer::Responsive::PropertyDefinition.new(params)
+    error = assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError) do
+      Primer::Responsive::ArgumentDefinition.new(params)
     end
 
     assert(error&.message&.include?("default"))
@@ -149,7 +149,7 @@ class PropertyDefinitionTest < Minitest::Test
 
   def test_defition_valid_value_is_always_true_if_no_type_or_allowed_values_are_defined
     # arrange
-    property_definition = Primer::Responsive::PropertyDefinition.new(
+    argument_definition = Primer::Responsive::ArgumentDefinition.new(
       default: 10
     )
     values = {
@@ -164,7 +164,7 @@ class PropertyDefinitionTest < Minitest::Test
     values.each_value do |value|
       # assert
       assert(
-        property_definition.valid_value?(value),
+        argument_definition.valid_value?(value),
         "Value `#{value.inspect}`(#{value.class.inspect}) should be valid if no type or allowed_values is specified"
       )
     end
@@ -172,7 +172,7 @@ class PropertyDefinitionTest < Minitest::Test
 
   def test_valid_value_uses_allowed_values_to_check_for_value_validity
     # arrange
-    property_definition = Primer::Responsive::PropertyDefinition.new(
+    argument_definition = Primer::Responsive::ArgumentDefinition.new(
       allowed_values: [1, 3, 5]
     )
     test_cases = {
@@ -187,7 +187,7 @@ class PropertyDefinitionTest < Minitest::Test
     test_cases.each do |value, expected|
       # assert
       assert(
-        property_definition.valid_value?(value) == expected,
+        argument_definition.valid_value?(value) == expected,
         "Value `#{value.inspect}` should be #{expected.inspect} per allowed_values"
       )
     end
@@ -195,7 +195,7 @@ class PropertyDefinitionTest < Minitest::Test
 
   def test_valid_value_uses_allowed_values_to_check_for_value_validity_in_responsive_variants
     # arrange
-    property_definition = Primer::Responsive::PropertyDefinition.new(
+    argument_definition = Primer::Responsive::ArgumentDefinition.new(
       responsive: :yes,
       allowed_values: [:a, :b, :c],
       v_narrow: {
@@ -257,7 +257,7 @@ class PropertyDefinitionTest < Minitest::Test
     test_cases.each do |test_case|
       # assert
       assert(
-        property_definition.valid_value?(test_case[:value], test_case[:variant]) == test_case[:expected],
+        argument_definition.valid_value?(test_case[:value], test_case[:variant]) == test_case[:expected],
         "Value `#{test_case[:value].inspect}` should be #{test_case[:expected].inspect} per allowed_values"
       )
     end
@@ -265,14 +265,14 @@ class PropertyDefinitionTest < Minitest::Test
 
   def test_validate_value_raises_error_if_value_has_invalid_type
     # arrange
-    property_definition = Primer::Responsive::PropertyDefinition.new(
+    argument_definition = Primer::Responsive::ArgumentDefinition.new(
       type: Numeric
     )
     value = "string value"
 
     # act / assert
-    error = assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyValueError) do
-      property_definition.validate_value(value)
+    error = assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentValueError) do
+      argument_definition.validate_value(value)
     end
 
     assert(error&.message&.include?("type"))
@@ -280,20 +280,20 @@ class PropertyDefinitionTest < Minitest::Test
 
   def test_validate_value_raises_error_if_value_outside_allowed_values
     # arrange
-    property_definition = Primer::Responsive::PropertyDefinition.new(
+    argument_definition = Primer::Responsive::ArgumentDefinition.new(
       allowed_values: [:a, :b, :c]
     )
     value = :invalid_value
 
     # act / assert
-    assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyValueError) do
-      property_definition.validate_value(value)
+    assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentValueError) do
+      argument_definition.validate_value(value)
     end
   end
 
   def test_validate_value_raises_error_if_value_outside_allowed_values_for_responsive_variants
     # arrange
-    property_definition = Primer::Responsive::PropertyDefinition.new(
+    argument_definition = Primer::Responsive::ArgumentDefinition.new(
       allowed_values: [:a, :b, :c],
       responsive: :yes,
       v_narrow: {
@@ -303,14 +303,14 @@ class PropertyDefinitionTest < Minitest::Test
     value = :invalid_value
 
     # act / assert
-    assert_raises(Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyValueError) do
-      property_definition.validate_value(value, :v_narrow)
+    assert_raises(Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentValueError) do
+      argument_definition.validate_value(value, :v_narrow)
     end
   end
 
   def test_deprecated_value_method_is_true_for_values_deprecated
     # arrange
-    property_definition = Primer::Responsive::PropertyDefinition.new(
+    argument_definition = Primer::Responsive::ArgumentDefinition.new(
       allowed_values: [:a, :b, :c],
       deprecation: {
         deprecated_values: [:d, :e]
@@ -319,6 +319,6 @@ class PropertyDefinitionTest < Minitest::Test
     value = :d
 
     # act / assert
-    assert(property_definition.deprecated_value?(value))
+    assert(argument_definition.deprecated_value?(value))
   end
 end

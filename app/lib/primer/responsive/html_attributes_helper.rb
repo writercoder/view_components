@@ -8,7 +8,7 @@ module Primer
     # it easier to handle html attributes on their own, instead of filtering system_args
     module HtmlAttributesHelper
       # The global attributes supported only exclude event handlers and interactive APIs
-      # If they need to be supported, they should be part of the component properties
+      # If they need to be supported, they should be part of the component arguments
       # so their behavior can be documented and sanitized
       #
       # attributes ending in * accept any attribute prefixed with the attribute name,

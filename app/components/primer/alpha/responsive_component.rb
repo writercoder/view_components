@@ -6,14 +6,14 @@ module Primer
     class ResponsiveComponent < Primer::BaseComponent
       extend ActionView::Helpers::TagHelper
       extend Primer::Responsive::HtmlAttributesHelper
-      extend Primer::Responsive::PropertiesDefinitionHelper
+      extend Primer::Responsive::ArgumentsDefinitionHelper
       extend Primer::Responsive::StyleClassMapHelper
 
-      attr_reader :property_values, :html_attributes
+      attr_reader :argument_values, :html_attributes
 
       # class instance variables
       @additional_allowed_html_attributes = nil
-      @properties = nil
+      @arguments = nil
       @style_map = nil
 
       # Declares a list of allowed HTML attributes to be used when validating/sanitizing the attributes
@@ -22,19 +22,19 @@ module Primer
         @additional_allowed_html_attributes = additional_allowed_html_attributes
       end
 
-      # Defines all properties part of the component props API
-      def self.properties_definition(all_properties_definition)
-        @properties = properties_definition_builder(all_properties_definition)
+      # Defines all arguments part of the component props API
+      def self.arguments_definition(all_arguments_definition)
+        @arguments = arguments_definition_builder(all_arguments_definition)
       end
 
-      # Adds property definitions to the componennt props API
-      # To be used in child components that want to reuse its parent's property definitions
-      # - if a propery with the same name is added, it'll overwrite the parent's property definition
+      # Adds argument definitions to the componennt props API
+      # To be used in child components that want to reuse its parent's argument definitions
+      # - if a propery with the same name is added, it'll overwrite the parent's argument definition
       # NOTE: favor composition over inheritance when creating components whenever possible.
       #       This method is supposed to be used with "abstract" or "base" parent component classes
-      def self.add_properties_definition(new_properties_definition)
-        new_properties = properties_definition_builder(new_properties_definition)
-        @properties = !superclass.respond_to?(:properties) || superclass.properties.nil? ? new_properties : { **superclass.properties, **new_properties }
+      def self.add_arguments_definition(new_arguments_definition)
+        new_arguments = arguments_definition_builder(new_arguments_definition)
+        @arguments = !superclass.respond_to?(:arguments) || superclass.arguments.nil? ? new_arguments : { **superclass.arguments, **new_arguments }
       end
 
       # Declares the class map of a component.
@@ -70,21 +70,21 @@ module Primer
       end
 
       class << self
-        attr_accessor :properties, :style_map, :additional_allowed_html_attributes
+        attr_accessor :arguments, :style_map, :additional_allowed_html_attributes
       end
 
-      # @param property_values: [Hash] component property values
+      # @param argument_values: [Hash] component argument values
       # @param html_attributes: [Hash] html_attributes to be added to the component root element
       #
-      # NOTE: use a property named :tag to support custom tags, since the definition can also be used to valid what tags are allowed
-      def initialize(property_values: {}, html_attributes: {})
-        @property_values = property_values
+      # NOTE: use a argument named :tag to support custom tags, since the definition can also be used to valid what tags are allowed
+      def initialize(argument_values: {}, html_attributes: {})
+        @argument_values = argument_values
         @html_attributes = html_attributes
 
         validate_html_attributes if should_raise_error?
         sanitize_html_attributes!
 
-        tag = property_values.fetch(:tag, nil)
+        tag = argument_values.fetch(:tag, nil)
         super(tag: tag)
 
         @html_attributes[:"data-view-component"] = true
@@ -126,28 +126,28 @@ module Primer
         self.class.tag.attributes(html_attributes)
       end
 
-      # Normalizes the property_values by component properties_definition
-      def normalize_values(property_values: {}, fallback_to_default: true)
-        self.class.normalize_property_values!(
-          properties_definition: self.class.properties,
-          property_values: property_values,
-          fallback_to_default: fallback_to_default || Primer::Responsive::PropertiesDefinitionHelper.production_env?
+      # Normalizes the argument_values by component arguments_definition
+      def normalize_values(argument_values: {}, fallback_to_default: true)
+        self.class.normalize_argument_values!(
+          arguments_definition: self.class.arguments,
+          argument_values: argument_values,
+          fallback_to_default: fallback_to_default || Primer::Responsive::ArgumentsDefinitionHelper.production_env?
         )
       end
 
-      # Normalizes and updates the property_values by component properties_definition
+      # Normalizes and updates the argument_values by component arguments_definition
       def normalize_values!(fallback_to_default: true)
-        @property_values = normalize_values(
-          property_values: @property_values,
+        @argument_values = normalize_values(
+          argument_values: @argument_values,
           fallback_to_default: fallback_to_default
         )
       end
 
-      def validate_values(property_values = nil)
-        property_values = @property_values if property_values.nil?
-        self.class.validate_property_values(
-          properties_definition: self.class.properties,
-          property_values: property_values
+      def validate_values(argument_values = nil)
+        argument_values = @argument_values if argument_values.nil?
+        self.class.validate_argument_values(
+          arguments_definition: self.class.arguments,
+          argument_values: argument_values
         )
       end
 
@@ -158,14 +158,14 @@ module Primer
       def filtered_style_class_map!(force_recalculation: false)
         @filtered_map unless @filtered_map.nil? || force_recalculation
 
-        @filtered_map = filter_style_class_map(@property_values)
+        @filtered_map = filter_style_class_map(@argument_values)
       end
 
-      def filter_style_class_map(property_values = nil)
+      def filter_style_class_map(argument_values = nil)
         {} if self.class.style_map.nil?
 
-        property_values = @property_values if property_values.nil?
-        self.class.apply_values_to_style_map(self.class.style_map, property_values)
+        argument_values = @argument_values if argument_values.nil?
+        self.class.apply_values_to_style_map(self.class.style_map, argument_values)
       end
     end
   end

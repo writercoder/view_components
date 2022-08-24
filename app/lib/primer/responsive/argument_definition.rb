@@ -2,8 +2,8 @@
 
 module Primer
   module Responsive
-    # Property definition helps defining, validating, and deprecating the property of responsive components
-    class PropertyDefinition
+    # Argument Definition helps defining, validating, and deprecating an argument of responsive components
+    class ArgumentDefinition
       ALLOWED_PARAMS = [
         :name,
         :variant_name,
@@ -12,7 +12,7 @@ module Primer
         :default,
         :deprecation,
         :responsive
-      ].concat(PropertiesDefinitionHelper::RESPONSIVE_VARIANTS).freeze
+      ].concat(ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS).freeze
       RESPONSIVE_OPTIONS = [:no, :transitional, :yes].freeze
 
       attr_accessor :name
@@ -27,7 +27,7 @@ module Primer
 
       def initialize(params = {})
         @params = params
-        validate_params_structure unless PropertiesDefinitionHelper.production_env?
+        validate_params_structure unless ArgumentsDefinitionHelper.production_env?
 
         @name = params[:name]
         @allowed_values = params[:allowed_values]
@@ -39,10 +39,10 @@ module Primer
         @are_variants_required = false
         unless @responsive == :no
           @responsive_variants = {}
-          PropertiesDefinitionHelper::RESPONSIVE_VARIANTS.each do |variant|
+          ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS.each do |variant|
             next unless params.key? variant
 
-            @responsive_variants[variant] = ResponsiveVariantPropertyDefinition.new(
+            @responsive_variants[variant] = ResponsiveVariantArgumentDefinition.new(
               name: @name,
               variant_name: variant,
               **params[variant]
@@ -53,17 +53,17 @@ module Primer
 
         @has_defined_default = params.key?(:default)
 
-        validate_definition unless PropertiesDefinitionHelper.production_env?
+        validate_definition unless ArgumentsDefinitionHelper.production_env?
       end
 
-      # Checks if the property is required by checking if it or its reponsive variants have defaults.
+      # Checks if the argument is required by checking if it or its reponsive variants have defaults.
       def required?
         !@has_defined_default && (responsive?(:no) || @are_variants_required)
       end
 
       # checks responsive type of responsiveness in general.
       #
-      # @param responsive_type [Symbol](:no, :transitional, :yes) the responsive type to check, or nil to ask if the property
+      # @param responsive_type [Symbol](:no, :transitional, :yes) the responsive type to check, or nil to ask if the argument
       #                        has responsive support (if:transitional or :yes).
       def responsive?(responsive_type = nil)
         return @responsive == responsive_type unless responsive_type.nil?
@@ -71,10 +71,10 @@ module Primer
         @responsive != :no
       end
 
-      # Check if the property definition has an explicit default value.
+      # Check if the argument definition has an explicit default value.
       #
       # @param variant [Symbol](:v_narrow, :v_regular, :v_wide) if a variant is used, this method will answer if that specific variant
-      #                has a default value, if not, thie method answers if the main property has a default value.
+      #                has a default value, if not, thie method answers if the main argument has a default value.
       def defined_default?(variant = nil)
         return @has_defined_default if variant.nil? || !responsive?
         return @responsive_variants[variant].defined_default? if @responsive_variants.key?(variant)
@@ -82,11 +82,11 @@ module Primer
         false
       end
 
-      # Retrieves the default value for this property or for its responsive variant. If the property has no defined default value
+      # Retrieves the default value for this argument or for its responsive variant. If the argument has no defined default value
       # this method will return nil.
       #
       # @param variant [Symbol](:v_narrow, :v_regular, :v_wide) if passed, will retrieve the default value for the responsive variant
-      #                otherwise, retrieves the default value for the property.
+      #                otherwise, retrieves the default value for the argument.
       def default_value(variant = nil)
         return @default unless responsive?
         return @default if variant.nil? || !defined_default?(variant)
@@ -128,14 +128,14 @@ module Primer
       # @param value [Any] given value.
       # @param variant [Symbol](:v_narrow, :v_regular, :v_wide) specific responsive variant to check against.
       #
-      # @raise Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyValueError if value if not valid.
+      # @raise Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentValueError if value if not valid.
       def validate_value(value, variant = nil)
         return if valid_value?(value, variant)
 
         base_message = invalid_value_base_message(value)
 
         unless @type.nil?
-          raise PropertiesDefinitionHelper::InvalidPropertyValueError, <<~MSG
+          raise ArgumentsDefinitionHelper::InvalidArgumentValueError, <<~MSG
             #{base_message}
             Value has to be of type #{@type.inspect}.
           MSG
@@ -148,23 +148,23 @@ module Primer
           variant_allowed_values = responsive_variant&.allowed_values || []
           all_allowed_values = allowed_values.concat(variant_allowed_values)
 
-          raise PropertiesDefinitionHelper::InvalidPropertyValueError, <<~MSG
+          raise ArgumentsDefinitionHelper::InvalidArgumentValueError, <<~MSG
             #{base_message}
             Value for responsive variant "#{variant.inspect}" has to be one of #{all_allowed_values.inspect}.
           MSG
         end
 
-        raise PropertiesDefinitionHelper::InvalidPropertyValueError, <<~MSG
+        raise ArgumentsDefinitionHelper::InvalidArgumentValueError, <<~MSG
           #{base_message}
           Value has to be one of #{allowed_values.inspect}.
         MSG
       end
 
-      # Checks if the entire property is deprecated.
+      # Checks if the entire argument is deprecated.
       #
       # @return [Boolean]
       def deprecated?
-        !@deprecation.nil? && @deprecation.property_deprecated?
+        !@deprecation.nil? && @deprecation.argument_deprecated?
       end
 
       # Checks if a given value is deprecated.
@@ -185,7 +185,7 @@ module Primer
         @deprecation.deprecation_warn_message(value)
       end
 
-      # Helper method to retrieve a base error message when raising errors for invalid property values.
+      # Helper method to retrieve a base error message when raising errors for invalid argument values.
       # Can be used to custom validation rules
       #
       # # @return [String]
@@ -196,7 +196,7 @@ module Primer
       private
 
       def error_base_message
-        "Invalid property definition for \"#{@name.inspect}\"."
+        "Invalid argument definition for \"#{@name.inspect}\"."
       end
 
       def validate_params_structure(params = nil)
@@ -205,38 +205,38 @@ module Primer
         params.each_key do |key|
           next if ALLOWED_PARAMS.include? key
 
-          raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
-            Invalid property definition param:
+          raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
+            Invalid argument definition param:
             Param `#{key.inspect}` is not a valid definition parameters.
             Allowed parameters: `#{ALLOWED_PARAMS.inspect}`
           MSG
         end
       end
 
-      # Validates the property definition when developing a responsive component.
+      # Validates the argument definition when developing a responsive component.
       # Triggers automatically on instantiation when not in production
       def validate_definition
         if !@allowed_values.nil? && !@type.nil?
-          raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+          raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
             #{error_base_message}
             Definition cannot contain both :type and :allowed_values.
           MSG
         end
 
         unless valid_responsive_option?
-          raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+          raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
             #{error_base_message}
             Invalid :responsive value: #{responsive.inspect}. Allowed values for :responsive are: #{RESPONSIVE_OPTIONS.inspect}.
           MSG
         end
 
         if responsive? :no
-          PropertiesDefinitionHelper::RESPONSIVE_VARIANTS.each do |variant|
+          ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS.each do |variant|
             next unless @params.key? variant
 
-            raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+            raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
               #{error_base_message}
-              Properties not responsive can't have responsive variants definition, but #{variant.inspect} found.
+              Arguments not responsive can't have responsive variants definition, but #{variant.inspect} found.
               To fix this, change :responsive to :transitional or :yes
             MSG
           end
@@ -249,15 +249,15 @@ module Primer
               repeated_values = @allowed_values & responsive_variant.allowed_values
               next if repeated_values.empty?
 
-              raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+              raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
                 #{error_base_message}
-                Responsive variant can't have @allowed_values existent in @allowed_values of the property definition.
+                Responsive variant can't have @allowed_values existent in @allowed_values of the argument definition.
                 To fix, remove #{repeated_values.inspect} from #{variant_name.inspect} responsive variant.
               MSG
             end
           elsif @responsive_variants.values.any? { |rv| !rv.allowed_values.nil? }
             # responsive definition cannot contain :allowed_values if the main definition is @type
-            raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+            raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
               #{error_base_message}
               Responsive variant can't use @allowed_values when main definition is @type based.
             MSG
@@ -270,7 +270,7 @@ module Primer
 
             responsive_variants_with_default << responsive_variant.variant_name
             if responsive?(:yes) && defined_default?
-              raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+              raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
                 #{error_base_message}
                 A responsive-only type (responsive: :yes) cannot contain a variant :default at the same
                 time it defines an overall :default. Remove the base :default, or remove all variants :default
@@ -288,16 +288,16 @@ module Primer
           end
 
           unless responsive_variants_with_default.empty?
-            PropertiesDefinitionHelper::RESPONSIVE_VARIANTS_MAP.each do |key, config|
+            ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS_MAP.each do |key, config|
               next if config[:optional]
               next if responsive_variants_with_default.include? key
 
-              raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+              raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
                 #{error_base_message}
-                If a responsive property defines a default in at least one responsive variant,
+                If a responsive argument defines a default in at least one responsive variant,
                 all required responsive variants have to also define a default value.
                 Variant with default: #{responsive_variants_with_default.inspect}
-                Variant missing default: #{PropertiesDefinitionHelper::REQUIRED_RESPONSIVE_VARIANTS - responsive_variants_with_default}
+                Variant missing default: #{ArgumentsDefinitionHelper::REQUIRED_RESPONSIVE_VARIANTS - responsive_variants_with_default}
               MSG
             end
           end
@@ -305,9 +305,9 @@ module Primer
 
         unless @deprecation.nil?
           if !@deprecation.type.nil? && @deprecation.type == @type
-            raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+            raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
               #{error_base_message}
-              Deprecated type can't be the same as property type
+              Deprecated type can't be the same as argument type
             MSG
           end
 
@@ -315,9 +315,9 @@ module Primer
             current_allowed_values = (@allowed_values || []) + (@responsive_variants&.values&.map(&:allowed_values)&.flatten || [])
             repeated_attrs = current_allowed_values & @deprecation.deprecated_values
             unless repeated_attrs.empty?
-              raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+              raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
                 #{error_base_message}
-                Deprecated values #{@deprecation.deprecated_values.inspect} can't be part of the allowed_values of the property: #{repeated_attrs.inspect}
+                Deprecated values #{@deprecation.deprecated_values.inspect} can't be part of the allowed_values of the argument: #{repeated_attrs.inspect}
               MSG
             end
           end
@@ -335,7 +335,7 @@ module Primer
       def validate_default_value_by_allowed_values(allowed_values, value)
         return if allowed_values.nil? || allowed_values.any?(value)
 
-        raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+        raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
           #{error_base_message}
           Default value #{value.inspect}(#{value.class.inspect}) has to be one of #{allowed_values.inspect}.
         MSG
@@ -344,7 +344,7 @@ module Primer
       def validate_default_value_by_type(value)
         return if value.is_a? @type
 
-        raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+        raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
           #{error_base_message}
           Default value #{value.inspect}(#{value.class.inspect}) has to be of type #{@type.inspect}.
         MSG
@@ -358,15 +358,15 @@ module Primer
         return nil unless params.key? :deprecation
 
         deprecation_params = {
-          property_definition: self,
+          argument_definition: self,
           **params[:deprecation]
         }
-        PropertyDeprecation.new(**deprecation_params)
+        ArgumentDeprecation.new(**deprecation_params)
       end
     end
 
-    # Internal class only to be used as part of a responsive property definition
-    class ResponsiveVariantPropertyDefinition < PropertyDefinition
+    # Internal class only to be used as part of a responsive argument definition
+    class ResponsiveVariantArgumentDefinition < ArgumentDefinition
       DENY_RESPONSIVE_VARIANT_ATTRIBUTES = [:type, :responsive, :deprecation].freeze
 
       attr_reader :variant_name
@@ -377,10 +377,10 @@ module Primer
       end
 
       def validate_definition
-        invalid_attrs = [*PropertiesDefinitionHelper::RESPONSIVE_VARIANTS, *DENY_RESPONSIVE_VARIANT_ATTRIBUTES] & @params.keys
+        invalid_attrs = [*ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS, *DENY_RESPONSIVE_VARIANT_ATTRIBUTES] & @params.keys
         return if invalid_attrs.empty?
 
-        raise PropertiesDefinitionHelper::InvalidPropertyDefinitionError, <<~MSG
+        raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
           #{error_base_message}
           Responsive variants cannot have the following attributes as part of their definitions: #{DENY_RESPONSIVE_VARIANT_ATTRIBUTES.inspect}
           Invalid attributes found for #{@variant_name.inspect}: #{invalid_attrs.inspect}
@@ -388,26 +388,26 @@ module Primer
       end
     end
 
-    # Handles deprecation of properties or values as part of the responsive property definition
-    class PropertyDeprecation
-      # @property: deprecates the whole property. Defaults to true if @deprecated_values and @type are not set
+    # Handles deprecation of arguments or values as part of the responsive argument definition
+    class ArgumentDeprecation
+      # @argument: deprecates the whole argument. Defaults to true if @deprecated_values and @type are not set
       # @deprecated_values: array of deprecated values that cannot be used moving forward
       # @type: if a type was changed into another and the old type is still supported. This should be the old supported type
       # @warn_message: explanations for the deprecation on top of what is presented by default
       attr_reader :deprecated_values, :type, :warn_message
 
-      def initialize(property_definition: nil, property: false, deprecated_values: nil, type: nil, warn_message: "")
-        @property_definition = property_definition
+      def initialize(argument_definition: nil, argument: false, deprecated_values: nil, type: nil, warn_message: "")
+        @argument_definition = argument_definition
         @deprecated_values = deprecated_values
         @type = type
 
-        @property = deprecated_values.nil? && type.nil? ? true : property
+        @argument = deprecated_values.nil? && type.nil? ? true : argument
 
         @warn_message = warn_message
       end
 
       def deprecation_warn(value_given = nil)
-        return unless PropertiesDefinitionHelper.production_env? || silent_deprecation?
+        return unless ArgumentsDefinitionHelper.production_env? || silent_deprecation?
 
         deprecation_message = deprecation_warn_message(value_given)
         ActiveSupport::Deprecation.warn(deprecation_message)
@@ -416,13 +416,13 @@ module Primer
       def deprecation_warn_message(value_given = nil)
         return "" unless deprecated_value? value_given
 
-        property_name = @property_definition.name.inspect
-        msg = if @property
-                "Property #{property_name} is deprecated."
+        argument_name = @argument_definition.name.inspect
+        msg = if @argument
+                "Argument #{argument_name} is deprecated."
               elsif !@type.nil?
-                "Type #{@type.inspect} is deprecated for property #{property_name}. Use type #{@property_definition.type.inspect} instead. Value provided: #{value_given.inspect}(#{value_given.class.inspect})"
+                "Type #{@type.inspect} is deprecated for argument #{argument_name}. Use type #{@argument_definition.type.inspect} instead. Value provided: #{value_given.inspect}(#{value_given.class.inspect})"
               else
-                "#{@deprecated_values.inspect} #{@deprecated_values.length > 1 ? 'are' : 'is'} deprecated for property #{property_name}. Value provided: #{value_given.inspect}"
+                "#{@deprecated_values.inspect} #{@deprecated_values.length > 1 ? 'are' : 'is'} deprecated for argument #{argument_name}. Value provided: #{value_given.inspect}"
               end
         msg = "DEPRECATION: #{msg}"
         msg += "\n             #{@warn_message}" unless @warn_message.empty?
@@ -430,13 +430,13 @@ module Primer
         msg
       end
 
-      def property_deprecated?
-        @property
+      def argument_deprecated?
+        @argument
       end
 
       def deprecated_value?(value)
-        # property deprecation means that all values are deprecated
-        return true if @property
+        # argument deprecation means that all values are deprecated
+        return true if @argument
 
         @type.nil? ? @deprecated_values.any?(value) : value.is_a?(@type)
       end

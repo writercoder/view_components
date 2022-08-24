@@ -2,11 +2,11 @@
 
 require "test_helper"
 
-class PropertiesDefinitionHelperTest < Minitest::Test
-  include Primer::Responsive::PropertiesDefinitionHelper
-  PROPERTY_IDENTIFIER_KEY = Primer::Responsive::PropertiesDefinitionHelper::PROPERTY_IDENTIFIER_KEY
+class ArgumentsDefinitionHelperTest < Minitest::Test
+  include Primer::Responsive::ArgumentsDefinitionHelper
+  ARGUMENT_IDENTIFIER_KEY = Primer::Responsive::ArgumentsDefinitionHelper::ARGUMENT_IDENTIFIER_KEY
 
-  def props_definition_input
+  def args_definition_input
     {
       prop_a: prop(
         responsive: :no,
@@ -54,86 +54,86 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     }
   end
 
-  def test_properties_definition_builder_creates_a_hash_of_properties_and_variants
+  def test_arguments_definition_builder_creates_a_hash_of_arguments_and_variants
     # arrange
-    input = props_definition_input
+    input = args_definition_input
 
     # act
-    props_definition = properties_definition_builder(input)
+    args_definition = arguments_definition_builder(input)
 
     # assert
-    prop_a = props_definition[:prop_a]
-    assert_instance_of(Primer::Responsive::PropertyDefinition, prop_a)
+    prop_a = args_definition[:prop_a]
+    assert_instance_of(Primer::Responsive::ArgumentDefinition, prop_a)
     assert_equal(:prop_a, prop_a.name)
     assert_equal(false, prop_a.responsive?)
     assert_equal(true, prop_a.defined_default?)
     assert_equal(0, prop_a.default_value)
     assert_equal(false, prop_a.required?)
 
-    prop_b = props_definition[:prop_b]
-    assert_instance_of(Primer::Responsive::PropertyDefinition, prop_b)
+    prop_b = args_definition[:prop_b]
+    assert_instance_of(Primer::Responsive::ArgumentDefinition, prop_b)
     assert_equal(:prop_b, prop_b.name)
     assert_equal(false, prop_b.responsive?)
     assert_equal(false, prop_b.defined_default?)
     assert_equal(true, prop_b.required?)
 
-    responsive_prop_c = props_definition[:responsive_prop_c]
-    assert_instance_of(Primer::Responsive::PropertyDefinition, responsive_prop_c)
+    responsive_prop_c = args_definition[:responsive_prop_c]
+    assert_instance_of(Primer::Responsive::ArgumentDefinition, responsive_prop_c)
     assert_equal(:responsive_prop_c, responsive_prop_c.name)
     assert_equal(true, responsive_prop_c.responsive?)
     assert_equal(false, responsive_prop_c.defined_default?)
     assert_equal(false, responsive_prop_c.required?)
     assert_instance_of(
-      Primer::Responsive::ResponsiveVariantPropertyDefinition,
+      Primer::Responsive::ResponsiveVariantArgumentDefinition,
       responsive_prop_c.responsive_variants[:v_narrow]
     )
     assert_equal(true, responsive_prop_c.defined_default?(:v_narrow))
     assert_equal(:n_a, responsive_prop_c.default_value(:v_narrow))
     assert_instance_of(
-      Primer::Responsive::ResponsiveVariantPropertyDefinition,
+      Primer::Responsive::ResponsiveVariantArgumentDefinition,
       responsive_prop_c.responsive_variants[:v_regular]
     )
     assert_equal(true, responsive_prop_c.defined_default?(:v_regular))
     assert_equal(:b, responsive_prop_c.default_value(:v_regular))
     assert_instance_of(
-      Primer::Responsive::ResponsiveVariantPropertyDefinition,
+      Primer::Responsive::ResponsiveVariantArgumentDefinition,
       responsive_prop_c.responsive_variants[:v_wide]
     )
     assert_equal(true, responsive_prop_c.defined_default?(:v_wide))
     assert_equal(:a, responsive_prop_c.default_value(:v_wide))
 
-    transitional_prop_d = props_definition[:prop_d]
-    assert_instance_of(Primer::Responsive::PropertyDefinition, transitional_prop_d)
+    transitional_prop_d = args_definition[:prop_d]
+    assert_instance_of(Primer::Responsive::ArgumentDefinition, transitional_prop_d)
     assert_equal(:prop_d, transitional_prop_d.name)
     assert_equal(true, transitional_prop_d.responsive?)
     assert_equal(true, transitional_prop_d.defined_default?)
     assert_equal(false, transitional_prop_d.required?)
     assert_equal(:a, transitional_prop_d.default_value)
-    assert_instance_of(Primer::Responsive::PropertyDeprecation, transitional_prop_d.deprecation)
+    assert_instance_of(Primer::Responsive::ArgumentDeprecation, transitional_prop_d.deprecation)
     assert_equal(true, transitional_prop_d.deprecated_value?(:aa))
     assert(
       transitional_prop_d
       .deprecation_warn_message(:aa)
       .include?(
-        input[:prop_d][PROPERTY_IDENTIFIER_KEY][:deprecation][:warn_message]
+        input[:prop_d][ARGUMENT_IDENTIFIER_KEY][:deprecation][:warn_message]
       )
     )
 
-    namespace = props_definition[:prop_ns]
+    namespace = args_definition[:prop_ns]
     assert_kind_of(Hash, namespace)
 
     nested_deep_prop_a = namespace[:deep_prop_a]
-    assert_instance_of(Primer::Responsive::PropertyDefinition, nested_deep_prop_a)
+    assert_instance_of(Primer::Responsive::ArgumentDefinition, nested_deep_prop_a)
     assert(nested_deep_prop_a.responsive?(:yes))
 
     nested_deep_prop_b = namespace[:deep_prop_b]
-    assert_instance_of(Primer::Responsive::PropertyDefinition, nested_deep_prop_b)
+    assert_instance_of(Primer::Responsive::ArgumentDefinition, nested_deep_prop_b)
     assert(nested_deep_prop_b.responsive?(:transitional))
   end
 
-  def test_normalize_property_values_sets_default_to_missing_values
+  def test_normalize_argument_values_sets_default_to_missing_values
     # arrange
-    props_definition = properties_definition_builder(
+    args_definition = arguments_definition_builder(
       prop_a: prop(
         type: String,
         default: "default value"
@@ -148,20 +148,20 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     }
 
     # act
-    normalized_values = normalize_property_values!(
-      properties_definition: props_definition,
-      property_values: values.deep_dup,
+    normalized_values = normalize_argument_values!(
+      arguments_definition: args_definition,
+      argument_values: values.deep_dup,
       fallback_to_default: true
     )
 
     # assert
-    assert_equal(props_definition[:prop_a].default_value, normalized_values[:prop_a])
+    assert_equal(args_definition[:prop_a].default_value, normalized_values[:prop_a])
     assert_equal(values[:prop_b], normalized_values[:prop_b])
   end
 
-  def test_normalize_property_values_spreads_fully_responsive_values
+  def test_normalize_argument_values_spreads_fully_responsive_values
     # arrange
-    props_definition = properties_definition_builder(
+    args_definition = arguments_definition_builder(
       prop_a: prop(
         responsive: :yes,
         allowed_values: [:a, :b, :c],
@@ -173,9 +173,9 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     }
 
     # act
-    normalized_values = normalize_property_values!(
-      properties_definition: props_definition,
-      property_values: values.deep_dup,
+    normalized_values = normalize_argument_values!(
+      arguments_definition: args_definition,
+      argument_values: values.deep_dup,
       fallback_to_default: true
     )
 
@@ -186,9 +186,9 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     assert_equal(false, normalized_values.fetch(:v_wide, {}).key?(:prop_a), "Optional responsive variants shouldn't be added implicitly")
   end
 
-  def test_normalize_property_values_only_spreads_transitional_responsive_value_if_explicitly_set_into_variants
+  def test_normalize_argument_values_only_spreads_transitional_responsive_value_if_explicitly_set_into_variants
     # arrange
-    props_definition = properties_definition_builder(
+    args_definition = arguments_definition_builder(
       prop_a: prop(
         responsive: :transitional,
         allowed_values: [:a, :b, :c],
@@ -213,9 +213,9 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     }
 
     # act
-    normalized_values = normalize_property_values!(
-      properties_definition: props_definition,
-      property_values: values.deep_dup,
+    normalized_values = normalize_argument_values!(
+      arguments_definition: args_definition,
+      argument_values: values.deep_dup,
       fallback_to_default: true
     )
 
@@ -225,12 +225,12 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     assert_equal(false, normalized_values.fetch(:v_narrow, {}).key?(:prop_a), "Transitional responsive variants shouldn't be added implicitly")
 
     assert_equal(values[:v_narrow][:prop_b], normalized_values[:v_narrow][:prop_b])
-    assert_equal(props_definition[:prop_b].default_value(:v_regular), normalized_values[:v_regular][:prop_b])
+    assert_equal(args_definition[:prop_b].default_value(:v_regular), normalized_values[:v_regular][:prop_b])
   end
 
-  def test_normalize_property_values_uses_base_default_value_for_responsive_value_unless_responsive_variants_are_present_in_the_values
+  def test_normalize_argument_values_uses_base_default_value_for_responsive_value_unless_responsive_variants_are_present_in_the_values
     # arrange
-    props_definition = properties_definition_builder(
+    args_definition = arguments_definition_builder(
       prop_a: prop(
         responsive: :transitional,
         allowed_values: [:t_default, :t_narrow, :t_regular, :t_wide, :t_extra, :t_extra2],
@@ -251,13 +251,13 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     }
 
     # act
-    normalized_empty = normalize_property_values!(properties_definition: props_definition, property_values: values_empty.deep_dup)
+    normalized_empty = normalize_argument_values!(arguments_definition: args_definition, argument_values: values_empty.deep_dup)
 
-    normalized_base_value = normalize_property_values!(properties_definition: props_definition, property_values: values_base_value.deep_dup)
+    normalized_base_value = normalize_argument_values!(arguments_definition: args_definition, argument_values: values_base_value.deep_dup)
 
-    normalized_incomplete_variants = normalize_property_values!(properties_definition: props_definition, property_values: values_incomplete_variants.deep_dup)
+    normalized_incomplete_variants = normalize_argument_values!(arguments_definition: args_definition, argument_values: values_incomplete_variants.deep_dup)
 
-    normalized_all_variants = normalize_property_values!(properties_definition: props_definition, property_values: values_all_variants.deep_dup)
+    normalized_all_variants = normalize_argument_values!(arguments_definition: args_definition, argument_values: values_all_variants.deep_dup)
 
     # assert
     assert_equal(:t_default, normalized_empty[:prop_a])
@@ -281,9 +281,9 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     assert_equal(:t_extra2, normalized_all_variants[:v_regular][:prop_a])
   end
 
-  def test_normalize_property_values_fallback_to_default_when_invalid_value_present
+  def test_normalize_argument_values_fallback_to_default_when_invalid_value_present
     # arrange
-    props_definition = properties_definition_builder(
+    args_definition = arguments_definition_builder(
       prop_a: prop(
         responsive: :no,
         allowed_values: [:a, :b, :c],
@@ -325,27 +325,27 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     }
 
     # act
-    normalized_values = normalize_property_values!(
-      properties_definition: props_definition,
-      property_values: values.deep_dup,
+    normalized_values = normalize_argument_values!(
+      arguments_definition: args_definition,
+      argument_values: values.deep_dup,
       fallback_to_default: true
     )
 
     # assert
     assert_equal(:a, normalized_values[:prop_a], "Invalid value should fallback to default")
 
-    assert_equal(props_definition[:prop_r].default_value(:v_narrow), normalized_values[:v_narrow][:prop_r])
-    assert_equal(props_definition[:prop_r].default_value(:v_regular), normalized_values[:v_regular][:prop_r])
-    assert_equal(props_definition[:prop_r].default_value(:v_wide), normalized_values[:v_wide][:prop_r])
+    assert_equal(args_definition[:prop_r].default_value(:v_narrow), normalized_values[:v_narrow][:prop_r])
+    assert_equal(args_definition[:prop_r].default_value(:v_regular), normalized_values[:v_regular][:prop_r])
+    assert_equal(args_definition[:prop_r].default_value(:v_wide), normalized_values[:v_wide][:prop_r])
 
-    assert_equal(props_definition[:prop_t].default_value(:v_narrow), normalized_values[:v_narrow][:prop_t])
-    assert_equal(props_definition[:prop_t].default_value(:v_regular), normalized_values[:v_regular][:prop_t])
-    assert_equal(props_definition[:prop_t].default_value, normalized_values[:v_wide][:prop_t])
+    assert_equal(args_definition[:prop_t].default_value(:v_narrow), normalized_values[:v_narrow][:prop_t])
+    assert_equal(args_definition[:prop_t].default_value(:v_regular), normalized_values[:v_regular][:prop_t])
+    assert_equal(args_definition[:prop_t].default_value, normalized_values[:v_wide][:prop_t])
   end
 
-  def test_normalize_property_values_with_deep_properties_definitions
+  def test_normalize_argument_values_with_deep_arguments_definitions
     # arrange
-    props_definition = properties_definition_builder(
+    args_definition = arguments_definition_builder(
       one_lvl_deep: {
         prop_no: prop(type: String, default: "default value"),
         prop_responsive: prop(
@@ -421,43 +421,43 @@ class PropertiesDefinitionHelperTest < Minitest::Test
     }
 
     # act
-    normalized_values = normalize_property_values!(
-      properties_definition: props_definition,
-      property_values: values.deep_dup,
+    normalized_values = normalize_argument_values!(
+      arguments_definition: args_definition,
+      argument_values: values.deep_dup,
       fallback_to_default: true
     )
 
     # assert
     assert_equal(
-      props_definition[:one_lvl_deep][:prop_no].default_value,
+      args_definition[:one_lvl_deep][:prop_no].default_value,
       normalized_values[:one_lvl_deep][:prop_no],
       "Invalid value should fallback to default"
     )
     assert_equal(
-      props_definition[:one_lvl_deep][:prop_transitional].default_value,
+      args_definition[:one_lvl_deep][:prop_transitional].default_value,
       normalized_values[:one_lvl_deep][:prop_transitional],
-      "Transitional property with invalid base value should fallback to default in a non-responsive fashion"
+      "Transitional argument with invalid base value should fallback to default in a non-responsive fashion"
     )
 
     assert_equal(
-      props_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_no].default_value,
+      args_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_no].default_value,
       normalized_values[:multiple_lvls_deep][:level_a][:level_a_a][:prop_no],
-      "Invalid value will fallback to default even in nested properties"
+      "Invalid value will fallback to default even in nested arguments"
     )
     assert_equal(
-      props_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_transitional].default_value,
+      args_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_transitional].default_value,
       normalized_values[:multiple_lvls_deep][:level_a][:level_a_a][:prop_transitional],
-      "Missing value for nested property is set to default"
+      "Missing value for nested argument is set to default"
     )
     assert_equal(
       values[:multiple_lvls_deep][:level_b][:prop_no],
       normalized_values[:multiple_lvls_deep][:level_b][:prop_no],
-      "Valid value for nested property doesn't fallback to default"
+      "Valid value for nested argument doesn't fallback to default"
     )
     assert_equal(
-      props_definition[:multiple_lvls_deep][:level_b][:prop_transitional].default_value,
+      args_definition[:multiple_lvls_deep][:level_b][:prop_transitional].default_value,
       normalized_values[:multiple_lvls_deep][:level_b][:prop_transitional],
-      "Missing value for nested property is set to default"
+      "Missing value for nested argument is set to default"
     )
 
     assert_equal(
@@ -466,31 +466,31 @@ class PropertiesDefinitionHelperTest < Minitest::Test
       "Valid responsive values don't fallback to default"
     )
     assert_equal(
-      props_definition[:one_lvl_deep][:prop_responsive].default_value(:v_regular),
+      args_definition[:one_lvl_deep][:prop_responsive].default_value(:v_regular),
       normalized_values[:v_regular][:one_lvl_deep][:prop_responsive],
-      "Invalid responsive value for nested property is normalized and set to default"
+      "Invalid responsive value for nested argument is normalized and set to default"
     )
 
     assert_equal(
-      props_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive].default_value(:v_narrow),
+      args_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive].default_value(:v_narrow),
       normalized_values[:v_narrow][:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive],
-      "Invalid responsive value for nested property is normalized and set to default"
+      "Invalid responsive value for nested argument is normalized and set to default"
     )
     assert_equal(
-      props_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive].default_value(:v_regular),
+      args_definition[:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive].default_value(:v_regular),
       normalized_values[:v_regular][:multiple_lvls_deep][:level_a][:level_a_a][:prop_responsive],
-      "Missing responsive value for nested property is normalized and set to default"
+      "Missing responsive value for nested argument is normalized and set to default"
     )
 
     assert_equal(
-      props_definition[:multiple_lvls_deep][:level_b][:prop_responsive].default_value(:v_narrow),
+      args_definition[:multiple_lvls_deep][:level_b][:prop_responsive].default_value(:v_narrow),
       normalized_values[:v_narrow][:multiple_lvls_deep][:level_b][:prop_responsive],
-      "Missing responsive value for nested property is normalized and set to default"
+      "Missing responsive value for nested argument is normalized and set to default"
     )
     assert_equal(
-      props_definition[:multiple_lvls_deep][:level_b][:prop_responsive].default_value(:v_regular),
+      args_definition[:multiple_lvls_deep][:level_b][:prop_responsive].default_value(:v_regular),
       normalized_values[:v_regular][:multiple_lvls_deep][:level_b][:prop_responsive],
-      "Missing responsive value for nested property is normalized and set to default"
+      "Missing responsive value for nested argument is normalized and set to default"
     )
   end
 end
