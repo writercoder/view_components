@@ -56,25 +56,37 @@ module Primer
         validate_definition unless PropertiesDefinitionHelper.production_env?
       end
 
-      # tells if the property is required by checking if it or its reponsive variants have defaults
+      # Checks if the property is required by checking if it or its reponsive variants have defaults.
       def required?
         !@has_defined_default && (responsive?(:no) || @are_variants_required)
       end
 
-      # checks responsive type of responsiveness in general
+      # checks responsive type of responsiveness in general.
+      #
+      # @param responsive_type [Symbol](:no, :transitional, :yes) the responsive type to check, or nil to ask if the property
+      #                        has responsive support (if:transitional or :yes).
       def responsive?(responsive_type = nil)
         return @responsive == responsive_type unless responsive_type.nil?
 
         @responsive != :no
       end
 
+      # Check if the property definition has an explicit default value.
+      #
+      # @param variant [Symbol](:v_narrow, :v_regular, :v_wide) if a variant is used, this method will answer if that specific variant
+      #                has a default value, if not, thie method answers if the main property has a default value.
       def defined_default?(variant = nil)
-        return @has_defined_default if variant.nil?
+        return @has_defined_default if variant.nil? || !responsive?
         return @responsive_variants[variant].defined_default? if @responsive_variants.key?(variant)
 
         false
       end
 
+      # Retrieves the default value for this property or for its responsive variant. If the property has no defined default value
+      # this method will return nil.
+      #
+      # @param variant [Symbol](:v_narrow, :v_regular, :v_wide) if passed, will retrieve the default value for the responsive variant
+      #                otherwise, retrieves the default value for the property.
       def default_value(variant = nil)
         return @default unless responsive?
         return @default if variant.nil? || !defined_default?(variant)
@@ -82,6 +94,10 @@ module Primer
         defined_default?(variant) ? @responsive_variants[variant].default : @default
       end
 
+      # Checks if a given value is valid.
+      #
+      # @param value [Any] given value.
+      # @param variant [Symbol](:v_narrow, :v_regular, :v_wide) specific responsive variant to check against.
       def valid_value?(value, variant = nil)
         # deprecated values are considered valid, even though they're discouraged
         return true if deprecated_value?(value)
@@ -107,6 +123,12 @@ module Primer
         !!responsive_variant&.allowed_values&.include?(value)
       end
 
+      # Checks if a given value is valid and raises error if it's not.
+      #
+      # @param value [Any] given value.
+      # @param variant [Symbol](:v_narrow, :v_regular, :v_wide) specific responsive variant to check against.
+      #
+      # @raise Primer::Responsive::PropertiesDefinitionHelper::InvalidPropertyValueError if value if not valid.
       def validate_value(value, variant = nil)
         return if valid_value?(value, variant)
 
@@ -138,22 +160,35 @@ module Primer
         MSG
       end
 
+      # Checks if the entire property is deprecated.
+      #
+      # @return [Boolean]
       def deprecated?
         !@deprecation.nil? && @deprecation.property_deprecated?
       end
 
+      # Checks if a given value is deprecated.
+      #
+      # @pram value [Any] the value to check for deprecation.
       def deprecated_value?(value)
         return false if @deprecation.nil?
 
         @deprecation.deprecated_value?(value)
       end
 
+      # Gets the deprecation message for the given value
+      #
+      # @return [String]
       def deprecation_warn_message(value)
         return "" if @deprecation.nil?
 
         @deprecation.deprecation_warn_message(value)
       end
 
+      # Helper method to retrieve a base error message when raising errors for invalid property values.
+      # Can be used to custom validation rules
+      #
+      # # @return [String]
       def invalid_value_base_message(value)
         "Invalid value for \"#{@name.inspect}\": provided \"#{value.inspect}\"(#{value.class.inspect})."
       end
