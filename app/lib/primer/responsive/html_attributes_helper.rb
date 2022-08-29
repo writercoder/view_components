@@ -56,15 +56,15 @@ module Primer
                                            .map { |attribute_prefix| attribute_prefix.to_s.chop }
                                            .freeze
 
-      # Error raised when a
+      # Error raised for when attribute used not present in allowed list
       InvalidHtmlAttributeError = Class.new(StandardError)
 
-      # Validates the hash of HTML Attributes for a component
+      # Validates the hash of HTML Attributes against the global allowed attributes and any additional allowed attributes
       #
       # @param given_html_attributes [Hash] keys are symbols with the html attribute name.
       # @param additional_allowed_attributes [Array] optional array to allow components to accept element specific attributes.
       #                                              However, wildcard is not allowed for them.
-      def validate_html_attributes(given_html_attributes, additional_allowed_attributes = [])
+      def validate_html_attributes(given_html_attributes, additional_allowed_attributes: [])
         return if given_html_attributes.blank?
 
         given_html_attributes.each_key do |name|
@@ -79,12 +79,12 @@ module Primer
         end
       end
 
-      # Validates the hash of HTML Attributes for a component
+      # Validates the hash of HTML Attributes strictly against the provided allowe attributes
       #
       # @param given_html_attributes [Hash] keys are symbols with the html attribute name.
       # @param additional_allowed_attributes [Array] optional array to allow components to accept element specific attributes.
       #                                              However, wildcard is not allowed for them.
-      def strict_validate_html_attributes(given_html_attributes, allowed_attributes = [], allowed_attribute_prefixes = [])
+      def strict_validate_html_attributes(given_html_attributes, allowed_attributes:, allowed_attribute_prefixes: [])
         return if given_html_attributes.blank?
 
         given_html_attributes.each_key do |name|
@@ -98,7 +98,7 @@ module Primer
         end
       end
 
-      # Generates a sanitized attributes hash continaing only allowed attributes present in raw_html_attributes
+      # Generates a sanitized attributes hash containing only allowed attributes present in raw_html_attributes
       #
       # @param raw_html_attributes [Hash] html attributes and values to be sanitized
       # @param additional_allowed_attributes [Array] optional array to allow components to accept element specific attributes.
@@ -109,6 +109,26 @@ module Primer
         sanitized_attributes = {}
         raw_html_attributes.each do |name, value|
           next unless ALLOWED_GLOBAL_ATTRIBUTES.include?(name) || additional_allowed_attributes.include?(name) || ALLOWED_GLOBAL_ATTRIBUTES_PREFIXES.any? { |prefix| name.to_s.starts_with? prefix }
+
+          sanitized_attributes[name] = value
+        end
+
+        sanitized_attributes
+      end
+
+      # Generates a sanitized attributes hash containing only allowed attributes present in raw_html_attributes
+      #
+      # @param raw_html_attributes [Hash] html attributes and values to be sanitized
+      # @param allowed_attributes [Array] array to allow components to accept element specific attributes.
+      #                                   Wildcard not supported.
+      # @param allowed_attrbitues_prefixes [Array] optional array containing attributes prefixes to allow a subset of attributes
+      #                                            like "data-" and "item" attributes
+      def strict_sanitize_html_attributes(raw_html_attributes, allowed_attributes:, allowed_attribute_prefixes: [])
+        return raw_html_attributes if raw_html_attributes.blank?
+
+        sanitized_attributes = {}
+        raw_html_attributes.each do |name, value|
+          next unless allowed_attributes.include?(name) || allowed_attribute_prefixes.any? { |prefix| name.to_s.starts_with? prefix }
 
           sanitized_attributes[name] = value
         end

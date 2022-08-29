@@ -41,22 +41,22 @@ module Primer
         v_regular_default: "",
         v_regular_default_type: ""
       )
-        props = { name: :component_argument }
+        args = { name: :component_argument }
         responsive = :no if responsive == "false"
-        props[:responsive] = responsive.to_sym unless responsive.empty?
+        args[:responsive] = responsive.to_sym unless responsive.empty?
 
         unless allowed_values.empty?
-          props[:allowed_values] = allowed_values.split(",").map(&:strip)
-          props[:allowed_values] = props[:allowed_values].map(&:to_i) if allowed_values_type == "Integer"
+          args[:allowed_values] = allowed_values.split(",").map(&:strip)
+          args[:allowed_values] = args[:allowed_values].map(&:to_i) if allowed_values_type == "Integer"
         end
 
         unless default.empty?
           default = default.to_i if default_type == "Integer"
-          props[:default] = default
+          args[:default] = default
         end
 
         unless type.empty?
-          props[:type] = case type
+          args[:type] = case type
                          when "String"
                            String
                          when "Integer"
@@ -65,8 +65,8 @@ module Primer
         end
 
         unless v_narrow_allowed_values.empty? && v_narrow_default.empty?
-          props[:v_narrow] = {}
-          v_narrow = props[:v_narrow]
+          args[:v_narrow] = {}
+          v_narrow = args[:v_narrow]
           unless v_narrow_allowed_values.empty?
             v_narrow[:allowed_values] = v_narrow_allowed_values.split(",").map(&:strip)
             v_narrow[:allowed_values] = v_narrow[:allowed_values].map(&:to_i) if v_narrow_allowed_values_type == "Integer"
@@ -78,8 +78,8 @@ module Primer
         end
 
         unless v_regular_allowed_values.empty? && v_regular_default.empty?
-          props[:v_regular] = {}
-          v_regular = props[:v_regular]
+          args[:v_regular] = {}
+          v_regular = args[:v_regular]
           unless v_regular_allowed_values.empty?
             v_regular[:allowed_values] = v_regular_allowed_values.split(",").map(&:strip)
             v_regular[:allowed_values] = v_regular[:allowed_values].map(&:to_i) if v_regular_allowed_values_type == "Integer"
@@ -91,13 +91,13 @@ module Primer
         end
 
         begin
-          argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+          argument_definition = Primer::Responsive::ArgumentDefinition.new(args)
         rescue Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError => e
           error_message = e.message
         end
 
         panels = []
-        panels << { title: "props", output: props.pretty_inspect }
+        panels << { title: "args", output: args.pretty_inspect }
         panels << { title: "object", output: argument_definition.pretty_inspect } if show_object
         panels << { title: "ERROR", style: ERROR_STYLE, output: error_message } if error_message.present?
 
@@ -113,7 +113,7 @@ module Primer
       # @param value_type select [String, Symbol]
       # @param responsive_variant select [~, v_narrow, v_regular, v_wide]
       def validate_value(value: "", value_type: "String", responsive_variant: "")
-        props = {
+        args = {
           name: :test,
           allowed_values: [:a, :b, :c],
           responsive: :transitional,
@@ -133,7 +133,7 @@ module Primer
           }
         }
 
-        argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+        argument_definition = Primer::Responsive::ArgumentDefinition.new(args)
 
         responsive_variant = responsive_variant.empty? ? nil : responsive_variant.to_sym
         case value_type
@@ -153,7 +153,7 @@ module Primer
         end
 
         panels = []
-        panels << { title: "props", output: props.pretty_inspect }
+        panels << { title: "args", output: args.pretty_inspect }
         panels << { title: "value", output: value.pretty_inspect }
         panels << { title: "log", output: log_message }
 
@@ -169,7 +169,7 @@ module Primer
       #
       # @param show_object toggle
       def stress_test(show_object: false)
-        props = {
+        args = {
           name: :test,
           allowed_values: [:a, :b, :c],
           responsive: :transitional,
@@ -190,13 +190,13 @@ module Primer
         }
 
         begin
-          argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+          argument_definition = Primer::Responsive::ArgumentDefinition.new(args)
         rescue Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError => e
           error_message = e.message
         end
 
         panels = []
-        panels << { title: "props", output: props.pretty_inspect }
+        panels << { title: "args", output: args.pretty_inspect }
         panels << { title: "object", output: argument_definition.pretty_inspect } if show_object
         panels << { title: "ERROR", style: ERROR_STYLE, output: error_message } if error_message.present?
 
@@ -210,21 +210,21 @@ module Primer
       #
       # @param show_object toggle
       def invalid_default_type(show_object: false)
-        props = {
+        args = {
           name: :test,
           type: Numeric,
           default: "Hello"
         }
 
         begin
-          argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+          argument_definition = Primer::Responsive::ArgumentDefinition.new(args)
         rescue Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError => e
           error_message = e.message
         end
 
         # output
         panels = []
-        panels << { title: "props", output: props.pretty_inspect }
+        panels << { title: "args", output: args.pretty_inspect }
         panels << { title: "object", output: argument_definition.pretty_inspect } if show_object
         panels << { title: "ERROR", style: ERROR_STYLE, output: error_message }
 
@@ -238,7 +238,7 @@ module Primer
       #
       # @param show_object toggle
       def invalid_default(show_object: false)
-        props = {
+        args = {
           name: :test,
           allowed_values: [1, 2, 3],
           responsive: :yes,
@@ -249,14 +249,14 @@ module Primer
         }
 
         begin
-          argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+          argument_definition = Primer::Responsive::ArgumentDefinition.new(args)
         rescue Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError => e
           error_message = e.message
         end
 
         # output
         panels = []
-        panels << { title: "props", output: props.pretty_inspect }
+        panels << { title: "args", output: args.pretty_inspect }
         panels << { title: "object", output: argument_definition.pretty_inspect } if show_object
         panels << { title: "ERROR", style: ERROR_STYLE, output: error_message }
 
@@ -270,7 +270,7 @@ module Primer
       #
       # @param show_object toggle
       def definition_error_type_values(show_object: false)
-        props = {
+        args = {
           name: :test,
           type: String,
           responsive: :transitional,
@@ -281,14 +281,14 @@ module Primer
         }
 
         begin
-          argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+          argument_definition = Primer::Responsive::ArgumentDefinition.new(args)
         rescue Primer::Responsive::ArgumentsDefinitionHelper::InvalidArgumentDefinitionError => e
           error_message = e.message
         end
 
         # output
         panels = []
-        panels << { title: "props", output: props.pretty_inspect }
+        panels << { title: "args", output: args.pretty_inspect }
         panels << { title: "object", output: argument_definition.pretty_inspect } if show_object
         panels << { title: "ERROR", style: ERROR_STYLE, output: error_message }
 
@@ -301,7 +301,7 @@ module Primer
       # @!group Deprecation
       # @label Deprecation: value
       def deprecate_value
-        props = {
+        args = {
           name: :test,
           allowed_values: [1, 2, 3, 4],
           responsive: :yes,
@@ -310,12 +310,12 @@ module Primer
             warn_message: "Support for these values is going to be dropped in the next release"
           }
         }
-        argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+        argument_definition = Primer::Responsive::ArgumentDefinition.new(args)
         error_message = argument_definition.deprecation_warn_message(5)
 
         # output
         panels = []
-        panels << { title: "props", output: props.pretty_inspect }
+        panels << { title: "args", output: args.pretty_inspect }
         panels << { style: ERROR_STYLE, output: error_message }
 
         render_with_template(
@@ -326,19 +326,19 @@ module Primer
 
       # @label Deprecation: type
       def deprecate_type
-        props = {
+        args = {
           name: :test,
           type: String,
           deprecation: {
             type: Integer
           }
         }
-        argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+        argument_definition = Primer::Responsive::ArgumentDefinition.new(args)
         error_message = argument_definition.deprecation_warn_message(5)
 
         # output
         panels = []
-        panels << { title: "props", output: props.pretty_inspect }
+        panels << { title: "args", output: args.pretty_inspect }
         panels << { style: ERROR_STYLE, output: error_message }
 
         render_with_template(
@@ -349,20 +349,20 @@ module Primer
 
       # @label Deprecation: argument
       def deprecate_argument
-        props = {
+        args = {
           name: :test,
           allowed_values: [1, 2, 3],
           deprecation: {
             warn_message: "This argument is unsafe and will be sunset in version 1.8"
           }
         }
-        argument_definition = Primer::Responsive::ArgumentDefinition.new(props)
+        argument_definition = Primer::Responsive::ArgumentDefinition.new(args)
 
         error_message = argument_definition.deprecation_warn_message(5)
 
         # output
         panels = []
-        panels << { title: "props", output: props.pretty_inspect }
+        panels << { title: "args", output: args.pretty_inspect }
         panels << { style: ERROR_STYLE, output: error_message }
 
         render_with_template(

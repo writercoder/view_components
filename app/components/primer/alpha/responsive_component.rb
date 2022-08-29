@@ -12,24 +12,32 @@ module Primer
       attr_reader :argument_values, :html_attributes
 
       # class instance variables
-      @additional_allowed_html_attributes = nil
+      @strictly_allowed_html_attributes = nil
+      @added_html_attributes_allow_list = nil
       @arguments = nil
       @style_map = nil
 
-      # Declares a list of allowed HTML attributes to be used when validating/sanitizing the attributes
-      def self.add_allowed_html_attributes(*additional_allowed_html_attributes)
-        additional_allowed_html_attributes.flatten! if additional_allowed_html_attributes.is_a? Array
-        @additional_allowed_html_attributes = additional_allowed_html_attributes
+      # Declares a list of exclusively allowed HTML attributes to be used when validating/sanitizing the attributes
+      def self.allowed_html_attributes(*allowed_html_attributes)
+        allowed_html_attributes = allowed_html_attributes.flatten if allowed_html_attributes.is_a? Array
+        @strictly_allowed_html_attributes = allowed_html_attributes
       end
 
-      # Defines all arguments part of the component props API
+      # Declares a list of additional allowed HTML attributes to be used when validating/sanitizing the attributes
+      # The base allowed list can be found in Primer::Responsive::HtmlAttributesHelper
+      def self.additional_allowed_html_attributes(*additional_allowed_html_attributes)
+        additional_allowed_html_attributes.flatten! if additional_allowed_html_attributes.is_a? Array
+        @added_html_attributes_allow_list = additional_allowed_html_attributes
+      end
+
+      # Defines all arguments part of the component args API
       def self.arguments_definition(all_arguments_definition)
         @arguments = arguments_definition_builder(all_arguments_definition)
       end
 
-      # Adds argument definitions to the componennt props API
+      # Adds argument definitions to the componennt args API
       # To be used in child components that want to reuse its parent's argument definitions
-      # - if a propery with the same name is added, it'll overwrite the parent's argument definition
+      # - if an argument with the same name is added, it'll overwrite the parent's argument definition
       # NOTE: favor composition over inheritance when creating components whenever possible.
       #       This method is supposed to be used with "abstract" or "base" parent component classes
       def self.add_arguments_definition(new_arguments_definition)
@@ -70,7 +78,7 @@ module Primer
       end
 
       class << self
-        attr_accessor :arguments, :style_map, :additional_allowed_html_attributes
+        attr_accessor :arguments, :style_map, :html_attributes_allow_list, :additional_allowed_html_attributes
       end
 
       # @param argument_values: [Hash] component argument values
@@ -100,7 +108,7 @@ module Primer
       # Validate html attributes
       def validate_html_attributes(html_attributes = nil)
         html_attributes = @html_attributes if html_attributes.nil?
-        self.class.validate_html_attributes(html_attributes, self.class.additional_allowed_html_attributes)
+        self.class.validate_html_attributes(html_attributes, additional_allowed_attributes: self.class.additional_allowed_html_attributes)
       end
 
       # Sanitizes @html_attributes or a custom html_attributes, if provided

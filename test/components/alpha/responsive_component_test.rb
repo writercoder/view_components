@@ -8,11 +8,11 @@ class ResponsiveComponentTest < Minitest::Test
     klass = Class.new(Primer::Alpha::ResponsiveComponent) do
       # act
       arguments_definition(
-        simple_prop: prop(
+        simple_arg: arg(
           allowed_values: [:a, :b, :c],
           default: :b
         ),
-        responsive_prop: prop(
+        responsive_arg: arg(
           responsive: :yes,
           type: Numeric,
           v_narrow: { default: 1 },
@@ -23,30 +23,30 @@ class ResponsiveComponentTest < Minitest::Test
     Object.send(:const_set, :ChildResponsiveComponent, klass)
 
     # assert
-    simple_prop_definition = ChildResponsiveComponent.arguments[:simple_prop]
-    assert_instance_of(Primer::Responsive::ArgumentDefinition, simple_prop_definition)
-    assert_equal(:b, simple_prop_definition.default_value)
+    simple_arg_definition = ChildResponsiveComponent.arguments[:simple_arg]
+    assert_instance_of(Primer::Responsive::ArgumentDefinition, simple_arg_definition)
+    assert_equal(:b, simple_arg_definition.default_value)
 
-    responsive_prop_definition = ChildResponsiveComponent.arguments[:responsive_prop]
-    assert_instance_of(Primer::Responsive::ArgumentDefinition, responsive_prop_definition)
-    assert_instance_of(Primer::Responsive::ResponsiveVariantArgumentDefinition, responsive_prop_definition.responsive_variants[:v_narrow])
-    assert_instance_of(Primer::Responsive::ResponsiveVariantArgumentDefinition, responsive_prop_definition.responsive_variants[:v_regular])
-    assert_equal(1, responsive_prop_definition.default_value(:v_narrow))
-    assert_equal(2, responsive_prop_definition.default_value(:v_regular))
+    responsive_arg_definition = ChildResponsiveComponent.arguments[:responsive_arg]
+    assert_instance_of(Primer::Responsive::ArgumentDefinition, responsive_arg_definition)
+    assert_instance_of(Primer::Responsive::ResponsiveVariantArgumentDefinition, responsive_arg_definition.responsive_variants[:v_narrow])
+    assert_instance_of(Primer::Responsive::ResponsiveVariantArgumentDefinition, responsive_arg_definition.responsive_variants[:v_regular])
+    assert_equal(1, responsive_arg_definition.default_value(:v_narrow))
+    assert_equal(2, responsive_arg_definition.default_value(:v_regular))
 
     # teardown
     Object.send(:remove_const, :ChildResponsiveComponent)
   end
 
-  def test_add_arguments_definition_class_method_inherits_parent_props
+  def test_add_arguments_definition_class_method_inherits_parent_args
     # arrange
     parent_klass = Class.new(Primer::Alpha::ResponsiveComponent) do
       arguments_definition(
-        parent_prop_a: prop(
+        parent_arg_a: arg(
           allowed_values: [:a, :b, :c],
           default: :b
         ),
-        parent_prop_b: prop(
+        parent_arg_b: arg(
           responsive: :yes,
           type: String
         )
@@ -57,11 +57,11 @@ class ResponsiveComponentTest < Minitest::Test
     child_klass = Class.new(ParentResponsiveComponent) do
       # act
       add_arguments_definition(
-        parent_prop_a: prop(
+        parent_arg_a: arg(
           type: String,
           default: "overwriting argument definition"
         ),
-        child_prop: prop(
+        child_arg: arg(
           responsive: :yes,
           type: Integer
         )
@@ -70,20 +70,20 @@ class ResponsiveComponentTest < Minitest::Test
     Object.send(:const_set, :ChildResponsiveComponent, child_klass)
 
     # assert
-    parent_prop_a = ChildResponsiveComponent.arguments[:parent_prop_a]
-    original_prop_a = ParentResponsiveComponent.arguments[:parent_prop_a]
+    parent_arg_a = ChildResponsiveComponent.arguments[:parent_arg_a]
+    original_arg_a = ParentResponsiveComponent.arguments[:parent_arg_a]
 
-    parent_prop_b = ChildResponsiveComponent.arguments[:parent_prop_b]
-    original_prop_b = ParentResponsiveComponent.arguments[:parent_prop_b]
+    parent_arg_b = ChildResponsiveComponent.arguments[:parent_arg_b]
+    original_arg_b = ParentResponsiveComponent.arguments[:parent_arg_b]
 
-    child_prop = ChildResponsiveComponent.arguments[:child_prop]
+    child_arg = ChildResponsiveComponent.arguments[:child_arg]
 
-    assert_instance_of(Primer::Responsive::ArgumentDefinition, parent_prop_a)
-    assert_instance_of(Primer::Responsive::ArgumentDefinition, parent_prop_b)
-    assert_instance_of(Primer::Responsive::ArgumentDefinition, child_prop)
+    assert_instance_of(Primer::Responsive::ArgumentDefinition, parent_arg_a)
+    assert_instance_of(Primer::Responsive::ArgumentDefinition, parent_arg_b)
+    assert_instance_of(Primer::Responsive::ArgumentDefinition, child_arg)
 
-    refute_equal(original_prop_a, parent_prop_a, "Child arguments with same name should overwrite parent's argument definition")
-    assert_equal(original_prop_b, parent_prop_b, "Parent's arguments should be inherited unless overwritten by Child arguments_definition")
+    refute_equal(original_arg_a, parent_arg_a, "Child arguments with same name should overwrite parent's argument definition")
+    assert_equal(original_arg_b, parent_arg_b, "Parent's arguments should be inherited unless overwritten by Child arguments_definition")
 
     # teardown
     Object.send(:remove_const, :ParentResponsiveComponent)

@@ -98,7 +98,7 @@ module Primer
         instance = Alpha::ChildDummyResponsiveComponent.new
 
         panels = [
-          { title: "Arguments", output: instance.props.pretty_inspect }
+          { title: "Arguments", output: instance.args.pretty_inspect }
         ]
 
         render_with_template(
@@ -168,7 +168,7 @@ module Primer
         end
         render_with_template(
           locals: {
-            props: nil, #Alpha::DummyResponsiveComponent::PROPS_DEFINITION_FOR_TESTS.pretty_inspect,
+            args: nil, #Alpha::DummyResponsiveComponent::args_DEFINITION_FOR_TESTS.pretty_inspect,
             component: component.pretty_inspect,
             error_message: error_message
           },
@@ -188,7 +188,7 @@ module Primer
 
         render_with_template(
           locals: {
-            props: nil,
+            args: nil,
             component: component.pretty_inspect,
             error_message: nil
           },
@@ -200,17 +200,17 @@ module Primer
     # === COMPONENT CLASS TESTS ===
     # class for testing responsive component class methods
     class DummyResponsiveComponent < Primer::Alpha::ResponsiveComponent
-      attr_reader :props
+      attr_reader :args
 
       arguments_definition(
-        uuid: prop(
+        uuid: arg(
           type: String
         ),
-        id: prop(
+        id: arg(
           type: Integer,
           default: 0
         ),
-        spacing: prop(
+        spacing: arg(
           responsive: :yes,
           allowed_values: [:s, :m, :l],
           v_narrow: { default: :s },
@@ -224,21 +224,21 @@ module Primer
           }
         ),
         placement: {
-          viewport: prop(
+          viewport: arg(
             responsive: :transitional,
             allowed_values: [:center, :top, :bottom, :full],
             default: :top,
             v_narrow: { default: :full },
             v_regular: { default: :top },
           ),
-          container: prop(
+          container: arg(
             allowed_values: [:top, :right, :bottom, :left],
             default: :bottom
           )
         },
         double: {
           namespace: {
-            test_prop: prop(
+            test_prop: arg(
               responsive: :yes,
               allowed_values: [:test_a, :test_b, :test_c],
               v_narrow: { default: :test_a },
@@ -251,7 +251,7 @@ module Primer
 
       def initialize(argument_values: {}, html_attributes: {})
         super
-        @props = DummyResponsiveComponent.arguments
+        @args = DummyResponsiveComponent.arguments
       end
 
       def should_raise_error?
@@ -261,7 +261,7 @@ module Primer
 
     # dummy class to test inherited arguments
     class ChildDummyResponsiveComponent < DummyResponsiveComponent
-      attr_reader :props
+      attr_reader :args
 
       add_allowed_html_attributes :for, :autocomplete
 
@@ -307,24 +307,24 @@ module Primer
 
       def initialize(argument_values: {}, html_attributes: {})
         super
-        @props = ChildDummyResponsiveComponent.arguments
+        @args = ChildDummyResponsiveComponent.arguments
       end
     end
 
     # class for responsive default tests
     class DefaultValuesResponsiveComponent < Primer::Alpha::ResponsiveComponent
       arguments_definition(
-        responsive_a: prop(
+        responsive_a: arg(
           responsive: :yes,
           allowed_values: [:a, :b, :c],
           default: :b
         ),
-        responsive_opt_a: prop(
+        responsive_opt_a: arg(
           responsive: :transitional,
           allowed_values: [:a, :b, :c],
           default: :b
         ),
-        responsive_b: prop(
+        responsive_b: arg(
           responsive: :yes,
           allowed_values: [:a, :b, :c],
           v_narrow: { default: :a },
@@ -332,7 +332,7 @@ module Primer
           v_wide: { default: :c }
         ),
         nested: {
-          responsive_c: prop(
+          responsive_c: arg(
             responsive: :yes,
             allowed_values: [:a, :b],
             v_narrow: {

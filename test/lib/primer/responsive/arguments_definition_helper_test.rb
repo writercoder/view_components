@@ -180,9 +180,9 @@ class ArgumentsDefinitionHelperTest < Minitest::Test
     )
 
     # assert
-    assert_equal(false, normalized_values.key?(:prop_a), "Fully responsive props base values have to be moved into responsive variants")
-    assert_equal(values[:prop_a], normalized_values[:v_narrow][:prop_a], "Fully responsive props base values have to be moved into responsive variants")
-    assert_equal(values[:prop_a], normalized_values[:v_regular][:prop_a], "Fully responsive props base values have to be moved into responsive variants")
+    assert_equal(false, normalized_values.key?(:prop_a), "Fully responsive args base values have to be moved into responsive variants")
+    assert_equal(values[:prop_a], normalized_values[:v_narrow][:prop_a], "Fully responsive args base values have to be moved into responsive variants")
+    assert_equal(values[:prop_a], normalized_values[:v_regular][:prop_a], "Fully responsive args base values have to be moved into responsive variants")
     assert_equal(false, normalized_values.fetch(:v_wide, {}).key?(:prop_a), "Optional responsive variants shouldn't be added implicitly")
   end
 

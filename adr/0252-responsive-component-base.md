@@ -97,7 +97,7 @@ To keep things reusable, inside `app/lib/primer` a `responsive` folder holds all
 
 ```rb
 class CustomComponent < Primer::Alpha::ResponsiveComponent
-  properties_definition(
+  arguments_definition(
     id: prop(
       type: Numeric,
       default: 0

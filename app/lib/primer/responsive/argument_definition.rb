@@ -372,6 +372,7 @@ module Primer
       attr_reader :variant_name
 
       def initialize(params = {})
+        params[:allowed_values] = params[:additional_allowed_values]
         @variant_name = params[:variant_name]
         super(params)
       end
