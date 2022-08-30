@@ -13,7 +13,7 @@ module Primer
 
       # class instance variables
       @strictly_allowed_html_attributes = nil
-      @added_html_attributes_allow_list = nil
+      @added_allowed_html_attributes = nil
       @arguments = nil
       @style_map = nil
 
@@ -27,7 +27,7 @@ module Primer
       # The base allowed list can be found in Primer::Responsive::HtmlAttributesHelper
       def self.additional_allowed_html_attributes(*additional_allowed_html_attributes)
         additional_allowed_html_attributes.flatten! if additional_allowed_html_attributes.is_a? Array
-        @added_html_attributes_allow_list = additional_allowed_html_attributes
+        @added_allowed_html_attributes = additional_allowed_html_attributes
       end
 
       # Defines all arguments part of the component args API
@@ -78,7 +78,7 @@ module Primer
       end
 
       class << self
-        attr_accessor :arguments, :style_map, :html_attributes_allow_list, :additional_allowed_html_attributes
+        attr_accessor :arguments, :style_map, :strictly_allowed_html_attributes, :added_allowed_html_attributes
       end
 
       # @param argument_values: [Hash] component argument values
@@ -108,24 +108,35 @@ module Primer
       # Validate html attributes
       def validate_html_attributes(html_attributes = nil)
         html_attributes = @html_attributes if html_attributes.nil?
-        self.class.validate_html_attributes(html_attributes, additional_allowed_attributes: self.class.additional_allowed_html_attributes)
+
+        unless self.class.strictly_allowed_html_attributes.nil?
+          self.class.strict_validate_html_attributes(html_attributes, allowed_attributes: self.class.strictly_allowed_html_attributes)
+          return
+        end
+
+        self.class.validate_html_attributes(html_attributes, additional_allowed_attributes: self.class.added_allowed_html_attributes || [])
       end
 
       # Sanitizes @html_attributes or a custom html_attributes, if provided
       def sanitize_html_attributes(html_attributes = nil)
         html_attributes = @html_attributes if html_attributes.nil?
+
+        unless self.class.strictly_allowed_html_attributes.nil?
+          return self.class.strict_sanitize_html_attributes(
+            html_attributes,
+            allowed_attributes: self.class.strictly_allowed_html_attributes
+          )
+        end
+
         self.class.sanitize_html_attributes(
           html_attributes,
-          additional_allowed_attributes: self.class.additional_allowed_attributes
+          additional_allowed_attributes: self.class.added_allowed_attributes
         )
       end
 
       # Sanitizes and updates @html_attributes
       def sanitize_html_attributes!
-        @html_attributes = self.class.sanitize_html_attributes(
-          @html_attributes || {},
-          additional_allowed_attributes: self.class.additional_allowed_html_attributes
-        )
+        @html_attributes = sanitize_html_attributes(@html_attributes)
       end
 
       # @param html_attibutes [Hash] defaults to instance @html_attributes

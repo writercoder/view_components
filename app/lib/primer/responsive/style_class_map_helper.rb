@@ -4,8 +4,10 @@ module Primer
   module Responsive
     # style map helper
     module StyleClassMapHelper
-      RESPONSIVE_VARIANTS_MAP = Primer::Responsive::ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS_MAP
-      RESPONSIVE_VARIANTS = Primer::Responsive::ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS
+      RESPONSIVE_VARIANTS_MAP = Primer::Responsive::ResponsiveConfig::RESPONSIVE_VARIANTS_MAP
+      RESPONSIVE_VARIANTS = Primer::Responsive::ResponsiveConfig::RESPONSIVE_VARIANTS
+
+      private_constant :RESPONSIVE_VARIANTS_MAP, :RESPONSIVE_VARIANTS
 
       def add_responsive_variants(map, remove_initial: false)
         RESPONSIVE_VARIANTS_MAP.each do |responsive_variant, config|

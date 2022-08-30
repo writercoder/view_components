@@ -4,23 +4,29 @@ module Primer
   module Responsive
     # argument space helper
     module ArgumentsDefinitionHelper
+      RESPONSIVE_VARIANTS_MAP = Primer::Responsive::ResponsiveConfig::RESPONSIVE_VARIANTS_MAP
+      RESPONSIVE_VARIANTS = Primer::Responsive::ResponsiveConfig::RESPONSIVE_VARIANTS
+      REQUIRED_RESPONSIVE_VARIANTS = Primer::Responsive::ResponsiveConfig::REQUIRED_RESPONSIVE_VARIANTS
+
+      private_constant :RESPONSIVE_VARIANTS_MAP, :RESPONSIVE_VARIANTS, :REQUIRED_RESPONSIVE_VARIANTS
+
       # NOTE: optional responsive variants are skipped
       # when calculating style classes and when validating missgin values
-      RESPONSIVE_VARIANTS_MAP = {
-        v_narrow: {
-          style_class_modifier: "whenNarrow"
-        },
-        v_regular: {
-          style_class_modifier: "whenRegular"
-        },
-        v_wide: {
-          optional: true,
-          style_class_modifier: "whenWide"
-        }
-      }.freeze
+      # RESPONSIVE_VARIANTS_MAP = {
+      #   v_narrow: {
+      #     style_class_modifier: "whenNarrow"
+      #   },
+      #   v_regular: {
+      #     style_class_modifier: "whenRegular"
+      #   },
+      #   v_wide: {
+      #     optional: true,
+      #     style_class_modifier: "whenWide"
+      #   }
+      # }.freeze
 
-      RESPONSIVE_VARIANTS = RESPONSIVE_VARIANTS_MAP.keys.freeze
-      REQUIRED_RESPONSIVE_VARIANTS = RESPONSIVE_VARIANTS_MAP.reject { |_, c| c[:optional] }.keys.freeze
+      # RESPONSIVE_VARIANTS = RESPONSIVE_VARIANTS_MAP.keys.freeze
+      # REQUIRED_RESPONSIVE_VARIANTS = RESPONSIVE_VARIANTS_MAP.reject { |_, c| c[:optional] }.keys.freeze
 
       ARGUMENT_IDENTIFIER_KEY = :__argument_definition
 

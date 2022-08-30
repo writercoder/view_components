@@ -8,26 +8,26 @@ class ArgumentsDefinitionHelperTest < Minitest::Test
 
   def args_definition_input
     {
-      prop_a: prop(
+      prop_a: arg(
         responsive: :no,
         type: Integer,
         default: 0
       ),
 
-      prop_b: prop(type: String),
+      prop_b: arg(type: String),
 
-      responsive_prop_c: prop(
+      responsive_prop_c: arg(
         allowed_values: [:a, :b],
         responsive: :yes,
         v_narrow: {
-          allowed_values: [:n_a, :n_b],
+          additional_allowed_values: [:n_a, :n_b],
           default: :n_a
         },
         v_regular: { default: :b },
         v_wide: { default: :a }
       ),
 
-      prop_d: prop(
+      prop_d: arg(
         allowed_values: [:a, :b],
         responsive: :transitional,
         default: :a,
@@ -38,12 +38,12 @@ class ArgumentsDefinitionHelperTest < Minitest::Test
       ),
 
       prop_ns: {
-        deep_prop_a: prop(
+        deep_prop_a: arg(
           allowed_values: [:a, :b, :c],
           responsive: :yes
         ),
 
-        deep_prop_b: prop(
+        deep_prop_b: arg(
           responsive: :transitional,
           allowed_values: [:a, :b, :c],
           default: :a,
@@ -134,11 +134,11 @@ class ArgumentsDefinitionHelperTest < Minitest::Test
   def test_normalize_argument_values_sets_default_to_missing_values
     # arrange
     args_definition = arguments_definition_builder(
-      prop_a: prop(
+      prop_a: arg(
         type: String,
         default: "default value"
       ),
-      prop_b: prop(
+      prop_b: arg(
         type: Integer,
         default: 100
       )
@@ -162,7 +162,7 @@ class ArgumentsDefinitionHelperTest < Minitest::Test
   def test_normalize_argument_values_spreads_fully_responsive_values
     # arrange
     args_definition = arguments_definition_builder(
-      prop_a: prop(
+      prop_a: arg(
         responsive: :yes,
         allowed_values: [:a, :b, :c],
         default: :a
@@ -189,12 +189,12 @@ class ArgumentsDefinitionHelperTest < Minitest::Test
   def test_normalize_argument_values_only_spreads_transitional_responsive_value_if_explicitly_set_into_variants
     # arrange
     args_definition = arguments_definition_builder(
-      prop_a: prop(
+      prop_a: arg(
         responsive: :transitional,
         allowed_values: [:a, :b, :c],
         default: :a
       ),
-      prop_b: prop(
+      prop_b: arg(
         responsive: :transitional,
         allowed_values: [:ta, :tb, :tc],
         default: :tc,
@@ -231,7 +231,7 @@ class ArgumentsDefinitionHelperTest < Minitest::Test
   def test_normalize_argument_values_uses_base_default_value_for_responsive_value_unless_responsive_variants_are_present_in_the_values
     # arrange
     args_definition = arguments_definition_builder(
-      prop_a: prop(
+      prop_a: arg(
         responsive: :transitional,
         allowed_values: [:t_default, :t_narrow, :t_regular, :t_wide, :t_extra, :t_extra2],
         default: :t_default,
@@ -284,25 +284,25 @@ class ArgumentsDefinitionHelperTest < Minitest::Test
   def test_normalize_argument_values_fallback_to_default_when_invalid_value_present
     # arrange
     args_definition = arguments_definition_builder(
-      prop_a: prop(
+      prop_a: arg(
         responsive: :no,
         allowed_values: [:a, :b, :c],
         default: :a
       ),
-      prop_r: prop(
+      prop_r: arg(
         responsive: :yes,
         allowed_values: [:ra, :rb],
         v_narrow: {
-          allowed_values: [:rna, :rnb],
+          additional_allowed_values: [:rna, :rnb],
           default: :rnb
         },
         v_regular: {
-          allowed_values: [:rra, :rrb],
+          additional_allowed_values: [:rra, :rrb],
           default: :rra
         },
         v_wide: { default: :rb }
       ),
-      prop_t: prop(
+      prop_t: arg(
         responsive: :transitional,
         allowed_values: [:ta, :tb, :tc],
         default: :tc,
@@ -347,14 +347,14 @@ class ArgumentsDefinitionHelperTest < Minitest::Test
     # arrange
     args_definition = arguments_definition_builder(
       one_lvl_deep: {
-        prop_no: prop(type: String, default: "default value"),
-        prop_responsive: prop(
+        prop_no: arg(type: String, default: "default value"),
+        prop_responsive: arg(
           responsive: :yes,
           allowed_values: [:a, :b, :c],
           v_narrow: { default: :a },
           v_regular: { default: :b }
         ),
-        prop_transitional: prop(
+        prop_transitional: arg(
           responsive: :transitional,
           type: Numeric,
           default: -1
@@ -363,33 +363,33 @@ class ArgumentsDefinitionHelperTest < Minitest::Test
       multiple_lvls_deep: {
         level_a: {
           level_a_a: {
-            prop_no: prop(type: String, default: "default value"),
-            prop_responsive: prop(
+            prop_no: arg(type: String, default: "default value"),
+            prop_responsive: arg(
               responsive: :yes,
               allowed_values: [:a, :b, :c],
               v_narrow: { default: :a },
               v_regular: { default: :b }
             ),
-            prop_transitional: prop(
+            prop_transitional: arg(
               responsive: :transitional,
               type: Numeric,
               default: -1
             )
           },
-          level_a_b: prop(
+          level_a_b: arg(
             type: Integer,
             default: 100
           )
         },
         level_b: {
-          prop_no: prop(type: String, default: "default value"),
-          prop_responsive: prop(
+          prop_no: arg(type: String, default: "default value"),
+          prop_responsive: arg(
             responsive: :yes,
             allowed_values: [:a, :b, :c],
             v_narrow: { default: :a },
             v_regular: { default: :b }
           ),
-          prop_transitional: prop(
+          prop_transitional: arg(
             responsive: :transitional,
             type: Numeric,
             default: -1

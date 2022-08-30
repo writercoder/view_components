@@ -2,6 +2,10 @@
 
 module Primer
   module Responsive
+    RESPONSIVE_VARIANTS_MAP = Primer::Responsive::ResponsiveConfig::RESPONSIVE_VARIANTS_MAP
+    RESPONSIVE_VARIANTS = Primer::Responsive::ResponsiveConfig::RESPONSIVE_VARIANTS
+    REQUIRED_RESPONSIVE_VARIANTS = Primer::Responsive::ResponsiveConfig::REQUIRED_RESPONSIVE_VARIANTS
+
     # Argument Definition helps defining, validating, and deprecating an argument of responsive components
     class ArgumentDefinition
       ALLOWED_PARAMS = [
@@ -12,7 +16,7 @@ module Primer
         :default,
         :deprecation,
         :responsive
-      ].concat(ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS).freeze
+      ].concat(RESPONSIVE_VARIANTS).freeze
       RESPONSIVE_OPTIONS = [:no, :transitional, :yes].freeze
 
       attr_accessor :name
@@ -39,7 +43,7 @@ module Primer
         @are_variants_required = false
         unless @responsive == :no
           @responsive_variants = {}
-          ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS.each do |variant|
+          RESPONSIVE_VARIANTS.each do |variant|
             next unless params.key? variant
 
             @responsive_variants[variant] = ResponsiveVariantArgumentDefinition.new(
@@ -231,7 +235,7 @@ module Primer
         end
 
         if responsive? :no
-          ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS.each do |variant|
+          RESPONSIVE_VARIANTS.each do |variant|
             next unless @params.key? variant
 
             raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG
@@ -288,7 +292,7 @@ module Primer
           end
 
           unless responsive_variants_with_default.empty?
-            ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS_MAP.each do |key, config|
+            RESPONSIVE_VARIANTS_MAP.each do |key, config|
               next if config[:optional]
               next if responsive_variants_with_default.include? key
 
@@ -297,7 +301,7 @@ module Primer
                 If a responsive argument defines a default in at least one responsive variant,
                 all required responsive variants have to also define a default value.
                 Variant with default: #{responsive_variants_with_default.inspect}
-                Variant missing default: #{ArgumentsDefinitionHelper::REQUIRED_RESPONSIVE_VARIANTS - responsive_variants_with_default}
+                Variant missing default: #{REQUIRED_RESPONSIVE_VARIANTS - responsive_variants_with_default}
               MSG
             end
           end
@@ -373,12 +377,14 @@ module Primer
 
       def initialize(params = {})
         params[:allowed_values] = params[:additional_allowed_values]
+        params.delete(:additional_allowed_values)
+
         @variant_name = params[:variant_name]
         super(params)
       end
 
       def validate_definition
-        invalid_attrs = [*ArgumentsDefinitionHelper::RESPONSIVE_VARIANTS, *DENY_RESPONSIVE_VARIANT_ATTRIBUTES] & @params.keys
+        invalid_attrs = [*RESPONSIVE_VARIANTS, *DENY_RESPONSIVE_VARIANT_ATTRIBUTES] & @params.keys
         return if invalid_attrs.empty?
 
         raise ArgumentsDefinitionHelper::InvalidArgumentDefinitionError, <<~MSG

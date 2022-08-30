@@ -94,7 +94,7 @@ class ArgumentDefinitionTest < Minitest::Test
       allowed_values: [:duplicate_value, :value_a, :value_b],
       responsive: :yes,
       v_narrow: {
-        allowed_values: [:duplicate_value, :narrow_a]
+        additional_allowed_values: [:duplicate_value, :narrow_a]
       }
     }
 
@@ -199,10 +199,10 @@ class ArgumentDefinitionTest < Minitest::Test
       responsive: :yes,
       allowed_values: [:a, :b, :c],
       v_narrow: {
-        allowed_values: [:na, :nb]
+        additional_allowed_values: [:na, :nb]
       },
       v_regular: {
-        allowed_values: [:ra]
+        additional_allowed_values: [:ra]
       }
     )
     test_cases = [
@@ -297,7 +297,7 @@ class ArgumentDefinitionTest < Minitest::Test
       allowed_values: [:a, :b, :c],
       responsive: :yes,
       v_narrow: {
-        allowed_values: [:d, :e]
+        additional_allowed_values: [:d, :e]
       }
     )
     value = :invalid_value
