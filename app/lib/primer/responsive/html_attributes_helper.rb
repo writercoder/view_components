@@ -15,6 +15,7 @@ module Primer
       # like aria-* and data-*
       #
       # To support element specific attributes, inherit from ResponsiveComponent
+      # and use the helper methods related to html attributes
       #
       # https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
       ALLOWED_GLOBAL_ATTRIBUTES = [
@@ -27,7 +28,7 @@ module Primer
         :autocapitalize,
         :autofocus,
         :class,
-        :classes, #support for Primer::BaseComponent abstraction
+        :classes, # support for Primer::BaseComponent abstraction
         :data,
         :"data-*",
         :enterkeyhint,
@@ -70,7 +71,7 @@ module Primer
         given_html_attributes.each_key do |name|
           next if ALLOWED_GLOBAL_ATTRIBUTES.include? name
           next if additional_allowed_attributes.include? name
-          next if ALLOWED_GLOBAL_ATTRIBUTES_PREFIXES.any? { |prefix| name.to_s.starts_with? prefix }
+          next if ALLOWED_GLOBAL_ATTRIBUTES_PREFIXES.any? { |prefix| name.to_s.start_with? prefix }
 
           raise InvalidHtmlAttributeError, <<~MSG
             HTML Attribute: "#{name}" is not allowed.
@@ -89,7 +90,7 @@ module Primer
 
         given_html_attributes.each_key do |name|
           next if allowed_attributes.include? name
-          next if allowed_attribute_prefixes.any? { |prefix| name.to_s.starts_with? prefix }
+          next if allowed_attribute_prefixes.any? { |prefix| name.to_s.start_with? prefix.to_s }
 
           raise InvalidHtmlAttributeError, <<~MSG
             HTML Attribute: "#{name}" is not allowed.
