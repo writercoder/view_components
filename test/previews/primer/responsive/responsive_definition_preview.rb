@@ -119,14 +119,14 @@ module Primer
           responsive: :transitional,
           default: :a,
           v_narrow: {
-            allowed_values: [:d, :e],
+            additional_allowed_values: [:d, :e],
             default: :d
           },
           v_regular: {
             default: :b
           },
           v_wide: {
-            allowed_values: [:xl]
+            additional_allowed_values: [:xl]
           },
           deprecation: {
             deprecated_values: [:x, :g]

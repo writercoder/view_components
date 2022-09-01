@@ -4,7 +4,7 @@ module Primer
   module Responsive
     # @label StyleClassMapHelper
     class StyleClassMapHelperPreview < ViewComponent::Preview
-      extend Primer::Responsive::StyleClassMapHelper
+      include Primer::Responsive::StyleClassMapHelper
 
       MAIN_TEMPLATE = "primer/responsive/responsive_preview_output"
 
@@ -41,7 +41,7 @@ module Primer
       def add_responsive
         map = CLASS_MAP
         map_copy = map.deep_dup
-        self.class.add_responsive_variants(map_copy)
+        add_responsive_variants!(map_copy)
 
         panels = [
           {
@@ -63,7 +63,7 @@ module Primer
       def to_responsive
         map = CLASS_MAP
         map_copy = map.deep_dup
-        self.class.add_responsive_variants(map_copy, remove_initial: true)
+        add_responsive_variants!(map_copy, remove_initial: true)
 
         panels = [
           {
@@ -94,7 +94,7 @@ module Primer
           }
         }
 
-        filtered_map = self.class.apply_values_to_style_map(map, values)
+        filtered_map = apply_values_to_style_map(map, values)
 
         panels = [
           {
@@ -136,8 +136,8 @@ module Primer
         }
 
         responsive_map = map.deep_dup
-        self.class.add_responsive_variants(responsive_map, remove_initial: true)
-        filtered_map = self.class.apply_values_to_style_map(responsive_map, values)
+        add_responsive_variants!(responsive_map, remove_initial: true)
+        filtered_map = apply_values_to_style_map(responsive_map, values)
 
         panels = [
           {

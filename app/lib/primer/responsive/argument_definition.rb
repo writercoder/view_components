@@ -41,6 +41,7 @@ module Primer
         @responsive = params.fetch(:responsive, :no)
 
         @are_variants_required = false
+        @responsive_variants = nil
         unless @responsive == :no
           @responsive_variants = {}
           RESPONSIVE_VARIANTS.each do |variant|

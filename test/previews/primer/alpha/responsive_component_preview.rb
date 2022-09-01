@@ -51,7 +51,7 @@ module Primer
         values[:placement][:container] = placement_container.to_sym unless placement_container.nil?
 
         cloned_values = values.deep_dup
-        component = Alpha::DummyResponsiveComponent.new(argument_values: cloned_values)
+        component = DummyResponsiveComponent.new(argument_values: cloned_values)
         component.normalize_values!
 
         panels = [
@@ -199,7 +199,7 @@ module Primer
 
     # === COMPONENT CLASS TESTS ===
     # class for testing responsive component class methods
-    class DummyResponsiveComponent < Primer::Alpha::ResponsiveComponent
+    class DummyResponsiveComponent < ::Primer::Alpha::ResponsiveComponent
       attr_reader :args
 
       arguments_definition(
@@ -215,11 +215,11 @@ module Primer
           allowed_values: [:s, :m, :l],
           v_narrow: { default: :s },
           v_regular: {
-            allowed_values: [:xs, :xl],
+            additional_allowed_values: [:xs, :xl],
             default: :l
           },
           v_wide: {
-            allowed_values: [:xl, :xxl],
+            additional_allowed_values: [:xl, :xxl],
             default: :xl
           }
         ),
@@ -229,7 +229,7 @@ module Primer
             allowed_values: [:center, :top, :bottom, :full],
             default: :top,
             v_narrow: { default: :full },
-            v_regular: { default: :top },
+            v_regular: { default: :top }
           ),
           container: arg(
             allowed_values: [:top, :right, :bottom, :left],
@@ -260,17 +260,17 @@ module Primer
     end
 
     # dummy class to test inherited arguments
-    class ChildDummyResponsiveComponent < DummyResponsiveComponent
+    class ChildDummyResponsiveComponent < ::Primer::Alpha::DummyResponsiveComponent
       attr_reader :args
 
-      add_allowed_html_attributes :for, :autocomplete
+      additional_allowed_html_attributes :for, :autocomplete
 
       add_arguments_definition(
-        id: prop(
+        id: arg(
           type: String,
           default: "empty id"
         ),
-        name: prop(
+        name: arg(
           type: String,
           responsive: :yes,
           default: "no name"
@@ -312,7 +312,7 @@ module Primer
     end
 
     # class for responsive default tests
-    class DefaultValuesResponsiveComponent < Primer::Alpha::ResponsiveComponent
+    class DefaultValuesResponsiveComponent < ::Primer::Alpha::ResponsiveComponent
       arguments_definition(
         responsive_a: arg(
           responsive: :yes,
@@ -336,15 +336,15 @@ module Primer
             responsive: :yes,
             allowed_values: [:a, :b],
             v_narrow: {
-              allowed_values: [:na, :nb],
+              additional_allowed_values: [:na, :nb],
               default: :na
             },
             v_regular: {
-              allowed_values: [:rd, :re],
+              additional_allowed_values: [:rd, :re],
               default: :a
             },
             v_wide: {
-              allowed_values: [:wc, :wd],
+              additional_allowed_values: [:wc, :wd],
               default: :wd
             }
           )

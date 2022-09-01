@@ -11,23 +11,31 @@ module Primer
 
       attr_reader :argument_values, :html_attributes
 
+      # HTML attributes "enum"
+      HTML_ATTRS_VALIDATION_STRICT = 1
+      HTML_ATTRS_VALIDATION_ADDITIONAL = 2
+      private_constant :HTML_ATTRS_VALIDATION_STRICT, :HTML_ATTRS_VALIDATION_ADDITIONAL
+
       # class instance variables
-      @strictly_allowed_html_attributes = nil
-      @added_allowed_html_attributes = nil
+      @html_attributes_type = nil
+      @saved_allowed_html_attributes = nil
       @arguments = nil
       @style_map = nil
 
       # Declares a list of exclusively allowed HTML attributes to be used when validating/sanitizing the attributes
+      # @param allowed_html_attributes [Array] array of symbols
       def self.allowed_html_attributes(*allowed_html_attributes)
         allowed_html_attributes = allowed_html_attributes.flatten if allowed_html_attributes.is_a? Array
-        @strictly_allowed_html_attributes = allowed_html_attributes
+        @html_attributes_type = HTML_ATTRS_VALIDATION_STRICT
+        @saved_allowed_html_attributes = allowed_html_attributes
       end
 
       # Declares a list of additional allowed HTML attributes to be used when validating/sanitizing the attributes
       # The base allowed list can be found in Primer::Responsive::HtmlAttributesHelper
       def self.additional_allowed_html_attributes(*additional_allowed_html_attributes)
-        additional_allowed_html_attributes.flatten! if additional_allowed_html_attributes.is_a? Array
-        @added_allowed_html_attributes = additional_allowed_html_attributes
+        allowed_html_attributes(additional_allowed_html_attributes)
+        @html_attributes_type = HTML_ATTRS_VALIDATION_ADDITIONAL
+        @saved_allowed_html_attributes
       end
 
       # Defines all arguments part of the component args API
@@ -53,8 +61,8 @@ module Primer
       # @param with_responsive [Hash] adds responsive variants to the hash map while keeping its original structure
       def self.style_class_map(general: {}, responsive: {}, with_responsive: {})
         @style_map = general.present? ? { **general } : {}
-        @style_map.deep_merge!(add_responsive_variants(responsive, remove_initial: true)) if responsive.present?
-        @style_map.deep_merge!(add_responsive_variants(with_responsive)) if with_responsive.present?
+        @style_map.deep_merge!(add_responsive_variants!(responsive, remove_initial: true)) if responsive.present?
+        @style_map.deep_merge!(add_responsive_variants!(with_responsive)) if with_responsive.present?
 
         @style_map.freeze
       end
@@ -71,20 +79,21 @@ module Primer
 
         @style_map = { **existing_style_map }
         @style_map.deep_merge!(general) if general.present?
-        @style_map.deep_merge!(add_responsive_variants(responsive, remove_initial: true)) if responsive.present?
-        @style_map.deep_merge!(add_responsive_variants(with_responsive)) if with_responsive.present?
+        @style_map.deep_merge!(add_responsive_variants!(responsive, remove_initial: true)) if responsive.present?
+        @style_map.deep_merge!(add_responsive_variants!(with_responsive)) if with_responsive.present?
 
         @style_map.freeze
       end
 
       class << self
-        attr_accessor :arguments, :style_map, :strictly_allowed_html_attributes, :added_allowed_html_attributes
+        attr_accessor :arguments, :style_map, :saved_allowed_html_attributes, :html_attributes_type
       end
 
       # @param argument_values: [Hash] component argument values
       # @param html_attributes: [Hash] html_attributes to be added to the component root element
       #
-      # NOTE: use a argument named :tag to support custom tags, since the definition can also be used to valid what tags are allowed
+      # NOTE: use an argument named :tag to support custom tag as the main component html element wrapper,
+      #       since the definition can also be used to validate what tags are allowed
       def initialize(argument_values: {}, html_attributes: {})
         @argument_values = argument_values
         @html_attributes = html_attributes
@@ -109,28 +118,28 @@ module Primer
       def validate_html_attributes(html_attributes = nil)
         html_attributes = @html_attributes if html_attributes.nil?
 
-        unless self.class.strictly_allowed_html_attributes.nil?
-          self.class.strict_validate_html_attributes(html_attributes, allowed_attributes: self.class.strictly_allowed_html_attributes)
+        if self.class.html_attributes_type == HTML_ATTRS_VALIDATION_STRICT
+          self.class.strict_validate_html_attributes(html_attributes, allowed_attributes: self.class.saved_allowed_html_attributes)
           return
         end
 
-        self.class.validate_html_attributes(html_attributes, additional_allowed_attributes: self.class.added_allowed_html_attributes || [])
+        self.class.validate_html_attributes(html_attributes, additional_allowed_attributes: self.class.saved_allowed_html_attributes || [])
       end
 
       # Sanitizes @html_attributes or a custom html_attributes, if provided
       def sanitize_html_attributes(html_attributes = nil)
         html_attributes = @html_attributes if html_attributes.nil?
 
-        unless self.class.strictly_allowed_html_attributes.nil?
+        if self.class.html_attributes_type == HTML_ATTRS_VALIDATION_STRICT
           return self.class.strict_sanitize_html_attributes(
             html_attributes,
-            allowed_attributes: self.class.strictly_allowed_html_attributes
+            allowed_attributes: self.class.saved_allowed_html_attributes
           )
         end
 
         self.class.sanitize_html_attributes(
           html_attributes,
-          additional_allowed_attributes: self.class.added_allowed_attributes
+          additional_allowed_attributes: self.class.saved_allowed_html_attributes || []
         )
       end
 
@@ -170,10 +179,15 @@ module Primer
         )
       end
 
+      # Retrieves the style_class_map defined in the class
       def style_class_map
         self.class.style_map
       end
 
+      # Calculates a filtered class map by applying the current values of the component's arguments
+      # Note: the result is cached by default
+      #
+      # @param force_recalculation [boolean] if true, ignores any cached previously calculated filtered class
       def filtered_style_class_map!(force_recalculation: false)
         @filtered_map unless @filtered_map.nil? || force_recalculation
 
@@ -184,7 +198,7 @@ module Primer
         {} if self.class.style_map.nil?
 
         argument_values = @argument_values if argument_values.nil?
-        self.class.apply_values_to_style_map(self.class.style_map, argument_values)
+        apply_values_to_style_map(self.class.style_map, argument_values)
       end
     end
   end

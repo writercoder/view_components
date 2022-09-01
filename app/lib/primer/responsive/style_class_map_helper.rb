@@ -2,16 +2,20 @@
 
 module Primer
   module Responsive
-    # style map helper
+    # style map helper to generate responsive variants of class map and to handle creation of classes based on responsive values
     module StyleClassMapHelper
       RESPONSIVE_VARIANTS_MAP = Primer::Responsive::ResponsiveConfig::RESPONSIVE_VARIANTS_MAP
       RESPONSIVE_VARIANTS = Primer::Responsive::ResponsiveConfig::RESPONSIVE_VARIANTS
 
       private_constant :RESPONSIVE_VARIANTS_MAP, :RESPONSIVE_VARIANTS
 
-      def add_responsive_variants(map, remove_initial: false)
+      # Adds responsive variants to the base map modifying the base classes to the respective variant name
+      #
+      # @param map [Hash] a hash composed of argument names mapping each possible value to a css class (string)
+      # @param remove_inicial [boolean] flag to remove the initial class map structure once the variants are added  
+      def add_responsive_variants!(map, remove_initial: false)
         RESPONSIVE_VARIANTS_MAP.each do |responsive_variant, config|
-          add_response_variant(map, responsive_variant, config[:style_class_modifier])
+          add_responsive_variant!(map, responsive_variant, config[:style_class_modifier], RESPONSIVE_VARIANTS)
         end
 
         if remove_initial
@@ -26,32 +30,8 @@ module Primer
         map
       end
 
-      def add_response_variant(map, responsive_variant, modifier)
-        map[responsive_variant] = {} unless map.key?(responsive_variant)
-
-        map_variant = map[responsive_variant]
-        map.each do |argument_name, value|
-          next if RESPONSIVE_VARIANTS_MAP.key?(argument_name)
-
-          responsive_argument_map = value.is_a?(Hash) ? build_responsive_variant(value, modifier) : derive_class_variant(value, modifier)
-          map_variant[argument_name] = responsive_argument_map
-        end
-      end
-
-      def build_responsive_variant(map, modifier)
-        responsive_map = {}
-        map.each do |key, value|
-          responsive_map[key] = value.is_a?(Hash) ? build_responsive_variant(value, modifier) : derive_class_variant(value, modifier)
-        end
-        responsive_map
-      end
-
-      def derive_class_variant(class_name, modifier)
-        "#{class_name}-#{modifier}"
-      end
-
       # Derive an applied map from the current arguments values.
-      # NOTE: This method doesn't take in consideration any argument definition, so to get the default classes, 
+      # NOTE: This method doesn't take into consideration any argument definition, so to get the default classes,
       #       make sure to fill the values with defaults before calling this method.
       #
       # @param map [Hash] a style class map with classes value-dependent
@@ -71,6 +51,32 @@ module Primer
         end
 
         applied_map
+      end
+
+      # ==== [ the following functions should be treated as private to this module ] ====
+      def add_responsive_variant!(map, responsive_variant, modifier, arguments_to_ignore = [])
+        map[responsive_variant] = {} unless map.key?(responsive_variant)
+
+        map_variant = map[responsive_variant]
+        map.each do |argument_name, value|
+          next if arguments_to_ignore.include?(argument_name)
+          next if argument_name == responsive_variant
+
+          responsive_argument_map = value.is_a?(Hash) ? build_responsive_variant(value, modifier) : derive_class_variant(value, modifier)
+          map_variant[argument_name] = responsive_argument_map
+        end
+      end
+
+      def build_responsive_variant(map, modifier)
+        responsive_map = {}
+        map.each do |key, value|
+          responsive_map[key] = value.is_a?(Hash) ? build_responsive_variant(value, modifier) : derive_class_variant(value, modifier)
+        end
+        responsive_map
+      end
+
+      def derive_class_variant(class_name, modifier)
+        "#{class_name}-#{modifier}"
       end
 
       def apply_responsive_map(map, argument_values)
