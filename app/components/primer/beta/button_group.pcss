@@ -1,0 +1,42 @@
+.ButtonGroup {
+  display: flex;
+  flex-direction: row;
+
+  & > .ButtonGroup-item:last-child:not(.Button-withTooltip) {
+    outline: solid 2px purple;
+  }
+
+  /* reset border-radius */
+  /* should we omit this class and just select all children? */
+  & > .ButtonGroup-item,
+  & > .ButtonGroup-item > .Button {
+    border-right-width: 0;
+    border-radius: 0;
+
+    &:first-child:is(.Button-withTooltip) > .Button,
+    &:first-child:not(.Button-withTooltip) {
+      outline: solid 2px deeppink;
+      border-top-left-radius: var(--primer-borderRadius-medium, 6px);
+      border-bottom-left-radius: var(--primer-borderRadius-medium, 6px);
+    }
+
+    &:last-child:is(.Button-withTooltip) > .Button {
+      outline: solid 2px yellowgreen;
+      border-right-width: var(--primer-borderWidth-thin, 1px);
+      border-top-right-radius: var(--primer-borderRadius-medium, 6px);
+      border-bottom-right-radius: var(--primer-borderRadius-medium, 6px);
+    }
+    &:last-child:not(.Button-withTooltip) {
+      outline: solid 2px blue;
+      border-right-width: var(--primer-borderWidth-thin, 1px);
+      border-top-right-radius: var(--primer-borderRadius-medium, 6px);
+      border-bottom-right-radius: var(--primer-borderRadius-medium, 6px);
+    }
+
+    /* ensure that the focus ring sits above the adjacent buttons */
+    &:focus,
+    &:active {
+      z-index: 1;
+    }
+  }
+}

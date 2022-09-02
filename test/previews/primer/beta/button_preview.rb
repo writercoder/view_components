@@ -82,6 +82,11 @@ module Primer
           "Button"
         end
       end
+
+      # @label Repo buttons
+      def repo_buttons
+        render_with_template()
       end
+    end
   end
 end

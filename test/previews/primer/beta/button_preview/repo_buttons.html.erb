@@ -1,0 +1,37 @@
+<div class="Stack Stack--dir-inline-whenRegular">
+    <%= render(Primer::Beta::Button.new(
+        scheme: :default,
+        size: :medium,
+        id: "1"
+    )) do |c| %>
+    <% c.leading_visual_icon(icon: :pin) %>
+    <% c.trailing_action_icon(icon: :"triangle-down") %>
+    Edit pins
+    <% end %>
+
+    <%= render(Primer::Beta::Button.new(
+        scheme: :default,
+        size: :medium,
+        id: "1"
+    )) do |c| %>
+    <% c.leading_visual_icon(icon: :eye) %>
+    <% c.trailing_visual_counter(count: 25, scheme: :primary) %>
+    <% c.trailing_action_icon(icon: :"triangle-down") %>
+    Watch
+    <% end %>
+
+    <div class="ButtonGroup">
+        <%= render(Primer::Beta::Button.new(
+            scheme: :default,
+            size: :medium,
+            id: "1",
+            classes: "ButtonGroup-item"
+        )) do |c| %>
+        <% c.leading_visual_icon(icon: :"repo-forked") %>
+        <% c.trailing_visual_counter(count: "1.1k", scheme: :primary) %>
+        Fork
+        <% end %>
+
+        <%= render(Primer::Beta::IconButton.new(icon: :"triangle-down", "aria-label": "Search", id: "search-button")) %>
+    </div>
+</div>
