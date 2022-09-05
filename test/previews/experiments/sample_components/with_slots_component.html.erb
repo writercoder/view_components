@@ -1,0 +1,11 @@
+<%= render(Primer::BaseComponent.new(tag: :div, **@system_arguments)) do %>
+    <% if private_leading_action %>
+      <span style="border: 1px solid #ddd; padding: 8px; display: inline-block; margin-right: 4px">
+        <%= private_leading_action %>
+      </span>
+    <% else %>
+      <em>[no leading action provided]</em>
+    <% end %>
+
+    default content
+<% end %>
