@@ -5,7 +5,7 @@ name: Demo Production
 on:
   push:
     branches:
-      - main
+      - debug_kuby
 
 jobs:
   build:
@@ -33,6 +33,12 @@ jobs:
       run: |
         docker pull primer.azurecr.io/primer/view_components_storybook:latest
         docker pull primer.azurecr.io/primer/view_components_storybook:latest-assets
+    - name: Setup tmate session
+      env:
+        RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+        AZURE_ACR_PASSWORD: ${{ secrets.AZURE_ACR_PASSWORD }}
+        AZURE_SPN_CLIENT_SECRET: ${{ secrets.AZURE_SPN_CLIENT_SECRET }}
+      uses: mxschmitt/action-tmate@v3
     - name: Build
       env:
         RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
