@@ -61,6 +61,7 @@ module Primer
         @system_arguments[:classes] = class_names(
           @system_arguments[:classes],
           "flash",
+          "flash-container",
           SCHEME_MAPPINGS[fetch_or_fallback(SCHEME_MAPPINGS.keys, scheme, DEFAULT_SCHEME)],
           "flash-full": full
         )

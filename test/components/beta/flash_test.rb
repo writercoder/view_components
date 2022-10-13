@@ -8,7 +8,8 @@ class PrimerFlashTest < Minitest::Test
   def test_renders
     render_inline(Primer::Beta::Flash.new) { "foo" }
 
-    assert_selector(".flash", text: "foo")
+    assert_selector(".flash.flash-container")
+    assert_selector(".flash-content", text: "foo")
     refute_selector(".flash-close")
     refute_selector(".flash-error")
     refute_selector(".flash-full")
