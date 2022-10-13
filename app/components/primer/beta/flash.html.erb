@@ -14,9 +14,14 @@
   <% end %>
   <% if @dismissible %>
     <div class="Banner-close">
-      <button class="js-flash-close" aria-label="Dismiss">
-        <%= primer_octicon "x" %>
-      </button>
+      <%= render(
+        Primer::Beta::IconButton.new(
+          scheme: :invisible,
+          icon: :x,
+          classes: "js-flash-close",
+          aria: { label: "Dismiss" }
+        )
+      ) %>
     </div>
   <% end %>
 <% end %>

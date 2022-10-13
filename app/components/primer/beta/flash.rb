@@ -8,20 +8,13 @@ module Primer
 
       # Optional action content showed on the right side of the component.
       #
-      # @param system_arguments [Hash] <%= link_to_system_arguments_docs %>
-      renders_one :action, lambda { |**system_arguments|
-        deny_tag_argument(**system_arguments)
-        system_arguments[:tag] = :div
-        system_arguments[:classes] = class_names(system_arguments[:classes], "flash-action")
-
-        Primer::BaseComponent.new(**system_arguments)
-      }
+      # @param system_arguments [Hash] The same arguments as <%= link_to_component(Primer::Beta::Button) %>.
+      renders_one :action, Primer::Beta::Button
 
       DEFAULT_SCHEME = :default
       SCHEME_MAPPINGS = {
         DEFAULT_SCHEME => "",
-        :info => "Banner--info",
-        :warning => "Banner--warn",
+        :warning => "Banner--warning",
         :danger => "Banner--error",
         :success => "Banner--success"
       }.freeze
@@ -43,19 +36,16 @@ module Primer
       # @example With actions
       #   <%= render(Primer::Beta::Flash.new) do |component| %>
       #     This is a flash message with actions!
-      #     <% component.with_action do %>
-      #       <%= render(Primer::ButtonComponent.new(size: :small)) { "Take action" } %>
-      #     <% end %>
+      #     <% component.with_action(size: :small) { "Take action" } %>
       #   <% end %>
       #
       # @param full [Boolean] Whether the component should take up the full width of the screen.
       # @param full_when_narrow [Boolean] Whether the component should take up the full width of the screen when rendered inside smaller viewports.
-      # @param spacious [Boolean] Whether to add margin to the bottom of the component.
       # @param dismissible [Boolean] Whether the component can be dismissed with an X button.
       # @param icon [Symbol] Name of Octicon icon to use.
       # @param scheme [Symbol] <%= one_of(Primer::Beta::Flash::SCHEME_MAPPINGS.keys) %>
       # @param system_arguments [Hash] <%= link_to_system_arguments_docs %>
-      def initialize(full: false, full_when_narrow: false, spacious: false, dismissible: false, icon: nil, scheme: DEFAULT_SCHEME, **system_arguments)
+      def initialize(full: false, full_when_narrow: false, dismissible: false, icon: nil, scheme: DEFAULT_SCHEME, **system_arguments)
         @icon = icon
         @dismissible = dismissible
         @system_arguments = deny_tag_argument(**system_arguments)
@@ -67,7 +57,6 @@ module Primer
           "Banner--full": full,
           "Banner--fullWhenNarrow": full_when_narrow
         )
-        @system_arguments[:mb] ||= spacious ? 4 : nil
       end
     end
   end
