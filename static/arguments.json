@@ -1264,12 +1264,6 @@
         "description": "Whether the component should take up the full width of the screen when rendered inside smaller viewports."
       },
       {
-        "name": "spacious",
-        "type": "Boolean",
-        "default": "`false`",
-        "description": "Whether to add margin to the bottom of the component."
-      },
-      {
         "name": "dismissible",
         "type": "Boolean",
         "default": "`false`",
@@ -1285,7 +1279,7 @@
         "name": "scheme",
         "type": "Symbol",
         "default": "`:default`",
-        "description": "One of `:danger`, `:default`, `:info`, `:success`, or `:warning`."
+        "description": "One of `:danger`, `:default`, `:success`, or `:warning`."
       },
       {
         "name": "system_arguments",
