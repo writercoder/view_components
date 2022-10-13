@@ -1,0 +1,6 @@
+<%= render(Primer::Beta::Flash.new(full: full, spacious: spacious, dismissible: dismissible, icon: icon, scheme: scheme)) do |component| %>
+  <% component.with_action do %>
+    <%= render(Primer::ButtonComponent.new(size: :small)) { "Take action" } %>
+  <% end %>
+  <%= content %>
+<% end %>
