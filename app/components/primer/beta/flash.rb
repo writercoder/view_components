@@ -47,11 +47,7 @@ module Primer
       # @param scheme [Symbol] <%= one_of(Primer::Beta::Flash::SCHEME_MAPPINGS.keys) %>
       # @param description [String] Optional description.
       # @param system_arguments [Hash] <%= link_to_system_arguments_docs %>
-<<<<<<< HEAD
       def initialize(full: false, full_when_narrow: false, dismissible: false, description: nil, icon: nil, scheme: DEFAULT_SCHEME, **system_arguments)
-=======
-      def initialize(full: false, full_when_narrow: false, dismissible: false, icon: nil, scheme: DEFAULT_SCHEME, **system_arguments)
->>>>>>> 336ed5631fdafea6a36147dbd169df95e1562312
         @icon = icon
         @dismissible = dismissible
         @description = description
