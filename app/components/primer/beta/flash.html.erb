@@ -5,7 +5,10 @@
     </div>
   <% end %>
   <div class="Banner-message">
-    <%= content %>
+    <p class="Banner-title"><%= content %></p>
+    <% if @description %>
+      <p><%= @description %></p>
+    <% end %>
   </div>
   <% if action %>
     <div class="Banner-actions">
@@ -14,9 +17,13 @@
   <% end %>
   <% if @dismissible %>
     <div class="Banner-close">
-      <button class="js-flash-close" aria-label="Dismiss">
-        <%= primer_octicon "x" %>
-      </button>
+      <%= render Primer::Beta::IconButton.new(
+        scheme: :invisible,
+        size: :medium,
+        id: "banner-close",
+        icon: :x,
+        "aria-label": "Dismiss"
+      ) %>
     </div>
   <% end %>
 <% end %>

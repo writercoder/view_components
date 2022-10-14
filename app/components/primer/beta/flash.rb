@@ -11,17 +11,15 @@ module Primer
       # @param system_arguments [Hash] <%= link_to_system_arguments_docs %>
       renders_one :action, lambda { |**system_arguments|
         deny_tag_argument(**system_arguments)
-        system_arguments[:tag] = :div
-        system_arguments[:classes] = class_names(system_arguments[:classes], "flash-action")
 
-        Primer::BaseComponent.new(**system_arguments)
+        Primer::Beta::Button.new(**system_arguments)
       }
 
       DEFAULT_SCHEME = :default
       SCHEME_MAPPINGS = {
         DEFAULT_SCHEME => "",
         :info => "Banner--info",
-        :warning => "Banner--warn",
+        :warning => "Banner--warning",
         :danger => "Banner--error",
         :success => "Banner--success"
       }.freeze
@@ -50,14 +48,15 @@ module Primer
       #
       # @param full [Boolean] Whether the component should take up the full width of the screen.
       # @param full_when_narrow [Boolean] Whether the component should take up the full width of the screen when rendered inside smaller viewports.
-      # @param spacious [Boolean] Whether to add margin to the bottom of the component.
       # @param dismissible [Boolean] Whether the component can be dismissed with an X button.
       # @param icon [Symbol] Name of Octicon icon to use.
       # @param scheme [Symbol] <%= one_of(Primer::Beta::Flash::SCHEME_MAPPINGS.keys) %>
+      # @param description [String] Optional description.
       # @param system_arguments [Hash] <%= link_to_system_arguments_docs %>
-      def initialize(full: false, full_when_narrow: false, spacious: false, dismissible: false, icon: nil, scheme: DEFAULT_SCHEME, **system_arguments)
+      def initialize(full: false, full_when_narrow: false, dismissible: false, description: nil, icon: nil, scheme: DEFAULT_SCHEME, **system_arguments)
         @icon = icon
         @dismissible = dismissible
+        @description = description
         @system_arguments = deny_tag_argument(**system_arguments)
         @system_arguments[:tag] = :div
         @system_arguments[:classes] = class_names(
@@ -65,9 +64,8 @@ module Primer
           "Banner",
           SCHEME_MAPPINGS[fetch_or_fallback(SCHEME_MAPPINGS.keys, scheme, DEFAULT_SCHEME)],
           "Banner--full": full,
-          "Banner--fullWhenNarrow": full_when_narrow
+          "Banner--full-whenNarrow": full_when_narrow
         )
-        @system_arguments[:mb] ||= spacious ? 4 : nil
       end
     end
   end
