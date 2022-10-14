@@ -8,12 +8,8 @@ module Primer
 
       # Optional action content showed on the right side of the component.
       #
-      # @param system_arguments [Hash] <%= link_to_system_arguments_docs %>
-      renders_one :action, lambda { |**system_arguments|
-        deny_tag_argument(**system_arguments)
-
-        Primer::Beta::Button.new(**system_arguments)
-      }
+      # @param system_arguments [Hash] The same arguments as <%= link_to_component(Primer::Beta::Button) %>.
+      renders_one :action, Primer::Beta::Button
 
       DEFAULT_SCHEME = :default
       SCHEME_MAPPINGS = {
@@ -41,9 +37,7 @@ module Primer
       # @example With actions
       #   <%= render(Primer::Beta::Flash.new) do |component| %>
       #     This is a flash message with actions!
-      #     <% component.with_action do %>
-      #       <%= render(Primer::ButtonComponent.new(size: :small)) { "Take action" } %>
-      #     <% end %>
+      #     <% component.with_action(size: :small) { "Take action" } %>
       #   <% end %>
       #
       # @param full [Boolean] Whether the component should take up the full width of the screen.
@@ -53,7 +47,11 @@ module Primer
       # @param scheme [Symbol] <%= one_of(Primer::Beta::Flash::SCHEME_MAPPINGS.keys) %>
       # @param description [String] Optional description.
       # @param system_arguments [Hash] <%= link_to_system_arguments_docs %>
+<<<<<<< HEAD
       def initialize(full: false, full_when_narrow: false, dismissible: false, description: nil, icon: nil, scheme: DEFAULT_SCHEME, **system_arguments)
+=======
+      def initialize(full: false, full_when_narrow: false, dismissible: false, icon: nil, scheme: DEFAULT_SCHEME, **system_arguments)
+>>>>>>> 336ed5631fdafea6a36147dbd169df95e1562312
         @icon = icon
         @dismissible = dismissible
         @description = description
