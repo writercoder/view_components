@@ -534,6 +534,7 @@
     "DEFAULT_SCHEME": "default",
     "SCHEME_MAPPINGS": {
       "default": "",
+      "info": "Banner--info",
       "warning": "Banner--warning",
       "danger": "Banner--error",
       "success": "Banner--success"

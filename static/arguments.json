@@ -1279,7 +1279,13 @@
         "name": "scheme",
         "type": "Symbol",
         "default": "`:default`",
-        "description": "One of `:danger`, `:default`, `:success`, or `:warning`."
+        "description": "One of `:danger`, `:default`, `:info`, `:success`, or `:warning`."
+      },
+      {
+        "name": "description",
+        "type": "String",
+        "default": "`nil`",
+        "description": "Optional description."
       },
       {
         "name": "system_arguments",
