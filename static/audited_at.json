@@ -90,7 +90,7 @@
   "Primer::LocalTime": "",
   "Primer::Markdown": "",
   "Primer::MenuComponent": "",
-  "Primer::Navigation::TabComponent": "",
+  "Primer::Alpha::Navigation::Tab": "",
   "Primer::OcticonComponent": "",
   "Primer::OcticonSymbolsComponent": "",
   "Primer::PopoverComponent": "",

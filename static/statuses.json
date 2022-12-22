@@ -90,7 +90,7 @@
   "Primer::LocalTime": "deprecated",
   "Primer::Markdown": "deprecated",
   "Primer::MenuComponent": "deprecated",
-  "Primer::Navigation::TabComponent": "alpha",
+  "Primer::Alpha::Navigation::Tab": "alpha",
   "Primer::OcticonComponent": "deprecated",
   "Primer::OcticonSymbolsComponent": "deprecated",
   "Primer::PopoverComponent": "deprecated",
