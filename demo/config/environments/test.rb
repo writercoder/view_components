@@ -39,7 +39,4 @@ Rails.application.configure do
   config.assets.debug = true
 
   config.assets.check_precompiled_asset = false
-
-  config.autoload_paths << Rails.root.join("..", "test", "forms")
-  config.view_component.preview_paths << Rails.root.join("..", "test", "previews")
 end
