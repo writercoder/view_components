@@ -2,11 +2,10 @@
 
 lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "primer/view_components/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "primer_view_components"
-  spec.version       = Primer::ViewComponents::VERSION::STRING
+  spec.version       = "0.0.1"
   spec.authors       = ["GitHub Open Source"]
   spec.email         = ["opensource+primer_view_components@github.com"]
 

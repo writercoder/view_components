@@ -40,11 +40,6 @@ Rails.application.configure do
 
   config.assets.check_precompiled_asset = false
 
-  # Raises error for missing translations.
-  # config.action_view.raise_on_missing_translations = true
-  config.primer_view_components.silence_deprecations = true
-  config.primer_view_components.raise_on_invalid_options = false
-
   config.autoload_paths << Rails.root.join("..", "test", "forms")
   config.view_component.preview_paths << Rails.root.join("..", "test", "previews")
 end
