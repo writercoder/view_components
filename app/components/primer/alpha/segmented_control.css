@@ -1,0 +1,164 @@
+/* SegmentedControl */
+
+.SegmentedControl {
+  display: inline-flex;
+  list-style: none;
+  background-color: var(--color-segmented-control-bg);
+  border-radius: var(--primer-borderRadius-medium, 6px);
+  box-shadow: var(--primer-borderInset-thin, inset 0 0 0 max(1px, 0.0625rem)) var(--color-border-default);
+}
+
+.SegmentedControl-item {
+  position: relative;
+  display: inline-flex;
+  border: var(--primer-borderWidth-thin, max(1px, 0.0625rem)) solid transparent;
+  border-radius: var(--primer-borderRadius-medium, 6px);
+  padding: var(--primer-control-xsmall-paddingInline-condensed, 4px);
+
+  /* Selected ---------------------------------------- */
+}
+
+.SegmentedControl-item.SegmentedControl-item--selected {
+    background-color: var(--color-btn-bg);
+    border-color: var(--color-segmented-control-button-selected-border);
+  }
+
+.SegmentedControl-item.SegmentedControl-item--selected .Button {
+      font-weight: var(--base-text-weight-semibold, 600);
+    }
+
+.SegmentedControl-item.SegmentedControl-item--selected .Button:hover {
+        background-color: transparent;
+      }
+
+.SegmentedControl-item.SegmentedControl-item--selected::before {
+      border-color: transparent;
+    }
+
+.SegmentedControl-item.SegmentedControl-item--selected + .SegmentedControl-item::before {
+      border-color: transparent;
+    }
+
+/* renders a visibly hidden "copy" of the text in bold, reserving box space for when text becomes bold on selected */
+
+.SegmentedControl-item .Button-label[data-content]::before {
+    display: block;
+    height: 0;
+    font-weight: var(--base-text-weight-semibold, 600);
+    visibility: hidden;
+    content: attr(data-content);
+  }
+
+/* Separator lines */
+
+.SegmentedControl-item::before {
+    position: absolute;
+    inset: 0 0 0 -1px;
+    margin-top: var(--primer-control-medium-paddingBlock, 6px);
+    margin-bottom: var(--primer-control-medium-paddingBlock, 6px);
+    content: '';
+    border-left: var(--primer-borderWidth-thin, max(1px, 0.0625rem)) solid var(--color-border-default);
+  }
+
+/* Button ----------------------------------------- */
+
+.SegmentedControl-item .Button {
+    border: 0;
+    font-weight: var(--base-text-weight-normal, 400);
+    transition: none;
+    color: var(--color-btn-text);
+  }
+
+.SegmentedControl-item .Button:focus-visible {
+      outline-offset: calc(var(--primer-control-xsmall-paddingInline-condensed, 4px) - var(--primer-borderWidth-thin, 1px));
+      border-radius: calc(var(--primer-borderRadius-medium, 6px) - 5px);
+    }
+
+.SegmentedControl-item .Button--small {
+    height: calc(var(--primer-control-small-size, 28px) - var(--primer-control-xsmall-paddingInline-condensed, 4px) * 2 - var(--primer-borderWidth-thin, 1px) * 2);
+    padding: 0 calc(var(--primer-control-small-paddingInline-condensed, 8px) - var(--primer-control-xsmall-paddingInline-condensed, 4px));
+  }
+
+.SegmentedControl-item .Button--small.Button--iconOnly {
+      width: calc(var(--primer-control-medium-size, 32px) - var(--primer-control-xsmall-paddingInline-condensed, 4px) * 2 - var(--primer-borderWidth-thin, 1px) * 2);
+    }
+
+.SegmentedControl-item .Button--small.Button--iconOnly::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  min-height: var(--primer-control-medium-size, 32px);
+  content: "";
+  transform: translateX(-50%) translateY(-50%);
+  min-width: var(--primer-control-medium-size, 32px);
+}
+
+.SegmentedControl-item .Button--medium {
+    height: calc(var(--primer-control-medium-size, 32px) - var(--primer-control-xsmall-paddingInline-condensed, 4px) * 2 - var(--primer-borderWidth-thin, 1px) * 2);
+    padding: 0 calc(var(--primer-control-medium-paddingInline-normal, 12px) - var(--primer-control-xsmall-paddingInline-condensed, 4px));
+  }
+
+.SegmentedControl-item .Button--medium.Button--iconOnly {
+      width: calc(var(--primer-control-medium-size, 32px) - var(--primer-control-xsmall-paddingInline-condensed, 4px) * 2 - var(--primer-borderWidth-thin, 1px) * 2);
+    }
+
+.SegmentedControl-item .Button--medium.Button--iconOnly::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  min-height: var(--primer-control-medium-size, 32px);
+  content: "";
+  transform: translateX(-50%) translateY(-50%);
+  min-width: var(--primer-control-medium-size, 32px);
+}
+
+.SegmentedControl-item .Button--large {
+    height: calc(var(--primer-control-large-size, 40px) - var(--primer-control-xsmall-paddingInline-condensed, 4px) * 2 - var(--primer-borderWidth-thin, 1px) * 2);
+    padding: 0 calc(var(--primer-control-large-paddingInline-spacious, 16px) - var(--primer-control-xsmall-paddingInline-condensed, 4px));
+  }
+
+.SegmentedControl-item .Button--large.Button--iconOnly {
+      width: calc(var(--primer-control-large-size, 40px) - var(--primer-control-xsmall-paddingInline-condensed, 4px) * 2 - var(--primer-borderWidth-thin, 1px) * 2);
+    }
+
+.SegmentedControl-item .Button--large.Button--iconOnly::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  min-height: var(--primer-control-large-size, 40px);
+  content: "";
+  transform: translateX(-50%) translateY(-50%);
+  min-width: var(--primer-control-large-size, 40px);
+}
+
+.SegmentedControl-item .Button--iconOnly {
+    padding: initial;
+  }
+
+.SegmentedControl-item .Button--invisible.Button--invisible-noVisuals .Button-label {
+    color: var(--color-btn-text);
+  }
+
+/* fullWidth */
+
+.SegmentedControl--fullWidth {
+  display: flex;
+}
+
+.SegmentedControl--fullWidth .SegmentedControl-item {
+    flex: 1;
+    justify-content: center;
+  }
+
+/* is .Button-withTooltip used anywhere? can't find use of it */
+
+.SegmentedControl--fullWidth .Button--iconOnly,
+  .SegmentedControl--fullWidth .Button-withTooltip {
+    width: 100%;
+  }
