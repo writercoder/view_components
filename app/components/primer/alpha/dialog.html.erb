@@ -1,6 +1,6 @@
 <%= show_button %>
-<div class="Overlay--hidden <%= @backdrop_classes %>" data-modal-dialog-overlay>
-  <%= render Primer::BaseComponent.new(**@system_arguments) do %>
+<%= render Primer::BaseComponent.new(**@system_arguments) do %>
+  <focus-trap class="Overlay-focus-trap" active="when-visible">
     <%= header %>
     <% if content.present? %>
       <%= content %>
@@ -8,5 +8,5 @@
       <%= body %>
       <%= footer %>
     <% end %>
-  <% end %>
-</div>
+  </focus-trap>
+<% end %>

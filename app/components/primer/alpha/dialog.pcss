@@ -1,5 +1,9 @@
 /* Overlay */
 
+.Overlay:not(:open) {
+  display: none;
+}
+
 .Overlay--hidden {
   display: none !important;
 }
@@ -19,9 +23,15 @@
   white-space: normal;
   flex-direction: column;
   background-color: var(--color-canvas-overlay);
+  border-width: 0;
   border-radius: var(--primer-borderRadius-large, 12px);
   box-shadow: var(--color-overlay-shadow);
   opacity: 1;
+
+  &.Overlay-focus-trap {
+    display: flex;
+    flex-direction: column;
+  }
 
   &.Overlay--size-auto {
     min-width: 192px;

@@ -126,7 +126,7 @@ module Primer
       )
         @system_arguments = deny_tag_argument(**system_arguments)
 
-        @system_arguments[:tag] = "modal-dialog"
+        @system_arguments[:tag] = "dialog"
         @system_arguments[:role] = "dialog"
         @system_arguments[:id] = id
         @system_arguments[:aria] = { modal: true }

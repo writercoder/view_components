@@ -1,4 +1,3 @@
-import {focusTrap} from '@primer/behaviors'
 import {getFocusableChild} from '@primer/behaviors/utils'
 
 function focusIfNeeded(elem: HTMLElement | undefined | null) {
@@ -69,8 +68,6 @@ function mousedownHandler(event: Event) {
 }
 
 export class ModalDialogElement extends HTMLElement {
-  //TODO: Do we remove the abortController from focusTrap?
-  #focusAbortController = new AbortController()
   openButton: HTMLButtonElement | null
 
   get open() {
@@ -83,10 +80,6 @@ export class ModalDialogElement extends HTMLElement {
       this.#overlayBackdrop?.classList.remove('Overlay--hidden')
       document.body.style.paddingRight = `${window.innerWidth - document.body.clientWidth}px`
       document.body.style.overflow = 'hidden'
-      if (this.#focusAbortController.signal.aborted) {
-        this.#focusAbortController = new AbortController()
-      }
-      focusTrap(this, undefined, this.#focusAbortController.signal)
       overlayStack.push(this)
     } else {
       if (!this.open) return
@@ -94,7 +87,6 @@ export class ModalDialogElement extends HTMLElement {
       this.#overlayBackdrop?.classList.add('Overlay--hidden')
       document.body.style.paddingRight = '0'
       document.body.style.overflow = 'initial'
-      this.#focusAbortController.abort()
       // if #openButton is a child of a menu, we need to focus a suitable child of the menu
       // element since it is expected for the menu to close on click
       const menu = this.openButton?.closest('details') || this.openButton?.closest('action-menu')
