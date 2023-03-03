@@ -3,7 +3,7 @@
     "browser": true,
     "es2021": true,
     "node": true
-  },
+  },cbvvbc
   "extends": [
     "eslint:recommended",
     "plugin:custom-elements/recommended"
