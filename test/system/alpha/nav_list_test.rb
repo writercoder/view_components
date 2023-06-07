@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "system/test_case"
+require "pry"
 
 module Alpha
   class NavListTest < System::TestCase
@@ -30,29 +31,28 @@ module Alpha
     end
 
     def test_show_more_item_with_trusted_types_enabled
+      visit_preview(:empty)
+
       result = page.evaluate_script(<<~JS)
-        window.trustedTypes = { createPolicy: () => ({ createHTML: (string) => string }) }
-        window.trustedTypes.createPolicy("test", { createHTML: (string) => "pizza time" })
-        //console.log(window.trustedTypes)
-        console.log('hallo')
-        document.body.innerHTML = '<div id="HIIIIII"></div>'
+        navList = customElements.get('nav-list')
+        navList.cspTrustedTypesPolicy = { createHtml: (html) => "pizza time"}
       JS
 
-      puts result
-
       visit_preview(:show_more_item)
-
 
       assert_selector "li.ActionListItem", count: 2
       assert_selector "li", text: "Popplers"
       assert_selector "li", text: "Slurm"
+
+      puts page.driver.current_url
+      page.driver.debug
 
       # use #find here to wait for the button to become enabled
       find("button", text: "Show more foods").click
 
       assert_selector "li.ActionListItem", count: 4
       assert_selector "li", text: "pizza time"
-      assert_selector "li", text: "howdy"
+      assert_selector "li", text: "Slurm"
       assert_selector "li", text: "Bachelor Chow"
       assert_selector "li", text: "LöBrau"
     end

@@ -9,6 +9,7 @@ require "test_helpers/retry"
 
 module System
   class TestCase < ActionDispatch::SystemTestCase
+    # something we can pass to this to geet headed browser
     driven_by :primer_cuprite, using: :chrome, screen_size: [1400, 1400], options: { process_timeout: 240, timeout: 240 }
 
     def visit_preview(scenario_name, params = {})

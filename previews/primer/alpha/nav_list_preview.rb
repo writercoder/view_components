@@ -84,6 +84,10 @@ module Primer
         end
       end
 
+      def empty
+        return "<div>hi</div>"
+      end
+
       # @label Show more item
       def show_more_item
         render(Primer::Alpha::NavList.new(aria: { label: "My favorite foods" })) do |list|

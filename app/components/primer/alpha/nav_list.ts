@@ -13,7 +13,6 @@ interface CSPTrustedTypesPolicy {
 interface CSPTrustedHTMLToStringable {
   toString: () => string
 }
-let cspTrustedTypesPolicyPromise: Promise<CSPTrustedTypesPolicy> | null = null
 
 @controller
 export class NavListElement extends HTMLElement {
@@ -25,9 +24,9 @@ export class NavListElement extends HTMLElement {
     this.setShowMoreItemState()
   }
 
-  set cspTrustedTypesPolicy(policy: CSPTrustedTypesPolicy) {
-    cspTrustedTypesPolicyPromise = Promise.resolve(policy)
-  }
+  // would have to set this using Object.defineProperty to make it readonly
+  // talk to primer view components/Keith about this
+  cspTrustedTypesPolicy = window.PrimerViewComponentsCspTrustedTypesPolicy as CSPTrustedTypesPolicy
 
   get showMoreDisabled(): boolean {
     return this.showMoreItem.hasAttribute('aria-disabled')
@@ -163,11 +162,11 @@ export class NavListElement extends HTMLElement {
       paginationURL.searchParams.append('page', this.currentPage.toString())
       const response = await fetch(paginationURL)
       if (!response.ok) return
-      // wrapp in  tt policy
       html = await response.text()
-      if (cspTrustedTypesPolicyPromise) {
+
+      const policy = NavListElement.cspTrustedTypesPolicy
+      if (policy) {
         console.log('wrapping in tt policy')
-        const policy = await cspTrustedTypesPolicyPromise
         html = policy.createHTML(html, response).toString()
       }
       if (this.currentPage === this.totalPages) {
