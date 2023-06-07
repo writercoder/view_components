@@ -1,6 +1,20 @@
 /* eslint-disable custom-elements/expose-class-on-global */
 import {controller, target, targets} from '@github/catalyst'
 
+
+// CSP trusted types: We don't want to add `@types/trusted-types` as a
+// dependency, so we use the following types as a stand-in.
+interface CSPTrustedTypesPolicy {
+  createHTML: (s: string, response: Response) => CSPTrustedHTMLToStringable
+}
+// Note: basically every object (and some primitives) in JS satisfy this
+// `CSPTrustedHTMLToStringable` interface, but this is the most compatible shape
+// we can use.
+interface CSPTrustedHTMLToStringable {
+  toString: () => string
+}
+let cspTrustedTypesPolicyPromise: Promise<CSPTrustedTypesPolicy> | null = null
+
 @controller
 export class NavListElement extends HTMLElement {
   @targets items: HTMLElement[]
@@ -9,6 +23,10 @@ export class NavListElement extends HTMLElement {
 
   connectedCallback(): void {
     this.setShowMoreItemState()
+  }
+
+  set cspTrustedTypesPolicy(policy: CSPTrustedTypesPolicy) {
+    cspTrustedTypesPolicyPromise = Promise.resolve(policy)
   }
 
   get showMoreDisabled(): boolean {
@@ -145,7 +163,13 @@ export class NavListElement extends HTMLElement {
       paginationURL.searchParams.append('page', this.currentPage.toString())
       const response = await fetch(paginationURL)
       if (!response.ok) return
+      // wrapp in  tt policy
       html = await response.text()
+      if (cspTrustedTypesPolicyPromise) {
+        console.log('wrapping in tt policy')
+        const policy = await cspTrustedTypesPolicyPromise
+        html = policy.createHTML(html, response).toString()
+      }
       if (this.currentPage === this.totalPages) {
         this.showMoreItem.hidden = true
       }
