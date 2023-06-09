@@ -64,6 +64,9 @@ export default class FocusGroupElement extends HTMLElement {
         }
       }
     } else if (event instanceof KeyboardEvent) {
+      if (event.metaKey || event.ctrlKey || event.altKey) {
+        return
+      }
       const items = Array.from(this.#items)
       let index = items.indexOf(event.target as Element)
       const key = event.key
