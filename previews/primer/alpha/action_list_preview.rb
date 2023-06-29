@@ -377,6 +377,53 @@ module Primer
           component.with_item(label: "Active item", href: "/", active: true)
         end
       end
+
+      # @!group ActionList all variants
+      # @label
+      def group_default
+        default
+      end
+
+      # @label
+      def group_heading
+        heading
+      end
+
+      # @label
+      def group_item_trailing_leading_visual
+        item_leading_trailing_visual
+      end
+
+      # @label
+      def group_item_description
+        item_with_description
+      end
+
+      # @label
+      def group_item_description_inline
+        item_with_description_inline
+      end
+
+      # @label
+      def group_item_trailing_action
+        item_trailing_action
+      end
+
+      # @label
+      def group_item_danger
+        item_danger
+      end
+
+      # @label
+      def group_item_disabled
+        item_disabled
+      end
+
+      # @label
+      def group_item_active
+        item_active
+      end
+      # @!endgroup
     end
   end
 end
